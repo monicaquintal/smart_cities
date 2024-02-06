@@ -1,8 +1,7 @@
 <div align="center">
-<a href="https://github.com/monicaquintal" target="_blank"><img align="right" height="120px" src="./assets/logo.png" /></a>
-<h1>ANÁLISE E DESENVOLVIMENTO DE SISTEMAS</h1>
+<a href="https://github.com/monicaquintal" target="_blank"><img align="right" height="100px" src="./assets/logo.png" /></a>
+<h1>ANÁLISE E DESENVOLVIMENTO DE SISTEMAS - FIAP ON</h1>
 <p>2°. ANO - 2024/1</p>
-<p>FIAP</p>
 </div>
 
 <div align="justify">
@@ -13,15 +12,14 @@
 <summary>MOBILE APPLICATION DEVELOPMENT</summary>
 
 [Capítulo 01: O show tem que continuar!](./fase01/capitulo01.md)<br>
-[Capítulo 02: .]()<br>
+[Capítulo 03: .]()<br>
 
 </details>
-<br>
 
 <details>
 <summary>ENTREPRENEURSHIP PROGRAM</summary>
 
-[Capítulo 03: .]()<br>
+[Capítulo 02: Cidades inteligentes.](./fase01/capitulo02.md)<br>
 
 </details>
 <br>
