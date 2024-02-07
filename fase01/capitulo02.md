@@ -55,6 +55,20 @@
 
 ## 1.3 DIMENSÕES NORTEADORAS DAS CIDADES INTELIGENTES
 
+- para qualificar uma cidade como Smart City, muitas áreas do desenvolvimento urbano devem progredir, como meio ambiente, saúde, trânsito, educação, emprego e tecnologia.
+- não há uma comissão que regularize o conceito de Smart City para o mundo; no entanto, os governos que escolhem organizar uma cidade de acordo com esse parâmetro recorrem aos padrões institucionalizados pela União Europeia, pois a Europa é o continente onde surgiram as primeiras cidades que colocaram em pauta esse conceito.
+- de acordo com os parâmetros definidos pela União Europeia, seis características são necessárias para uma cidade ser reconhecida como uma Smart City: Smart People, Smart Governance, Smart Environment, Smart Living, Smart Mobility e Smart Economy.
+
+> Esses parâmetros levam a uma Cidade Inteligente. Isso não significa que será uma cidade perfeita, e sim uma área urbana que, por meio de projetos tecnológicos interligados a políticas públicas, consegue sobreviver a tragédias e amparar seus habitantes.
+
+> Apesar de as seis áreas que constituem uma Smart City serem horizontais, nenhuma é mais importante que a outra.
+
+## 1.4 SMART PEOPLE
+
+
+
+
+
 
 
 
