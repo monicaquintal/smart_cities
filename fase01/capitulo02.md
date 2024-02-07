@@ -65,7 +65,14 @@
 
 ## 1.4 SMART PEOPLE
 
-
+- esse parâmetro instiga as lideranças da cidade a incentivar seus cidadãos por meio da educação e do acesso a condições que permitam a qualidade de vida e a criação de ideias que tornem o espaço urbano sustentável e resiliente. 
+- todos passam a ser agentes do local onde vivem!
+- de acordo com a União Europeia, Smart People são pessoas criativas e inovadoras que possibilitam uma sociedade inclusiva, engajada em uma educação de qualidade, que atrai incentivos em Pesquisa e Desenvolvimento (R&D) e centros de inovação. Essas pessoas também possuem um sistema de saúde acessível e de qualidade que, por consequência, possibilita uma alta expectativa de vida com infraestrutura, permitindo aos cidadãos terem uma aposentadoria e uma velhice com segurança e tranquilidade.
+- pode-se afirmar que Smart People tem as seguintes características:
+  - engajada em educação.
+  - sociedade inclusiva e participativa.
+  - criatividade que gera oportunidade.
+  - alta expectativa de vida. 
 
 
 
