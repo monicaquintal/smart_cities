@@ -74,6 +74,38 @@
   - criatividade que gera oportunidade.
   - alta expectativa de vida. 
 
+### 1.4.1 EXEMPLO DE PROJETO PARA SMART PEOPLE: [COMUNIDADE PYLADIES](http://brasil.pyladies.com/)
+- para incentivar mulheres e pessoas que são marginalizadas dentro da cultura tech, como indivíduos transgênerose transexuais, muitos grupos estão sendo organizados para conversar e fazer com que a inclusão e a diversidade aconteçam no mercado de trabalho de tecnologia. 
+- PyLadies foi criado por sete mulheres, para incentivar e ensinar mais mulheres a programar em Python, linguagem de programação de código aberto.
+- por meio da educação, incentivo e um grupo seguro para mulheres participarem e aprenderem, PyLadies contribui para que mais pessoas trabalhem com tecnologia.
+- é uma referência de como a tecnologia pode integrar as pessoas na sociedade, não apenas no mercado de tecnologia, mas também nas cidades onde a tecnologia é importante para sua estrutura.
+- nesse exemplo, as quatro características trabalham juntas: Engajamento em educação; Sociedade inclusiva e participativa; Criatividade que gera oportunidade; impulsionando a Alta expectativa de vida.
+
+## 2 SMART ECONOMY
+
+- não é apenas uma cidade com potencial financeiro, mas também com outras características que fomentam essa qualidade. 
+- a economia para uma Smart City é entendida por meio da presença da inovação, do caráter empreendedor e produtivo da sua mão de obra, assim como por possuir uma força financeira com identidade da cidade que permite ao local uma integração internacional.
+- itens que definem uma Smart Economy:
+  - Espírito de inovação.
+  - Empreendedorismo.
+  - Produtividade.
+  - Flexibilidade no mercado de trabalho.
+  - Integração internacional.
+  - Habilidade para transformar.
+- quanto mais há uma pluralidade cultural e respeito entre as características individuais, mais a economia é impulsionada. E, por consequência, o espaço urbano se torna mais sustentável e mais resiliente. Quando há uma pluralidade movida pela criatividade na economia, mesmo em momentos de crise, a cidade tem uma estruturapara se renovar e manter o bem-estar dos seus cidadãos. 
+- exemplos: Singapura e Nova York.
+
+### 2.1 EXEMPLO DE PROJETO PARA SMART ECONOMY: BANCO COLOMBIANO [NEQUI](https://www.youtube.com/watch?v=UJBR2TVwQy4)
+- é um banco criado a partir de uma estrutura digital: todos os serviços foram pensados para serem acessados via celular.
+- lançado em 2016, o suporte de infraestrutura é do Bancolombia, mas funciona de forma independente.
+- o objetivo é aproximar pessoas que nunca tiveram acesso a um banco e que pensam que o mercado financeiro não faz parte de seu dia a dia.
+- todos os processos funcionam pela plataforma do aplicativo, desde a criação da conta, sem a parte burocrática tradicional dos bancos, até o saque de dinheiro, sem a utilização de um cartão. O usuário recebe um código via celular, que ele usa nos caixas eletrônicos para liberar o saque do dinheiro.
+- é um forte exemplo de Smart Economy, pois, além de demonstrar as características para ser uma Economia Inteligente, também mostra a ligação entre as Dimensões Norteadoras para uma Smart City, como: Smart People, Smart Economy e Smart Environment.
+
+## 2.2 SMART ENVIRONMENT
+
+
+
 
 
 
