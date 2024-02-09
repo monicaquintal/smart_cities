@@ -104,6 +104,15 @@
 
 ## 2.2 SMART ENVIRONMENT
 
+- preocupação para questões ambientais e sustentáveis dascidades. 
+- um Smart Environment tem como ponto principal da sua agenda a qualidade do ar, a preservação ecológica e a sustentabilidade na administração dos recursos.
+- características:
+  - Proteção ambiental.
+  - Administração dos recursos sustentáveis.
+  - Tornar as condições naturais também uma atração econômica.
+  - Qualidade do ar.
+
+### 2.2.1 EXEMPLO DE PROJETO PARA SMART ENVIRONMENT: SONGDO E A COLETA DE LIXO
 
 
 
