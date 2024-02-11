@@ -113,14 +113,33 @@
   - Qualidade do ar.
 
 ### 2.2.1 EXEMPLO DE PROJETO PARA SMART ENVIRONMENT: SONGDO E A COLETA DE LIXO
+- Songdo é considerada uma Cidade Ubíqua; pode ser vista como Smart City,por possuir diversas funções realizadas por meio da tecnologia.Entretanto, por ser uma cidade recém-construída, há pontos a serem estudados/melhorados.
+- o governo coreano, junto a empresas que investiram US$ 40 bilhões,ajudou a construir essa cidade, que promete ser o polo de tecnologia e finanças da Ásia.
+- a partir do investimento do governo em preservar o meio ambiente do local, como o mega projeto de limpeza dos rios da capital Seul, Songdo também tem a preocupação de preservar 40% de sua área verde e todos os prédios construídos devem ter certificação de sustentabilidade.
+- todas as construções em Songdo têm lixeiras conectadas à central de coleta de lixo via vácuo.
+- a cidade também possui um programa de pontuação para cidadãos que depositam seu lixo de maneira correta nas lixeiras de reciclagem.
 
-18 
+## 2.3 SMART GOVERNANCE
 
+- definido como uma administração transparente e idônea, que disponibiliza serviços públicos e sociais à população por meio do exercício da política. 
+- Smart Governance entende que é necessária uma ação integrada entre a participação pública e a privada para o desenvolvimento de projetos urbanos que beneficiem a população.
+- características:
+  - Eficiência e transparência na administração.
+  - Serviços públicos e com preocupação social.
+  - Perspectiva e estratégia políticas.
 
-##AU
+### 2.3.1 EXEMPLO DE PROJETO PARA SMART GOVERNANCE: A ORGANIZAÇÃO POLÍTICA DE HONG KONG
+- para organizar Hong Kong de acordo com a política de governo para uma Smart City, dois fatores foram fundamentais:
+    1. Engajar a iniciativa pública em Smart Governance, ou seja, aliar a prática pública com o envolvimento de tecnologias como: social, dispositivos móveis, analíticos e armazenamento em nuvem.
+    2. diminuir a taxa de corrupção, fator que foi incentivado pelo ranking da transparência dos governos.
+- para isso, a cidade criou sete ações dentro da área de Smart Governance que devem ser executadas a curto, médio e longo prazo (em 5, 10 e mais de 15 anos).
+- para melhorar as condições de moradia e trânsito dessa megacidade, bem como organizá-la, um mapa 3D de seu domínio geográfico está em construção:
+  - até 2025, pretende-se que esse mapa ilustre futuras mudanças dentro das transformações do planejamento urbano, como: rotas úteis de mobilidade urbana, preservação arqueológica e novos lugares que propiciem construções e locais que viabilizem a construção de edifícios integrando cultura, entretenimento e meio ambiente. 
+  - um mapa que forneça também suporte em casos de emergência urbanos e que, a longo prazo, após 2030, permita uma visualização interativa que seja operada e performada pela análisede dados coletados no espaço urbano.
+- a instalação de e-governance diminui os processos burocráticos que impactam a liberação da permissão para a transformação do planejamento urbano, como a construção de novos imóveis e reformas em ruas e de locais públicos.
+- Hong Kong decidiu implementar uma infraestrutura centralizada de Big Data para desenvolver e executar modelos de análise.
 
-
-
+## 2.4 SMART LIVING
 
 
 --- 
