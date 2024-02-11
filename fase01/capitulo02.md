@@ -81,7 +81,7 @@
 - é uma referência de como a tecnologia pode integrar as pessoas na sociedade, não apenas no mercado de tecnologia, mas também nas cidades onde a tecnologia é importante para sua estrutura.
 - nesse exemplo, as quatro características trabalham juntas: Engajamento em educação; Sociedade inclusiva e participativa; Criatividade que gera oportunidade; impulsionando a Alta expectativa de vida.
 
-## 2 SMART ECONOMY
+## 2. SMART ECONOMY
 
 - não é apenas uma cidade com potencial financeiro, mas também com outras características que fomentam essa qualidade. 
 - a economia para uma Smart City é entendida por meio da presença da inovação, do caráter empreendedor e produtivo da sua mão de obra, assim como por possuir uma força financeira com identidade da cidade que permite ao local uma integração internacional.
@@ -140,6 +140,41 @@
 - Hong Kong decidiu implementar uma infraestrutura centralizada de Big Data para desenvolver e executar modelos de análise.
 
 ## 2.4 SMART LIVING
+
+- abrange não só características habitacionais, mas também interações dos habitantes com o espaço urbano, como oportunidades de lazer e cultura, atrações turísticas, atendimento médico, segurança, educação,condições de moradia para a melhor coesão social.
+- características:
+  - Opções de lazer e culturais.
+  - Acesso à saúde.
+  - Segurança.
+  - Qualidade habitacional.
+  - Acesso à educação de qualidade.
+  - Atrações turísticas.
+
+### 2.4.1 Exemplo de projeto para Smart Living: Portland e o pioneirismo em Comunidade Sustentável
+- Portland, no estado do Oregon/EUA , é conhecida como a Floresta do Silício.
+  - anos antes de a economia local ser impulsionada pelas empresas de tecnologia, havia mais de mil empresas na cidade e a infraestrutura urbana já estava preocupada com a qualidade de vida de seus moradores. 
+  - em 1902, a cidade assinou um tratado para integrar as construções urbanas à preservação das áreas verdes.
+  - em 2009, um bairro inteiro com 17 quarteirões foi construído para renovar uma antiga área industrial e transformá-la com o selo ambiental LEED (Leadership in Energy and Environmental Design).
+- a cidade também é conhecida como “20 minutos”, pois todos os serviços de que um cidadão necessita devem estar a 20 minutos a pé de sua casa.
+- até 2035, por meio do projeto “Cidade Saudável Conectada”, a prefeitura quer garantir bairros completos para, pelo menos, 80% da população (disponibilidade de comércio, empregos, educação, unidades de saúde e segurança bem como infraestrutura adequada para mobilidade).
+
+## 2.5 SMART MOBILITY
+
+- abrangetoda a questão de mobilidade dentro de uma cidade: é pensar em todos os trajetos que os cidadãos realizam para interagir dentro do espaço urbano.
+- define um deslocamento pela cidade que envolva um sistema de transporte público de qualidade para a população, garantia à acessibilidade e à infraestrutura para poder circular pelo espaço urbano e sustentabilidade no sistema de transporte.
+- características:
+  - Sistema de transporte público acessível e de qualidade.
+  - Acessibilidade.
+  - Infraestrutura baseada em Tecnologia da Informação e Comunicação.
+  - Sustentabilidade no sistema de transporte.
+
+### 2.6.1 EXEMPLO DE PROJETO PARA SMART MOBILITY: [IMPLEMENTAÇÃO DE TELEFÉRICO](https://youtu.be/AGHZLG9tMFM)
+- a partir de 2004, Medellín inaugurou mais essa forma de deslocamento para a população e passou a ser um exemplo mundial de mobilidade, sustentabilidade e inclusão.
+
+## 3. EXEMPLOS DE CIDADES INTELIGENTES
+
+### a) Singapura – Sudeste Asiático
+
 
 
 --- 
