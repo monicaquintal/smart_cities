@@ -6,7 +6,7 @@
 
 <div align="justify">
 
-<h2>📱 FASE 1: FASE 1 - APP WORLD (de 05/02 até 19/03)</h2>
+<h2>📱 FASE 1: APP WORLD (de 05/02 até 19/03)</h2>
 
 <details>
 <summary>MOBILE APPLICATION DEVELOPMENT</summary>

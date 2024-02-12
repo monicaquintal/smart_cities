@@ -1,5 +1,5 @@
 <div align="center">
-<a href="https://github.com/monicaquintal" target="_blank"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/kotlin/kotlin-original-wordmark.svg" width="120px" align="left"/></a>
+<a href="https://github.com/monicaquintal" target="_blank"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/kotlin/kotlin-original.svg" width="100px" align="left"/></a>
 <h1>FASE 1 - APP WORLD</h1>
 <h2>Capítulo 2A: Introdução ao Kotlin.</h2>
 </div>
@@ -230,7 +230,24 @@ println(letter)
 println("$gender")
 ~~~
 
-- 
+- quando é necessário inserir, em uma String, algum caractere reservado pela linguagem (por exemplo, o caractere de aspas duplas, que define o início/fim de uma String), utilizamos o caractere \, que permite utilizar caracteres reservados, bem como outros conjuntos especiais, como o carriage return (simulando a tecla ENTER), uma tabulação, entre outros. 
+
+~~~kotlin
+var text = "Este texto \"quebra\" em \n duas linhas"
+/* Resultado:
+ * Este texto "quebra" em
+ * duas linhas
+ */
+
+// O \t gera uma tabulação
+var text2 = "Nota:\t 10"
+// Resultado: Nota:   10
+
+// Apresentando os valores das variáveis
+println(text)
+println(text2)
+~~~
+
 
 
 
