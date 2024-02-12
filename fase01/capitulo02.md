@@ -200,6 +200,33 @@
   - Renovação do Porto Maravilha.
 
 ### 3.1.2 BELO HORIZONTE – MINAS GERAIS
+- MG app: 
+  - três pilares: serviços, informação e engajamento. 
+  - pelo aplicativo, o governo quer se aproximar dos cidadãos por meio de consultas populares, notificá-los a respeito de serviços públicos e conhecer o perfil dos usuários. 
+  - o governo pretende atualizar o app a cada quatro meses e fornecer serviços que atendam ao cidadão e diminuam o processo burocrático.
+
+### 3.1.3 PORTO ALEGRE – RIO GRANDE DO SUL
+- projeto #POAdigital:
+  - núcleo de comunicação, criatividade e empreendedorismo ligado ao gabinete do prefeito.
+  - impulsiona integração de secretarias, empresas, aceleradoras, universidades e startups, o que estimulaa adoção de iniciativas inovadoras.
+
+## 4. LOCAIS DE PESQUISA SOBRE CIDADES INTELIGENTES:
+
+### a) Brasil: 
+- [Porto Digital em Recife](http://www.portodigital.org/home).
+### b) Mundo:
+- [MIT Senseable LAB](http://senseable.mit.edu/).
+- [The Programmable City Lab](http://progcity.maynoothuniversity.ie/).
+- [Stanford Business School – Cliff Thomas: The Rise of Smart City](https://www.youtube.com/watch?v=z4UbN_YGwaw).
+- [BAU Design College em Barcelona](https://www.masterstudies.com/Master-in-Smart-Cities/Spain/Design-Bau/).
+
+## 5. CONCLUSÃO
+
+- a especulação imobiliária, o fluxo de imigrantes, a explosão das megalópoles, a escassez de recursos e outros temas colocam em pauta a situação das cidades, mas principalmente o cidadão que vive nela
+- para ser inteligente, uma cidade deve ressignificar a participação da população em suas leis e em seus projetos, é aquela em que seus líderes permitem o acesso da população às informações de governo, a seus dados e a seus gastos. É a cidade onde a desigualdade social é diminuída, é menos massacrante e realmente proporciona oportunidades a todos os seus cidadãos, e não ameaças; é o local onde a sua cultura é valorizada, mas sem sufocar as culturas trazidas pelos novos fluxos de migração.
+- a Cidade Inteligente coloca em destaque a educação para estimular a colaboração ea criatividade, de forma que o empreendedorismo possa propor novos caminhos para a economia. 
+- para ser resiliente, a Cidade Inteligente conhece suas dificuldades e problemas; é uma cidade que integra a participação popular e apoia novos projetos.
+- O que caminha para ser uma Cidade Inteligente é feito por humanos, para humanos, uma humanização do espaço urbano, e a tecnologia funciona como uma ferramenta, um megafone para despertar essa discussão.
 
 --- 
 
