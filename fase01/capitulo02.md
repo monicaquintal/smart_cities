@@ -174,8 +174,32 @@
 ## 3. EXEMPLOS DE CIDADES INTELIGENTES
 
 ### a) Singapura – Sudeste Asiático
+- [Singapore Sports Hub](https://www.youtube.com/watch?v=RohhBhhG6Hw).
+- Gardens by the Bay.
 
+### b) Medellín, Colômbia – América do Sul
+- organizou o planejamento urbano para uma Cidade Inteligente em quatro bairros de inovação:
+  - São Pedro: eficiência energética, informação e comunicação.
+  - Sevilla: moradia e saúde.
+  - Chagualo: produção científica e tecnológica, cultura e lazer.
+  - Jesús Nazareno: atividades educativas e biotecnológicas.
+- no meio desses quatro bairros, fica uma das áreas mais pobres da cidade e é onde está instalada a Ruta N: agência da prefeitura que coordena os programas de tecnologia e inovação.
 
+### c) Melbourne, Austrália – Oceania
+- um novo plano administrativo dos imóveis da região e um plano de mobilidade.
+- projetos:
+  - City of Melbourne Maps.
+  - Urban Forest Visual (preservar área verde).
+  - Pedestrian Monitoring.
+
+## 3.1 CENÁRIO BRASILEIRO
+
+### 3.1.1 RIO DE JANEIRO: RENOVAÇÃO DO PORTO MARAVILHA E CENTRO DE OPERAÇÕES RIO
+- projetos: 
+  - Centro de Operações Rio (COR) e 
+  - Renovação do Porto Maravilha.
+
+### 3.1.2 BELO HORIZONTE – MINAS GERAIS
 
 --- 
 
