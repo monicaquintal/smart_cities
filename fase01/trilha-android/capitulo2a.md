@@ -663,6 +663,107 @@ if(film3.isNullOrEmpty()) {
 var height: Double = 1.75
 ~~~
 
+### 1.8.2 Aritméticos (+, -, *, /, %)
+- são utilizados para a realização de operações aritméticas: soma, subtração, mudança de sinal, módulo etc.
+
+~~~kotlin
+var a = 12
+var b = 3
+
+var sum = a + b 
+var subtract = a - b 
+var multiplication = a * b 
+var division = a / b 
+var módulus = a % b 
+var minusA = -a 
+
+println(sum) // 15
+println(subtract) // 9
+println(multiplication) // 36
+println(division) // 4
+println(módulus) // Resto da divisão: 0
+println(minusA) // -12
+~~~
+
+### 1.8.3 Compostos (+=, -=, *=, /=, %=, ++, --)
+- são junções dos operadores aritméticos com o operador de atribuição.
+- efetuam a operação e atribuem o valor na variável ao mesmo tempo.
+
+~~~kotlin
+var a = 2
+var b = 3
+var newValue = 5
+
+newValue += a // 7
+newValue -= b // 4
+newValue *= a // 8
+newValue /= a // 4
+newValue %= b // Resto da divisão: 1
+
+newValue++ // incrementando 1
+println(newValue) 
+
+newValue-- // decrementando 1
+println(newValue)
+~~~
+
+### 1.8.4 Operadores lógicos (&&, ||, !)
+- executam operações lógicas, ou seja, sempre retornam verdadeiro ou falso.
+
+~~~kotlin
+var yes = true
+var no = false
+
+println(yes && no) //false
+println(yes || no) //true
+println(!yes) //false
+~~~
+
+### 1.8.5 Operadores de comparação (>, <, >=, <=, ==, !=)
+- utilizados quando se pretende comparar valores e possuir retorno de verdadeiro ou falso.
+
+~~~kotlin
+var a = 12
+var b = 3
+var c = 7
+var d = 3
+
+println(a > b) // true
+println(a < b) // false
+println(b >= d) // true
+println(a <= c) // false
+println(b == d) // true
+println(b != d) // false
+~~~
+
+### 1.8.6 Estrutura de decisão em mesma linha
+- operador ternário. 
+- com essa sintaxe, é possível avaliar uma condição e atribuir um valor,caso a condição seja verdadeira, e outro valor, caso seja falsa.
+
+~~~kotlin
+var grade = 7.5
+var result = if (grade > 7.0) "aprovado" else "reprovado"
+println(result) // aprovado
+~~~
+
+### 1.8.7 Coalescência nula (?:)
+- em Kotlin, o operador "?:" permite decidir pelo uso de uma atribuição de redundância, caso a variável analisada seja nula.
+
+~~~kotlin
+var age: Int? = null
+var myAge = age ?: 0 // 0
+println(myAge)
+
+age = 25
+var newAge = age ?: 0 // 25
+println(newAge)
+~~~
+
+### 1.8.8 Closed Range(..) e Half Closed Range (until)
+
+
+
+
 
 
 

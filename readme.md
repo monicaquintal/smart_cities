@@ -28,7 +28,7 @@
 <summary>Trilha Android</summary>
 <br>
 
-- Cap 2A - Introdução ao Kotlin
+- [Cap 2A - Introdução ao Kotlin](./fase01/trilha-android/capitulo2a.md)
 - Cap 3A - A casa do Android
 - Cap 4A - Introdução ao Jetpack Compose
 - Cap 5A - Layouts e componentes básicos no Jetpack Compose
