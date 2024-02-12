@@ -134,7 +134,7 @@
 
 ### o) Quais projetos são recorrentes no Startup One? Quais temas devemos evitar para nos diferenciar?
 - geralmente, os temas mais recorrentes do Startup One são relacionados ao nosso cotidiano, como: casamento, pet, guincho, baladas, restaurantes, academia, estacionamento, etc. 
-- para que se diferencie no Startup One, busque trabalhar com temas que transcendam esse senso comum e que gerem um grau de transformação ainda maior, como as áreas e temas indicados pela [YCombinator](https://www.ycombinator.com/rfs/), uma das maiores aceleradoras de Startups, do Vale do Silício.
+- para que se diferencie no Startup One, busque trabalhar com temas que transcendam esse senso comum e que gerem um grau de transformação ainda maior, como as áreas e temas indicados pela [Y Combinator](https://www.ycombinator.com/rfs/), uma das maiores aceleradoras de Startups, do Vale do Silício.
 
 --- 
 

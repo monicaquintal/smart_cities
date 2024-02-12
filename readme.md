@@ -22,12 +22,11 @@
 [Capítulo 02: Cidades inteligentes.](./fase01/capitulo02.md)<br>
 
 </details>
-<br>
-
 <h3>Trilhas</h3>
 
 <details>
 <summary>Trilha Android</summary>
+<br>
 
 - Cap 2A - Introdução ao Kotlin
 - Cap 3A - A casa do Android
@@ -43,10 +42,9 @@
 - Cap 13A - Animação e Multimídia
 
 </details>
-<br>
-
 <details>
 <summary>Trilha IOS</summary>
+<br>
 
 - Cap 2B - A hora da maçã 
 - Cap 3B - Voe com Swift
