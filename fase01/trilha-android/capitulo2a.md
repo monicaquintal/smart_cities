@@ -1219,16 +1219,373 @@ fun main(args: Array<String>) {
 
 ## 2.5 Generics
 
+- no exemplo acima, na sintaxe do método reduce, há um tipo que não conhecemos, o tipo "it"; ele não é um tipo válido ou existente na linguagem, mas foi criado na assinatura desse método e serve para representar um tipo genérico, ou seja, uma indicação de que qualquer tipo pode ser utilizado naquele parâmetro. 
+- o método exige que o mesmo tipo utilizado no parâmetro “it” seja usado dentro da closure e seja o tipo de retorno da função. 
+- esse tipo foi definido logo após o nome do método (reduce&lt;it&gt;) e isso indica que, nesse método, será usado um tipo chamado “it”, que pode ser representado por qualquer tipo existente ou criado por você.
 
+> `Generics` é um recurso poderoso, pois com ele não ficamos limitados a um tipo específico quando são criados métodos ou classes.
 
+- exemplo: imagine que o gerente do projeto pediu para ser criada uma função que receba dois números inteiros e retorne os mesmos dois números, mas com as posições trocadas. Passadas duas semanas, ele pede para criarmos a mesma função, mas agora temos de trocar duas Strings. - 
+- nesse caso, podemos criar uma única função com o recurso Generics, como no exemplo abaixo.
 
+~~~kotlin
+fun main() {
 
+  // Função para trocar números inteiros
+  fun swapInt(num1: Int, num2: Int): Pair<Int, Int> {
+    return Pair(num2, num1)
+  }
 
+  // Função para trocar String
+  fun swapString(string1: String, string2: String): Pair<String, String> {
+    return Pair(string2, string1)
+  }
+  
+  // Resultado
+  println(swapInt(4,400))
+  // println(swapInt("TEST1", "TEST2")) //ERRO
+  println(swapString("TEST1","TEST2")) 
+  // Função para trocar qualquer elemento
+  fun<T>swapAnything(element1: T, element2: T): Pair<T, T> {
+    return Pair(element2, element1)
+  }
+  
+	println(swapAnything(4, 400)) //(400, 4)
+	println(swapAnything("Test1", "Test2")) //(Test2, Test1)
+	println(swapAnything(20.5, 32.5)) // (32.5, 20.5)      
+  
+}
+~~~
 
+## 2.6 Classes
 
+### 2.6.1 Definição e construção
 
+- características:
+  - definem propriedades para armazenar valores.
+  - definem métodos para fornecer funcionalidades.
+  - definem inicializadores para configurar seu estado inicial.
+  - podem ser estendidas para expandir suas funcionalidades, além das presentes em suas implementações.
+  - trabalham com herança, o que permite a uma classe herdar as características de outra.
+  - type casting, que lhe permite checar e interpretar uma classe como sendo outra.
+- para criar uma classe, deve ser utilizada a `palavra reservada class`, seguida do nome da classe (iniciando em maiúsculo) e sua implementação entre chaves ({ }).
 
+~~~kotlin
+class Person constructor(var name: String, var isMale: Boolean, var age: Int = 0) {
 
+  // Métodos de classe
+  fun speak(sentence: String) {
+    if (age < 3) {
+      println("gugu dada")
+    } else {
+      println(sentence)
+    }
+  }
+
+  fun introduce() = println("\nOlá, meu nome é $name e tenho $age anos de idade.")
+}
+
+fun main(args: Array<String>) {
+
+  // Instanciando a classe Person
+  var pac = Person("Pedro Alvares Cabral", true)
+
+  // Impressão dos valores antes de alterar a idade
+  pac.introduce()
+
+  // Alterando uma propriedade de pac
+  pac.age = 45
+
+  // Impressão dos valores depois de alterar a idade
+  pac.introduce()
+
+  // Utilizando o método speak
+  pac.speak("Treinamento Kotlin")
+}
+~~~
+
+- a classe Person representa uma pessoa e possui as propriedades name, isMale e age, que armazenam o nome, o sexo (se for true, é masculino) e a idade. 
+- importante:
+  - em uma classe, as propriedades que armazenam um conteúdo também são chamadas de `propriedades armazenadas`. 
+  - toda classe necessita de um `método construtor` (ou método inicializador) para criar uma instância daquela classe (também chamada de objeto).
+    - o método construtor cria uma instância daquela classe e tem por obrigação alimentar qualquer propriedade que não tenha sido inicializada.
+    - no exemplo acima,a propriedade age é a única que foi definida e já inicializada com um valor (0). As demais (name e isMale) precisam ser inicializadas e cabe ao método construtor efetuar essa tarefa, por isso solicita dois parâmetros, name e isMale, que serão repassados às respectivas propriedades. 
+    - vale ressaltar que o nome dos parâmetros não precisa,necessariamente, ser o mesmo.
+  - dentro de classes, as funções passam a ser chamadas de métodos, e as variáveis são chamadas de propriedades.
+    - a classe Person possui dois métodos: introduce(), que serve para retornar à apresentação da pessoa, e speak(sentence: String), que faz com que a pessoa fale algo. 
+    - para chamarmos o método construtor, usamos apenas o nome da classe, passando os valores dos parâmetros do método.
+
+### 2.6.2 Propriedades computadas
+- há um recurso em Kotlin que permite ter uma propriedade que não armazena nenhum valor, apenas utiliza e trabalha um valor existente, chamado de `propriedades computadas`.
+
+~~~kotlin
+class Person {
+  // .....
+
+// Propriedade computada
+val gender: String
+  get() {
+  if (isMale) {
+    return "masculino"
+  } else {
+    return "feminino"
+  }
+}
+
+  //......
+}
+~~~
+
+- agora, caso deseje imprimir o sexo da pessoa, pode-se utilizar gender em vez de isMale, pois fica mais fácil e legível para o usuário visualizar o sexo como “masculino” e “feminino” do que como true e false.
+
+### 2.6.3 Propriedades/métodos de classe
+
+- todas as propriedades criadas na classe Person são chamadas de propriedades de instância, o que significa que seu uso só é possível por meio de uma instância da classe (por meio de um objeto). 
+- podemos criar propriedades que não necessitam de uma instância para  serem utilizadas e que podem ser acessadas diretamente na classe, chamadas de `propriedades de classe`.
+- na classe Person, será criada uma propriedade de classe que retorna a classe de animal da qual uma pessoa faz parte (mamífero). Como essa é uma informação referente à própria classe em si, ou seja, toda pessoa é um mamífero, deverá ser criada como propriedade de classe, sem a necessidade de criarmos uma instância.
+- propriedades de classe são criadas utilizando as `palavras reservadas companion object`, e costumam ser chamadas também de propriedades estáticas.
+  - uma propriedade estática mantém seu valor, se alterado ao longo do código, o que a torna útil em determinados cenários. 
+  - além de propriedades de classe, também pode haver métodos de classe, que podem ser utilizados sem a necessidade de uma instância.
+
+~~~kotlin
+class Person constructor(var name: String, var isMale: Boolean, var age: Int = 0) {
+  
+  //Métodos de classe
+  fun speak(sentence: String) {
+    if (age < 3) {
+      println("gugu dada")
+    } else {
+      println(sentence)
+    }
+  }
+  
+  fun introduce() = println("\nOlá, meu nome é $name e tenho $age anos de idade.")
+  
+  //Propriedade computada
+  val gender: String
+    get() {
+    if (isMale) {
+      return "masculino"
+    } else {
+      return "feminino"
+    }
+  }
+  
+  // palavras reservadas dentro da classe
+  // que habilitam propriedades e métodos
+  // que podem ser acessados diretamente.
+  companion object {
+
+    // Propriedade de classe (estática)
+    var animalClass: String = "mamífero"
+
+    // Método de classe
+    fun getInfo() : String {
+      return "Pessoa: ${Person.animalClass} que possui nome, sexo e idade"
+    }
+  }
+}
+
+fun main(args: Array<String>) {
+
+  // Instanciando a classe Person
+  var pac = Person("Pedro Alvares Cabral", true)
+
+  // Impressão dos valores antes de alterar a idade
+  pac.introduce()
+
+  // Alterando uma propriedade de pac
+  pac.age = 45
+
+  // Impressão dos valores depois de alterar a idade
+  pac.introduce()
+
+  // Utilizando o método speak
+  pac.speak("Treinamento Kotlin")
+
+  println(pac.gender)
+
+  println(Person.animalClass) // mamífero
+
+  println(Person.getInfo())
+  // Pessoa: mamífero que possui nome, sexo e idade
+}
+~~~
+
+- um método ou uma propriedade de classe são utilizados por meio da própria classe em si, não da instância. É por isso que necessita chamá-lo na própria classe. Até mesmo internamente (como no caso do método getInfo()), é necessário referenciá-lo por meio da classe.
+
+### 2.6.4 Herança
+- classes podem herdar as características de outra classe, que, nesse caso, chamamos de classe mãe ou super.
+- em Kotlin, para definirmos que uma classe herda de outra, é utilizado o `sinal : (dois-pontos)` após o seu nome, seguido da classe da qual herdará. 
+  - caso a classe filha implemente uma nova propriedade e essa não tenha nenhum valor associado durante sua definição, deve-se criar um construtor, que terá o papel de alimentar tanto esta quanto todas as propriedades não inicializadas da classe mãe. 
+  - deve-se, primeiro, inicializar as propriedades da classe filha para depois inicializar as propriedades da classe mãe, e essa etapa é realizada chamando o construtor da classe super usando a `palavra reservada super`.
+  - a próxima etapa é construir uma classe chamada Student, que representará um estudante e, como todo estudante é uma pessoa, será criada herdando da classe Person. O estudanteem questão possui uma propriedade a mais, o rm, que, em função disso,necessitará de um construtor próprio.
+
+~~~kotlin
+open class Person constructor(var name: String, var isMale: Boolean, var age: Int = 0) {
+
+  // Métodos de classe
+  fun speak(sentence: String) {
+    if (age < 3) {
+      println("gugu dada")
+    } else {
+      println(sentence)
+    }
+  }
+
+  fun introduce() = println("\nOlá, meu nome é $name e tenho $age anos de idade.")
+
+  // Propriedade computada
+  val gender: String
+    get() {
+    if (isMale) {
+      return "masculino"
+    } else {
+      return "feminino"
+    }
+  }
+
+  // palavras reservadas dentro da classe
+  // que habilitam propriedades e métodos
+  // que podem ser acessados diretamente.
+  companion object {
+
+    // Propriedade de classe (estática)
+    var animalClass: String = "mamífero"
+
+    // Método de classe
+    fun getInfo() : String {
+      return "Pessoa: ${Person.animalClass} que possui nome, sexo e idade"
+    }
+  }
+}
+
+// HERANÇA
+class Student : Person {
+  constructor (name: String, isMale: Boolean, age: Int = 0, rm: String) : super(name,isMale,age) {
+  }
+}
+
+fun main(args: Array<String>) {
+
+  // Instanciando a classe Person
+  var pac = Person("Pedro Alvares Cabral", true)
+
+  // Impressão dos valores antes de alterar a idade
+  pac.introduce()
+
+  // Alterando uma propriedade de pac
+  pac.age = 45
+
+  // Impressão dos valores depois de alterar a idade
+  pac.introduce()
+
+  // Utilizando o método speak
+  pac.speak("Treinamento Kotlin")
+
+  println(pac.gender)
+
+  println(Person.animalClass) // mamífero
+
+  println(Person.getInfo())
+  // Pessoa: mamífero que possui nome, sexo e idade
+
+  var student = Student("Pedrinho Cabral", false, 10,"97663")
+  student.introduce();
+}
+~~~
+
+- o método construtor de Student precisa solicitar todas as informações para criar não só um Student, mas também um Person, cujo construtor é chamado pelo uso de super, que nos dá acesso direto à classe mãe.
+
+### 2.6.5 Sobrescrita
+- classes filhas podem modificar propriedades ou métodos das classes mãe utilizando uma técnica chamada sobrescrita (override).
+- em Kotlin, utilizar a `palavra reservada override` seguida da nova implementação do método ou propriedade que será modificado.
+- com essa técnica, uma classe não precisa, necessariamente, executar os métodos ou propriedades computadas da mesma forma que a sua classe mãe executa.
+- a modificação proposta para o método introduce() faz com que agora,ele, além de retornar à apresentação do estudante pelo seu nome, também informe o seu RM, e faremos uso do próprio método introduce() da classe mãe para recuperar essa informação inicial.
+
+~~~kotlin
+open class Person constructor(var name: String, var isMale: Boolean, var age: Int = 0) {
+  
+  // Métodos de classe
+  fun speak(sentence: String) {
+    if (age < 3) {
+      println("gugu dada")
+    } else {
+      println(sentence)
+    }
+  }
+
+  open fun introduce() = println("\nOlá, meu nome é $name e tenho $age anos de idade.")
+
+  // Propriedade computada
+  val gender: String
+    get() {
+    if (isMale) {
+      return "masculino"
+    } else {
+      return "feminino"
+    }
+  }
+
+  // palavras reservadas dentro da classe
+  // que habilitam propriedades e métodos
+  // que podem ser acessados diretamente.
+  companion object {
+    //Propriedade de classe (estática)
+    var animalClass: String = "mamífero"
+
+    // Método de classe
+    fun getInfo() : String {
+      return "Pessoa: ${Person.animalClass} que possui nome, sexo e idade"
+    }
+  }
+}
+  
+// HERANÇA
+class Student : Person {
+
+  // propriedade local da classe Student
+  var rm = String()
+
+  constructor (name: String, isMale: Boolean, age: Int = 0, rm: String) : super(name, isMale, age) {
+    // Atribuindo o valor na propriedade local da classe Student
+    this.rm = rm
+  }
+
+  override fun introduce(): Unit {
+    super.introduce()
+    // Acessando a informação da propriedade local da classe Student
+    println("meu RM nesta escola é $rm")
+  }
+}
+
+fun main(args: Array<String>) {
+  // Instanciando a classe Person
+  var pac = Person("Pedro Alvares Cabral", true)
+
+  // Impressão dos valores antes de alterar a idade
+  pac.introduce()
+
+  // Alterando uma propriedade de pac
+  pac.age = 45
+
+  // Impressão dos valores depois de alterar a idade
+  pac.introduce()
+
+  // Utilizando o método speak
+  pac.speak("Treinamento Kotlin")
+
+  println(pac.gender)
+
+  println(Person.animalClass) //mamífero
+
+  println(Person.getInfo())
+  // Pessoa: mamífero que possui nome, sexo e idade
+
+  var student = Student("Pedro Júnior ", false, 10,"97663")
+  student.introduce();
+}
+~~~
 
 --- 
 
