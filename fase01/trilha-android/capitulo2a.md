@@ -759,7 +759,470 @@ var newAge = age ?: 0 // 25
 println(newAge)
 ~~~
 
-### 1.8.8 Closed Range(..) e Half Closed Range (until)
+### 1.8.8 Closed Range (..) e Half Closed Range (until)
+- estes operadores criamum intervalo de valores. 
+  - `Closed Range` utiliza (..) para criar um intervalo aberto, indicando o valor inicial e o valor final. 
+  - `Half Closed Range` utiliza a palavra reservada (until) para criar um intervalo entre o valor inicial e o valor imediatamente anterior ao valor final (intervalo aberto no início e fechado ao final). 
+
+~~~kotlin
+println("\nClosed Range ..")
+var numbers = 1..10
+for (number in numbers) {
+  println(number) // Imprime de 1 a 10
+}
+
+println("\nHalf Closed Range (until)")
+var newNumbers = (1 until 10)
+for (number in newNumbers) {
+  println(number) // Imprime de 1 a 9
+}
+~~~
+
+## 1.9 Estruturas condicionais e de repetição
+
+- toda linguagem precisa de uma estrutura na qual se pode tomar uma decisão e agir de acordo com ela, ou seja, definir o fluxo do código com base no resultado de uma análise. 
+- em Kotlin, a mais utilizadas é a `estrutura if else`. 
+- outro recurso existente em toda a linguagem é a possibilidade de executarmos o mesmo trecho de código o número de vezes que for necessário, seja controlado por um intervalo específico ou até que uma condição seja alcançada.
+
+### 1.9.1 If – else – else if
+- para uma tomada de decisão, caso certa condição seja verdadeira, e outra, caso seja falsa, faz-se uso da estrutura if – else – else if.
+
+~~~kotlin
+var number = 11
+if (number % 2 == 0) {
+  println("Ele é par")
+} else {
+  println("Ele é ímpar")
+}
+// Resultado: "Ele é ímpar"
+
+var temperature = 18
+var climate = ""
+if (temperature <= 0) {
+  climate = "Muito frio"
+} else if (temperature < 14) {
+  climate = "Frio"
+} else if (temperature < 21) {
+  climate = "Clima agradável"
+} else if (temperature < 30) {
+  climate = "Um pouco quente"
+} else {
+  climate = "Muuuito quente"
+}
+println("Temperatura: $temperature graus \nStatus: $climate")
+// Resultado:
+// Temperatura: 18 graus 
+// Status: Clima agradável
+~~~
+
+### 1.9.2 When
+- em situações em que precisamos fazer uso de vários else if, a estrutura `when` é mais adequada, pois foi criada especificamente para validar uma série de cenários possíveis para uma variável.
+- a palavra reservada when tem correlação com a palavra switch utilizada em outras linguagens de programação.
+- em Kotlin, o when precisa ser exaurido, ou seja, deve contemplar todos os possíveis cenários para aquela variável que está sendo validada. 
+  - porém, em situações nas quais o cenário é amplo, faz-se o uso da cláusula else (default em outras linguagens), que é o cenário escolhido quando nenhum dos outros é verdadeiro!
+
+~~~kotlin
+var number = 7
+when (number % 2) {
+  0 -> 
+  println("$number é par")
+  else -> 
+  println("$number é ímpar")
+}
+
+// Exemplo com vários cenários no mesmo case
+var letter = "z"
+when (letter) {
+  "a", "e", "i", "o", "u" ->
+  println("vogal")
+  else ->
+  println("consoante")
+}
+
+// Exemplo com range de letras
+when (letter) {
+  in "a".."f" ->
+  println("Você está na turma 1")
+  in "g".."l" ->
+  println("Você está na turma 2")
+  in "m".."r" ->
+  println("Você está na turma 3")
+  else ->
+  println("Você está na turma 4")
+}
+
+// Range de números
+var speed = 33
+when (speed) {
+  in 0 until 20 ->
+  println("Primeira marcha")
+  in 20 until 40 ->
+  println("Segunda marcha")
+  in 40 until 50 ->
+  println("Terceira marcha")
+  in 50 until 90 ->
+  println("Quarta marcha")
+  else ->
+  println("Quinta marcha")
+}
+~~~
+
+### 1.9.3 While / do while
+- essa estrutura de repetição é utilizada quando se deseja que certo trecho de código seja executado enquanto (`while`) uma condição seja verdadeira, ou seja, o laço será encerradono momento que a condição for falsa.
+- a estrutura `do while` é semelhante, porém sempre executa o código uma vez antes de validar a condição.
+
+~~~kotlin
+// while
+var life = 10
+while (life > 0) {
+  println("O jogador está com $life vidas")
+  life = life - 1
+}
+
+println("\n")
+ 
+// do while
+var tries = 0
+var diceNumber = 0
+do {
+  tries += 1 
+  diceNumber = ((Math.random() * 6) + 1).toInt()
+  println("Tentativa:$tries <-> Número Randomizado: $diceNumber")
+} while (diceNumber != 6)
+println("\nVocê tirou 6 após $tries tentativas")
+~~~
+
+### 1.9.4 For in
+- é a estrutura de repetição mais utilizada em Kotlin.
+- permite iterar (percorrer) uma coleção e recuperar todos os seus valores, o que é ideal quando necessitamos percorrer um array ou uma coleção, por exemplo. 
+
+~~~kotlin
+// Percorrendo um Array
+var students = arrayOf(
+  "João Francisco",
+  "Pedro Henrique",
+  "Gustavo Oliveira",
+  "Janaina Santos",
+  "Francisco José"
+) 
+for (student in students) {
+  println("O aluno $student veio na aula de hoje!")
+}
+
+// Percorrendo uma sequência (range)
+for (day in 1..30) {
+  println("Estou no dia $day")
+}
+
+// Note abaixo que uma String também é uma coleção
+var name = "FIAP"
+for (letter in name) {
+  println(letter)
+}
+
+// Vejamos como percorrer uma coleção,
+// imprimindo sua chave e valor. Nesta coleção
+// a chave é String e o valor é Int
+var people = mapOf(
+  (25 to "Paulo"),
+  (18 to "Renata"),
+  (33 to "Kleber"),
+  (51 to "Roberto"),
+  (36 to "Carol")
+)
+// A variável person, abaixo, recebe a chave
+// (key) e o valor (value) de cada elemento da coleção
+for (person in people) {
+  println(" ${person.key} => ${person.value}")
+}
+// Podemos quebrar a execução de um laço usando
+// o comando break
+var grades = arrayOf(10.0, 9.0, 8.5, 7.0, 9.5, 5.0, 22.0, 6.5, 10.0)
+for (grade in grades) {
+  println(grade)
+  if (grade < 0.0 || grade > 10.0) {
+    println("Nota inválida")
+    break
+  }
+}
+~~~
+
+## 1.10 Enumeradores
+
+- enumeradores (ou enum) são tipos criados pelo usuário.
+- servem para definir um tipo comum para um conjunto fechado de valores.
+- são utilizados para cenários os quais devem armazenar uma informação baseada em um conjunto limitado de possibilidades.
+- `palavra reservada enum` em conjunto com a palavra class, seguida do nome do enumerados (com inicial maiúscula) e, entre chaves, definimos todos os valores possíveis.
+- Enums são muito utilizados com When, pois geralmente precisamos verificar qual valor ele possui, para tomarmos uma decisão.
+- no exemplo abaixo, é criado um enum que serve para definir uma bússola, com quatro possíveis valores (norte, sul, leste e oeste).
+
+~~~kotlin
+//Definindo um enum fora da função main
+enum class Compass {
+  north,
+  east,
+  west,
+  south
+}
+fun main(args: Array<String>) {
+  // Criando uma variável do tipo Compass
+  var direction = Compass.north
+  // Como Kotlin trabalha com inferência de tipo, podemos usar
+  // somente .valor, caso o tipo seja definido explicitamente
+  var direction2: Compass = Compass.south
+  println("Minha direção é $direction")
+  // Minha direção é north
+
+  // Enums são muito usados com switch para análise do valor
+  when (direction) {
+    Compass.north -> 
+      println("Estamos indo para o norte")
+    Compass.south ->
+      println("Estamos indo para o sul")
+    Compass.east ->
+      println("Estamos indo para o leste")
+    Compass.west ->
+      println("Estamos indo para o oeste")
+  }
+  // Estamos indo para o norte
+
+// Outra forma de apresentar informações de um Enum
+  Compass.values().forEach {
+    println(it)
+  }
+}
+~~~
+
+### 1.10.1 Valores padrões
+- em Kotlin, é possível definir o tipo de um enum e, além disso, atribuir um valor padrão a cada um dos casos.
+
+~~~kotlin
+// Enum que define as posições das poltronas em um avião
+// Veja que é possível atribuir um valor padrão a cada uma delas
+enum class SeatPosition(var seat: String) {
+  aisle("corredor"),
+  middle("meio"),
+  window("janela")
+}
+
+// Enum de Int com valores padrões
+enum class Month(var m: Int) {
+  january(1), february(2), march(3), april(4), may(5), june(6), 
+  july(7), august(8), september(9), october(10), november(11), december(12)
+}
+
+fun main(args: Array<String>) {
+	var passengerSeat = SeatPosition.window
+	// Para imprimir o valor padrão, usamos o nome utilizado na construção do enum. Veja:
+	println(passengerSeat.seat) // janela
+	var currentMonth: Month = Month.june
+	println("Estamos no mês ${currentMonth.m} do ano")
+}
+~~~
+
+<div align="center">
+<h2>2. FUNÇÕES E CLOSURES</h2>
+</div>
+
+## 2.1 Funções
+
+- muitas vezes, ao longo do desenvolvimento de um app, nos deparamos com trechos de funcionalidades que precisam ser reutilizados ao longo do código. 
+- esses blocos de código podem ser criados por meio do uso de funções, que são trechos de comandos que executam operações definidas, podem receber valores (parâmetros) para trabalhar e podem retornar um resultado.
+
+## 2.2 Criando funções
+
+~~~kotlin
+// Sintaxe para criação de funções:
+fun main(args: Array<String>) {
+/*
+  fun nomeDaFuncao(parâmetro: Tipo) : TipoDeRetorno {
+    // Código
+    return TipoDeRetorno
+  }
+*/
+
+// Exemplo de uma função simples que não recebe
+// parâmetros e não retorna nada
+fun printlnHelloFormal() {
+  println("Hello!!!!")
+}
+printlnHelloFormal() // Hello!!!
+
+fun printlnHelloModoReduzido() = println("Hello!!!! Modo reduzido!")
+printlnHelloModoReduzido() // Hello!!!
+
+// Função que aceita parâmetro
+fun say(message: String) {
+  println(message)
+}
+say("Vamos criar funções em Kotlin")
+
+// Função que aceita mais de um parâmetro e que retorna algo
+fun sumNumbers(a: Int, b: Int) : Int {
+  return a + b
+}
+var result = sumNumbers(10,15)
+println(result) // 15
+}
+~~~
+
+- exemplo de função para calcular os 10 primeiros números da sequência de Fibonacci:
+
+~~~kotlin
+fun main(args: Array<String>) {
+
+  // Função
+  fun sequenciaFibonacci() {
+
+    // Declaração de variáveis
+    var number1 = 0
+    var number2 = 1
+
+    // Loop controlado de 1 até 10
+    for (sequence in 1..10) {
+
+      // Impressão do conteúdo da variável number1
+      println("$sequence -> $number1")
+
+      // Soma dos 2 valores das variáveis
+      var sum = number1 + number2
+
+      // Troca os valores entre as variáveis
+      number1 = number2
+      number2 = sum
+    }
+  }
+
+  // Executar a função
+  sequenciaFibonacci()
+}
+~~~
+
+## 2.3 Single-Expression functions
+
+- é possível desenvolver, na linguagem Kotlin, funções que encapsulam outras funções.
+
+~~~kotlin
+fun main(args: Array<String>) {
+  fun double(x: Int): Int = x * 2
+  println(double(8))
+  fun triple(x: Int) = x * 3
+  println(triple(10)) 
+}
+~~~
+
+## 2.4 Map, Filter e Reduce
+
+- muitas vezes, é necessário efetuar operações em Arrays ou Coleções em que é preciso percorrer a coleção para extrair determinados elementos ou modificá-los. 
+- além do for in, existem vários métodos que utilizam closures para esses fins.
+
+~~~kotlin
+fun main(args: Array<String>) {
+  
+  // elaborando um coleção do tipo List com números entre 1 a 10
+  val numbers = listOf(1,2,3,4,5,6,7,8,9,10)
+  println(numbers)
+
+  // "Filtrando" (filter) somente os números pares da coleção numbers
+  // a variável temporária chamada "it" utilizada na operação
+  var evenNumbers = numbers.filter { it%2 == 0 }
+  println("Listagem de números Pares: $evenNumbers")
+
+  // "Filtrando" (filter) somente os números ímpares da coleção numbers
+  // a variável temporária chamada "it" utilizada na operação
+  var oddNumbers = numbers.filter { it%2 != 0 }
+  println("Listagem de números Ímpares: $oddNumbers")
+
+  // A utilização do Map executa o processamento individual
+  // de cada elemento dentro da coleção.
+  var multiplyNumbers = numbers.map { it * it }
+  println("Multiplicação: $multiplyNumbers")
+
+  // Executa o processamento da coleção de acordo
+  // com os parâmetros enviados.
+  var sumNumbers = numbers.reduce {
+    // Captura o valor anterior ou atual (acc) e o valor atual(it)
+    acc, it ->
+    // Apresenta as informações
+    println("acc = $acc, it = $it")
+    // Executa o processamento das informações
+    acc + it }
+
+  println("Resultado da Somatório: $sumNumbers") // Total 1+2+3+4+5+6+7+8+9+10=55
+
+}
+~~~
+
+- o map é um método presente em coleções que percorre a coleção e executa uma closure em cada um de seus elementos, devolvendo a nova coleção gerada.
+
+~~~kotlin
+fun main(args: Array<String>) {
+
+  var names = arrayOf("João", "Paulo", "Henrique", "Ana", "Beatriz", "Carla", "Caroline")
+
+  // Aplicando map em names
+  var uppercasedNames = names.map({it.toUpperCase()})
+  println(uppercasedNames)
+  
+  // ["JOÃO", "PAULO", "HENRIQUE", "ANA", "BEATRIZ", "CARLA", "CAROLINE"]
+
+}
+~~~
+
+- foi criada uma closure que retorna a versão em maiúsculas (usando o ***método de String toUpperCase()***) dos nomes. 
+- o "it", nesse caso, refere-seao parâmetro da closure que representa cada um dos nomes da coleção.
+
+- no próximo exemplo, o desejo é filtrar a coleção e gerar um novo Array contendo apenas os nomes compostos por cinco letras ou menos, ou seja, agora será criado um novo Array contendo parte dos elementos do Array principal. 
+- quando existem casos como esse, deve ser utilizado o método filter,que filtra uma coleção, devolvendo outra com os elementos que foram filtrados.
+
+~~~kotlin
+// Aplicando filter em names
+var filteredNames = names.filter({it.length < 6})
+println(filteredNames)
+// ["João", "Paulo", "Ana", "Carla"]
+~~~
+
+- o método filter solicita que seja passada a função que servirá para filtrar os elementos. 
+- essa função deve conter a lógica que será implementada em cada um dos elementos do Array e, caso essa lógica retorne true, aquele elemento deverá fazer parte do novo Array. 
+- nesse exemplo, foi criada uma closure que verifica se a contagem de caracteres de cada nome é menor que seis, ou seja, se possui cincoou menos letras.
+
+- no último exemplo, será criado um Array de Double que representa algumas movimentações realizadas em uma conta-corrente (entrada e saída de valores, sendo que valores positivos representam entrada, enquanto negativos indicam saída). 
+- existe um método em Kotlin que está presente em todas as coleções e que serve para combinar todos os valores presentes naquela coleção, segundo uma lógica estipulada por nós. 
+- nesse exemplo, a combinação deverá ser feita por meio da soma de todos esses valores, porém é permitido implementar a lógica que desejar.
+- vale ressaltar que, apesar de o exemplo utilizar o Double, é possível utilizar Arrays de qualquer tipo, alterando a lógica. 
+- esse método é o `reduce`.
+
+~~~kotlin
+fun main(args: Array<String>) {
+
+  // Utilizando Reduce
+  var transactions = arrayOf<Double>
+  (500.0, -45.0, -70.0, -25.80, -321.72, 190.0, -35.15, -100.0)
+
+  var balance = transactions.reduce {
+
+    acc,it -> println("Saldo: " + String.format("%.2f", acc) + 
+                      " => Próximo Lançamento: " + String.format("%.2f", it))
+    (acc + it)
+  }
+
+  println("Seu saldo é R$ " + String.format("%.2f", balance))
+  // Seu saldo é R$ 92,33
+
+}
+~~~
+
+- o método reduce recebe dois parâmetros:
+  - acc: contém o valor inicial da operação.
+  - it: contém uma closure que receberá, a cada iteração, o resultado da operação e o elemento do Array. 
+- nesse exemplo, é definido que o valor inicial seria 0 e que, a cada iteração, o valor será somado com o elemento do Array, ou seja, na primeira iteração, teremos 0.0 + 500.0, na segunda, 500.0 + -45.0, na terceira, 455.0 + -70.0, e assim sucessivamente, até chegar ao último elemento do Array.
+
+## 2.5 Generics
+
+
+
+
+
 
 
 
