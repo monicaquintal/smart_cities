@@ -54,16 +54,27 @@
 
 ## 1.4 Criando um emulador (AVD)
 
+- para testar e verificar se o aplicativo está de acordo com o esperado,pode-se utilizar um dispositivo físico, configurando-o como desenvolvedor, ou criar um emulador que simule a configuração de um dispositivo físico.
+- para criar um emulador, é necessário executar o aplicativo Device Manager pelo caminho: Tools > DeviceManager, ou pelos atalhos localizados na barra de ferramentas.
+- no primeiro uso do Device Manager, nenhum emulador estará configurado.
+  - para criar um novo emulador, clique no botão "Create Virtual Device".
+  - na próxima página, o hardware desejado para criar o emulador deve ser selecionado; nessa primeira experiência, criar um emulador de ***Phone modelo Pixel 2***.
+  - na próxima tela deve ser selecionada a imagem (versão do sistema Android) que vamos utilizar. Nesse caso, utilizar a ***versão API 30 (R)***.
+  - na última página, inserir o nome do emulador e, caso pretenda alterar alguma configuração, selecionar a opção desejada, fazer a alteração e finalizar a criação do emulador.
+- depois de criar o emulador, ele aparecerá na lista de dispositivos. Para executar, selecionar o desejado e clicar no botão Run (botão verde triangular). Nessa tela, é possível alterar também as configurações de qualquer emulador. 
+- depois de executar o emulador, o progresso de configuração aparecerá na tela, fazendo algumas configurações necessárias.
+- também é possível alterar a forma de visualização do emulador clicando na engrenagem à direita e selecionando alguma das opções do menu View Mode.
 
+## 1.5 Executando apps no emulador e no dispositivo
 
-
-
-
-
-
-
-
-
+- para testar os apps desenvolvidos, há duas opções: criar um emulador ou executar o aplicativo direto em dispositivo físico. 
+- para realizar os testes, clicar no botão Run, na barra de ferramentas.
+  - ao lado do Run, há um combo que apresenta o valor ***app***, referente ao módulo app do projeto. 
+  - um projeto no Android Studio é ***composto de vários módulos*** (por exemplo, se for criado um projeto com suporte a Wear, ou até mesmo se for criado um teste Expresso, haverá a opção para executar o teste Expresso, a versão Wear e a versão Mobile do projeto).
+- ao clicar no botão Run, uma janela será aberta com a lista de dispositivos disponíveis para executar o projeto; selecionar o dispositivo e clicar no botão OK. O Android Studio vai compilar o projeto e executar no dispositivo selecionado se não houver erros.
+- ***para executar o projeto em device físico conectado via USB***, é necessário habilitar, nas configurações do aparelho, a opção Configurações > Segurança > Fontes desconhecidas e a opção Configurações > Opções do desenvolvedor > Depuração USB.
+  - a opção de desenvolvedor não aparece por padrão no Android 3.2 ou superior, para habilitá-la, é preciso entrar em Configurações > Sobre o telefone > Informações do software e clicar sete vezes em Número de compilação, ao fazer isso, uma mensagem vai aparecer informando que agora você é desenvolvedor e o menu Opções de desenvolvedor estará habilitado. 
+  - caso o computador não reconheça o dispositivo, verifique no site do fabricante se é necessária a instalação de algum driver; feito isso,siga os passos anteriores para executar o projeto!
 
 --- 
 
