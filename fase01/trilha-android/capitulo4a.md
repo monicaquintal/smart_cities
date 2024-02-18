@@ -197,6 +197,295 @@ override fun onCreate(savedInstanceState: Bundle?) {
 }
 ~~~
 
+- o método "setContent" é uma função que recebe como parâmetro um composable; é responsável por definir o conteúdo da IU, que neste caso é um composable.
+- o primeiro composable que é passado ao "setContent" é um composable responsável por definir o tema da nossa aplicação, ou seja, cores, fontes, dimensões etc. 
+- o `composable "MinhaIdadeTheme"` recebe como parâmetro outros composables, que por padrão no Android Studio começa por "Surface".
+- `Surface` é um container, ele é usado para envolver outros composables, como se fosse uma DIV do HTML; ele será o composable principal, que conterá todos os outros composables que definirão a IU. 
+  - no exemplo, o composable Surface está recebendo dois parâmetros, um que determina que ele deverá ocupar toda a tela do dispositivo e outro que define que ele terá uma cor de fundo padrão. Além do tamanho e cor, é possível modificar outros parâmetros do Surface
+
+~~~kotlin
+Surface(
+  modifier = Modifier.fillMaxSize(),
+  color = MaterialTheme.colorScheme.background
+)
+~~~
+
+- o composable Surface, por sua vez, recebe o `composable "Greeting"`, que é uma função e recebe um parâmetro do tipo String.
+
+~~~kotlin
+@Composable
+fun Greeting(name: String) {
+  // Código omitido
+}
+~~~
+
+> Por padrão, nomes de funções de composição são escritos com a inicial maiúscula, o que é importante para diferenciar funções de composição das funções regulares.
+
+## 2.2 Criação da primeira IU
+
+- o primeiro aplicativo consistirá em uma tela onde o usuário irá informar a sua idade utilizando 2 botões, um para incrementar a idade e outro para decrementar.
+
+<div align="center">
+<img src="../images/estrutura-iu-primeiro-app.png" width="60%">
+<em>Estrutura da IU "Minha idade".</em>
+</div>
+
+- para implementar a IU sugerida, abrir o arquivo "MainActivity.kt" do projeto e apagar algumas linhas, obtendo o código abaixo:
+
+~~~kotlin
+package br.com.fiap.minhaidade
+
+    import android.os.Bundle
+    import androidx.activity.ComponentActivity
+    import androidx.activity.compose.setContent
+    import androidx.compose.foundation.layout.fillMaxSize
+    import androidx.compose.material3.MaterialTheme
+    import androidx.compose.material3.Surface
+    import androidx.compose.ui.Modifier
+    import br.com.fiap.contador.ui.theme.ContadorTheme
+
+        class MainActivity : ComponentActivity() {
+            override fun onCreate(savedInstanceState: Bundle?) {
+            super.onCreate(savedInstanceState)
+            setContent {
+                MinhaIdadeTheme {
+                  Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+
+                }
+            }
+        }
+    }
+}
+~~~
+
+- escrever uma nova função de composição que incluirá todos os composables descritos.
+- para isso, no final do arquivo "MainActivity", logo após a chave de fechamento da classe, acrescentar o código:
+
+~~~kotlin
+@Composable
+    fun CounterScreen() {
+      Column() {
+        Text(text = "Qual a sua idade?")
+        Text(text = "Aperte os botões para informar a sua idade.")
+        Text(text = "21")
+        Row() {
+          Button(onClick = {}) {
+            Text(text = "-")
+          }
+          Button(onClick = {}) {
+            Text(text = "+")
+          }
+        }
+      }
+    }
+~~~ 
+
+- a função "CounterScreen" foi anotada com @Composable, o que é necessário para identificar a função como sendo uma função responsável por definir a aparência e o comportamento de um componente visual. Funções composable são os blocos de construção da IU.
+- na função "CounterScreen", inserimos uma Column que organizará o layout verticalmente. Dentro da Column há três Texts e seus textos, além de uma Row, que está posicionando 2 Buttons horizontalmente. 
+
+~~~kotlin
+package br.com.fiap.minhaidade
+
+    import android.os.Bundle
+    import androidx.activity.ComponentActivity
+    import androidx.activity.compose.setContent
+    import androidx.compose.foundation.layout.Column
+    import androidx.compose.foundation.layout.Row
+    import androidx.compose.foundation.layout.fillMaxSize
+    import androidx.compose.material3.Button
+    import androidx.compose.material3.MaterialTheme
+    import androidx.compose.material3.Surface
+    import androidx.compose.material3.Text
+    import androidx.compose.runtime.Composable
+    import androidx.compose.ui.Modifier
+    import androidx.compose.ui.tooling.preview.Preview
+    import br.com.fiap.contador.ui.theme.ContadorTheme
+
+    class MainActivity : ComponentActivity() {
+      override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+          MinhaIdadeTheme {
+            Surface(
+              modifier = Modifier.fillMaxSize(),
+              color = MaterialTheme.colorScheme.background
+            ) {
+            
+            }
+          }
+        }
+      }
+    }
+
+    @Composable
+    fun CounterScreen() {
+      Column() {
+        Text(text = "Qual a sua idade?")
+        Text(text = "Aperte os botões para informar a sua idade.")
+        Text(text = "21")
+        Row() {
+          Button(onClick = {}) {
+            Text(text = "-")
+          }
+          Button(onClick = {}) {
+            Text(text = "+")
+          }
+        }
+      }
+    }
+~~~
+
+- o aplicativo começa a ser executado pelo método "onCreate" da classe "MainActivity"; esse método faz uma chamada para o método "setContent", que define qual será o conteúdo da IU, que neste caso está sendo definido pela função de composição "CounterScreen".
+  - logo, no corpo do método setContent deve ocorrer uma chamada para a função CounterScreen. 
+  
+~~~kotlin
+class MainActivity : ComponentActivity() {
+        override fun onCreate(savedInstanceState: Bundle?) {
+          super.onCreate(savedInstanceState)
+          setContent {
+            MinhaIdadeTheme {
+              Surface(
+                modifier = Modifier.fillMaxSize(),
+                color = MaterialTheme.colorScheme.background
+              ) {
+                CounterScreen()
+              }
+            }
+          }
+        }
+      }
+~~~
+
+- para ver o resultado, executar o aplicativo em um emulador criado anteriormente. 
+- na barra de ferramentas do Android Studio, selecionar o emulador desejado e clicar em no botão "Run app", ou manter pressionada a tecla "Shift" enquanto pressiona uma vez a tecla F10.
+
+### Formatando e definindo o comportamento dos Componentes:
+
+### a) começar com o texto "Qual a sua idade", incluindo os parâmetros no composable Text responsável por renderizar este texto:
+
+~~~kotlin
+Text(
+        text = "Qual a sua idade?",
+        fontSize = 24.sp,
+        color = Color(0xFFAD1F4E),
+        fontWeight = FontWeight.Bold
+      )
+~~~
+
+- Text é o composable responsável por inserir texto na IU; é uma função qu pode receber diversos argumentos, como:
+  - text – fornece o texto que será exibido.
+  - fontSize – define o tamanho da fonte.
+  - color – cor do texto.
+  - fontWeight – define o estilo, como negrito e itálico.
+
+### b) formatando os outros composables:
+
+~~~kotlin
+@Composable
+    fun CounterScreen() {
+        Column() {
+            Text(
+            text = "Qual a sua idade?",
+            fontSize = 24.sp,
+            color = Color(0xFFAD1F4E),
+            fontWeight = FontWeight.Bold
+            )
+            Text(
+            text = "Aperte os botões para informar a sua idade.",
+            fontSize = 12.sp
+            )
+            Text(
+            text = "21",
+            fontSize = 48.sp,
+            fontWeight = FontWeight.Bold
+            )
+            Row() {
+            Button(
+                onClick = {},
+                modifier = Modifier.size(84.dp),
+                shape = RoundedCornerShape(8.dp),
+                colors = ButtonDefaults.buttonColors(Color(0xFFAD1F4E))
+            ) {
+                Text(text = "-", fontSize = 40.sp)
+            }
+            Button(
+                onClick = {},
+                modifier = Modifier.size(84.dp),
+                shape = RoundedCornerShape(8.dp),
+                colors = ButtonDefaults.buttonColors(Color(0xFFAD1F4E))
+            ) {
+                Text(text = "+", fontSize = 40.sp)
+            }
+        }
+    }
+}
+~~~
+
+- em relação aos botões, foram incluidos os parâmetros:
+  - `modifier = Modifier.size(84.dp)`: o parâmetro "modifier" é usado para aplicar modificações aos composables, como espaçamento, cor, tamanho, etc. Neste caso, o parâmetro modifier está alterando o tamanho do Button. Como informamos apenas uma dimensão o tamanho está sendo aplicado tanto ao comprimento quanto à altura.
+  - `shape = RoundedCornerShape(8.dp)`: o parâmetro "shape" modifica a forma do Button. "RoundedCornerShape" torna a forma com cantos arredondados, e definido o raio de curvatura para 8 dps. Outras formas: "RectangleShape", "CircleShape", etc.
+  - `colors = ButtonDefaults.buttonColors(Color(0xFFAD1F4E))`: modificamos a cor de preenchimento do botão. 
+
+### c) para ajustar o alinhamento, acrescentar os seguintes parâmetros à Column:
+
+~~~kotlin
+Column(
+      horizontalAlignment = Alignment.CenterHorizontally,
+      verticalArrangement = Arrangement.Center
+    ) {
+        // Código omitido
+    }
+~~~
+
+- o `parâmetro "horizontalAlignment"` define o alinhamento horizontal no interior da Column; neste caso, "Alignment.CenterHorizontally", que alinha o conteúdo de forma centralizada na horizontal.
+- o `parâmetro "verticalArrangement"` define a disposição vertical no interior da Column; "Arrangement.Center" posiciona o conteúdo no centro vertical da Column. 
+- essas duas configurações colocaram o conteúdo exatamente no centro da IU!
+
+### d) ajustando espaçamento entre texto e botões:
+
+- utilizar o composable "Spacer" antes e depois do texto "21". 
+
+~~~kotlin
+Spacer(modifier = Modifier.height(32.dp))
+Text(
+    text = "21",
+    fontSize = 48.sp,
+    fontWeight = FontWeight.Bold
+)
+Spacer(modifier = Modifier.height(32.dp))
+~~~ 
+
+### e) ajustando espaçamento ente botões:
+
+- entre os botões para incrementar ou decrementar a idade também há um espaço, utilizaremos o modificador "width" para que o espaçamento seja na horizontal. 
+
+~~~kotlin
+Row {
+  Button(
+    onClick = {},
+    modifier = Modifier.size(84.dp),
+    shape = RoundedCornerShape(8.dp),
+    colors = ButtonDefaults.buttonColors(Color(0xFFAD1F4E))
+  ) {
+    Text(text = "-", fontSize = 40.sp)
+  }
+  Spacer(modifier = Modifier.width(32.dp))
+  Button(
+    onClick = {},
+    modifier = Modifier.size(84.dp),
+    shape = RoundedCornerShape(8.dp),
+    colors = ButtonDefaults.buttonColors(Color(0xFFAD1F4E))
+  ) {
+    Text(text = "+", fontSize = 40.sp)
+  }
+}
+~~~
+
+## 2.3 Definindo o comportamento da nossa aplicação
+
 
 
 
