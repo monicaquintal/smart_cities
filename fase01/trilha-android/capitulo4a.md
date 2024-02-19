@@ -226,8 +226,8 @@ fun Greeting(name: String) {
 - o primeiro aplicativo consistirá em uma tela onde o usuário irá informar a sua idade utilizando 2 botões, um para incrementar a idade e outro para decrementar.
 
 <div align="center">
-<img src="../images/estrutura-iu-primeiro-app.png" width="60%">
-<em>Estrutura da IU "Minha idade".</em>
+<img src="../images/estrutura-iu-primeiro-app.png" width="60%"><br>
+<em>Estrutura da IU "Minha idade".</em><br>
 </div>
 
 - para implementar a IU sugerida, abrir o arquivo "MainActivity.kt" do projeto e apagar algumas linhas, obtendo o código abaixo:
@@ -485,6 +485,7 @@ Row {
 ~~~
 
 ## 2.3 Definindo o comportamento da nossa aplicação
+
 
 
 
