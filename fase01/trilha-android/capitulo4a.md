@@ -486,13 +486,152 @@ Row {
 
 ## 2.3 Definindo o comportamento da nossa aplicação
 
+- o objetivo da aplicação é permitir que o usuário indique a idade pressionando os botões "+" e "-", que irão incrementar ou decrementar o número exibido na caixa de texto. 
+- será necessário implementarmos os métodos "onClick" dos botões.
+- na primeira linha da função de composição "CounterScreen", criar a variável "idade":
 
+~~~kotlin
+@Composable
+  fun CounterScreen() {
+    var idade = 0
+    Column(
+      horizontalAlignment = Alignment.CenterHorizontally,
+      verticalArrangement = Arrangement.Center
+    )
+    ...
+  }
+~~~
 
+- alterar o valor do parâmetro "text" do composable "Text" que exibe a idade do usuário de "32" para "$idade":
 
+~~~kotlin
+@Composable
+    fun CounterScreen() {
 
+      var idade = 0
 
+    Column(
+      horizontalAlignment = Alignment.CenterHorizontally,
+      verticalArrangement = Arrangement.Center
+  ) {
+    Text(
+      text = "Qual a sua idade?",
+      fontSize = 24.sp,
+      color = Color(0xFFAD1F4E),
+      fontWeight = FontWeight.Bold
+    )
+    Text(
+      text = "Aperte os botões para informar a sua idade.",
+      fontSize = 12.sp
+    )
+    Spacer(modifier = Modifier.height(32.dp))
+    Text(
+      text = "$idade",
+      fontSize = 48.sp,
+      fontWeight = FontWeight.Bold
+    )
+    Spacer(modifier = Modifier.height(32.dp))
+    Row {
+      Button(
+        onClick = {},
+        modifier = Modifier.size(84.dp),
+        shape = RoundedCornerShape(8.dp),
+        colors = ButtonDefaults.buttonColors(Color(0xFFAD1F4E))
+      ) {
+        Text(text = "-", fontSize = 40.sp)
+      }
+      Spacer(modifier = Modifier.width(32.dp))
+      Button(
+        onClick = {},
+        modifier = Modifier.size(84.dp),
+        shape = RoundedCornerShape(8.dp),
+        colors = ButtonDefaults.buttonColors(Color(0xFFAD1F4E))
+      ) {
+        Text(text = "+", fontSize = 40.sp)
+      }
+    }
+  }
+}
+~~~
 
+- alterar o método "onClick" dos botões para que executem a tarefa de incrementar ou decrementar 1 à idade. 
 
+~~~kotlin
+Row {
+  Button(
+    onClick = { idade-- },
+    modifier = Modifier.size(84.dp),
+    shape = RoundedCornerShape(8.dp),
+    colors = ButtonDefaults.buttonColors(Color(0xFFAD1F4E))
+  ) {
+    Text(text = "-", fontSize = 40.sp)
+  }
+  Spacer(modifier = Modifier.width(32.dp))
+  Button(
+    onClick = { idade++ },
+    modifier = Modifier.size(84.dp),
+    shape = RoundedCornerShape(8.dp),
+    colors = ButtonDefaults.buttonColors(Color(0xFFAD1F4E))
+  ) {
+    Text(text = "+", fontSize = 40.sp)
+  }
+}
+~~~
+
+- ao executar o aplicativo, nada ocorre: o valor da idade continua sendo "0".
+
+## 2.4 Gerenciando o State da aplicação
+
+- o `state` é um dos principais fundamentos do Jetpack Compose: é ele quem vai orientar os composables a atualizarem a sua aparência com base nos dados que eles exibem.
+- em nosso aplicativo, o composable Text deve atualizar o seu valor, ou seja, a sua aparência, para refletir o seu estado atual, que é um valor diferente do que estava sendo exibido antes do clique.
+  - quem mantém o estado do Text é a variável "idade", pois é ela que guarda o valor que deve ser apresentado ao usuário. 
+  - sempre que "idade" mudar, o Text deve reagir a essa mudança e exibir o valor correto. 
+  - logo, a variável ***"idade" é uma variável de estado***. 
+- portanto, precisamos fazer um ajuste na declaração da variável "idade" para que o Jetpack Compose possa gerenciá-lo. 
+- alterar a declaração da variável "idade":
+
+~~~kotlin
+var idade = remember {
+  mutableStateOf(0)
+}
+~~~
+
+- a `função remember` é utilizada para criarmos as variáveis de estado juntamente com a `função mutableSateOf`, que torna a variável mutável e determina o valor inicial. 
+  - no caso da variável "idade", poderá ter seu valor alterado e é do tipo "Int", já que a inicializamos com "0".
+  - para acessar o valor em uma variável de estado utilizamos a função "value" da variável.
+
+~~~kotlin
+Row {
+  Button(
+    onClick = { idade.value-- },
+    modifier = Modifier.size(84.dp),
+    shape = RoundedCornerShape(8.dp),
+    colors = ButtonDefaults.buttonColors(Color(0xFFAD1F4E))
+  ) {
+    Text(text = "-", fontSize = 40.sp)
+  }
+  Spacer(modifier = Modifier.width(32.dp))
+  Button(
+    onClick = { idade.value++ },
+    modifier = Modifier.size(84.dp),
+    shape = RoundedCornerShape(8.dp),
+    colors = ButtonDefaults.buttonColors(Color(0xFFAD1F4E))
+  ) {
+    Text(text = "+", fontSize = 40.sp)
+  }
+}
+~~~
+
+<div align="center">
+
+## 3. [DESAFIO](./projects/Minhaidade/app/src/main/java/br/com/fiap/minhaidade/MainActivity.kt)
+</div>
+
+- para praticar o que você aprendeu neste capítulo, te desafio a implementar algumas funcionalidades extras em nosso aplicativo:
+  - 1. Adicione um texto abaixo dos botões que exiba uma mensagem informando se o usuário é maior ou menor de idade:
+    - se a idade apresentada for maior ou igual a 18 exiba a mensagem "Você é MAIOR de idade!", 
+    - caso contrário, exiba a mensagem "Você é MENOR de Idade!".
+  - 2. Outro ajuste interessante, seria impedir que o valor da idade seja menor do que zero ou maior do que 130. Corrija os métodos "onClick" de modo a atender esse requisito.
 
 --- 
 
