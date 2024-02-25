@@ -169,7 +169,7 @@ fun BoxScreen() {
 
 - são os composables de layout mais utilizados.
 - permitem que posicionemos os componentes de nossa IU lado a lado, na horizontal ou na vertical, na ordem em que são inseridos no código.
-- criado o projeto Jetpack Compose no Android Studio chamado [Column Row]().
+- criado o projeto Jetpack Compose no Android Studio chamado [Column Row](./projects/ColumnRow/app/src/main/java/br/com/fiap/columnrow/MainActivity.kt).
 - criar a função de composição chamada "ColomnRowScreen".
   - em relação ao "Surface", o primeiro componente estrutural, não precisamos inseri-lo agora, pois já faz parte da IU de forma padrão, e ocupa todo o tamanho da tela do dispositivo devido ao parâmetro modificador "modifier = Modifier.fillMaxSize()". 
 - iniciar pelos composables mais externos:
@@ -223,14 +223,305 @@ fun ColumnRowScreen() {
 
 ## 1.5 Modifier
 
+- é uma classe que permite modificar os estilos de um composable, como tamanho, cor, posicionamento, espaçamento, dentre outros. 
+- permite encadear vários modificadores para alterar a aparência de um composable, além do seu comportamento. 
+- as modificações são aplicadas na ordem em que você as declara.
+- modificadores mais utilizados:
+  - padding(): adiciona um espaçamento interno ao redor do composable.
+  - size(): define o tamanho do composable.
+  - offset(): define a posição do composable dentro do seu contêiner pai.
+  - clickable(): torna o composable clicável e permite adicionar uma ação ao ser clicado.
+  - background(): define a cor de fundo do composable.
+  - fillMaxWidth(), fillMaxHeight(): faz com que o composable ocupe todo o espaço disponível no eixo horizontal ou vertical, respectivamente.
+  - fillMaxSize(): faz com que o composable ocupe todo o espaço disponível na tela.
+  - align(): alinha o composable dentro do seu contêiner pai.
+  - weight(): controla a distribuição do espaço disponível entre vários composables dentro de um contêiner.
 
+### 1.5.1 Exemplo de aplicação - Modifier
 
+- na primeira Column, colocar uma cor de fundo (background) na cor ciano.
+- o Surface declara um modificador com o valor "Modifier.fillMaxSize()", que faz com que ele ocupe todo o tamanho da tela do dispositivo. Por padrão, os componentes filhos de um Surface herdam o seu tamanho, por isso a Column está ocupando todo o tamanho da tela.
+- podemos alterar o tamanho do Surface, como nos exemplos:
 
+~~~kotlin
+Surface(
+  modifier = Modifier.fillMaxSize(),
+  // ocupa toda a tela
+  color = MaterialTheme.colorScheme.background
+) 
+~~~
 
+~~~kotlin
+Surface (
+  modifier = Modifier.size(150.dp),
+  // gera um quadrado de 150x150, do lado superior esquerdo da tela. 
+  // esse quadrado é o Surface com a Column no seu interior.
+  color = MaterialTheme.colorScheme.background
+) 
+~~~
 
+~~~kotlin
+@Composable
+fun ColumnRowScreen() {
+  // Column principal
+  Column(
+    modifier = Modifier
+      .background(Color.Cyan)
+  ) {
+    Column(modifier = Modifier
+      .background(Color.Magenta)
+      .size(100.dp)
+      // permite que o quadrado magenta fique acima!
+      ) {
+      // Aqui vai o conteúdo
+    }
+    Row() {
+      // Aqui vai o conteúdo
+    }
+    Row() {
+      Column() {
+        // Aqui vai o conteúdo
+      }
+      Column() {
+        // Aqui vai o conteúdo
+      }
+    }
+  }
+}
+~~~
 
+- para colorir e redimensionar todos os composables da IU:
 
+~~~kotlin
+@Composable
+fun ColumnRowScreen() {
+  // Column principal
+  Column(
+    modifier = Modifier
+      .background(Color.Cyan)
+      // contêiner principal.
+      // posiciona os componentes internos de forma empilhada na vertical.
+  ) {
+    Column(modifier = Modifier
+      .background(Color.Magenta)
+      .fillMaxWidth().height(150.dp)
+      ) {
+      // Aqui vai o conteúdo
+    }
+    Row(modifier = Modifier
+      .fillMaxWidth()
+      .height(150.dp)
+      .background(Color.Green)) {
+      // Aqui vai o conteúdo
+    }
+    Row(modifier = Modifier
+    // row com duas coluns no interior
+      .fillMaxWidth()
+      .height(150.dp)
+      .background(Color.Yellow)) {
+      Column(modifier = Modifier
+        .fillMaxWidth()
+        .height(100.dp)
+        .padding(8.dp)
+        .background(Color.Red)
+        .weight(0.3f)) {
+        // Aqui vai o conteúdo
+      }
+      Column(modifier = Modifier
+        .fillMaxWidth()
+        .height(100.dp)
+        .padding(8.dp)
+        .background(Color.Blue)
+        .weight(0.7f)) {
+        // Aqui vai o conteúdo
+      }
+    }
+  }
+}
+~~~
 
+## 1.6 Alinhamento e arranjo de Colunas
+
+- o posicionamento pode ser feito utilizando o Alinhamento e o Arranjo. 
+- no exemplo anterior, na Column magenta, adicionar 4 botões:
+
+~~~kotlin
+Column(modifier = Modifier
+  .background(Color.Magenta)
+  .fillMaxWidth()
+  .height(150.dp)) {
+  Button(onClick = { /*TODO*/ }) {
+    Text(text = "Botão 01")
+  }
+  Button(onClick = { /*TODO*/ }) {
+    Text(text = "Botão 01")
+  }
+  Button(onClick = { /*TODO*/ }) {
+    Text(text = "Botão 01")
+  }
+  Button(onClick = { /*TODO*/ }) {
+    Text(text = "Botão 01")
+  }
+}
+~~~
+
+> Os composables podem utilizar outros composables para serem criados. O botão é um exemplo: utilizamos o Text para incluir o texto no botão. Em tese, é possível compor um composable com qualquer outro composable. 
+
+- na situação acima, a Column magenta possui a largura da tela do dispositivo (fillMaxWidth()), e altura de 150dp (height(150.dp)).
+- com isso, o quarto botão não está sendo visível, ou apenas parte dele é, já que a altura está fixada e não irá se adaptar ao seu conteúdo.
+- para resolver esse problema, excluir a função height do modificador, assim, a altura ficará dinâmica e se ajustará ao conteúdo da Column.
+
+~~~kotlin
+Column(
+  modifier = Modifier
+    .background(Color.Magenta)
+    .fillMaxWidth()
+) {
+  Button(onClick = { /*TODO*/ }) {
+    Text(text = "Botão 01")
+  }
+  Button(onClick = { /*TODO*/ }) {
+    Text(text = "Botão 01")
+  }
+  Button(onClick = { /*TODO*/ }) {
+    Text(text = "Botão 01")
+  }
+  Button(onClick = { /*TODO*/ }) {
+    Text(text = "Botão 01")
+  }
+}
+~~~
+
+### 1.6.1 horizontalAlignment
+- no exemplo acima, os botões estão alinhados no lado inicial da Column.
+- para alterar o alinhamento horizontal, usamos o parâmetro “horizontalAlignment” da Column.
+- valores:
+  - CenterHorizontally: alinha o conteúdo no centro horizontal da Column.
+  - End: alinha o conteúdo do lado final/direito da Column.
+  - Start: alinha o conteúdo do lado inicial/esquerdo da Column (padrão).
+
+~~~kotlin
+Column(
+  horizontalAlignment = Alignment.CenterHorizontally,
+  modifier = Modifier
+    .background(Color.Magenta)
+    .fillMaxWidth()
+) {
+  Button(onClick = { /*TODO*/ }) {
+    Text(text = "Botão 01")
+  }
+  Button(onClick = { /*TODO*/ }) {
+    Text(text = "Botão 01")
+  }
+  Button(onClick = { /*TODO*/ }) {
+    Text(text = "Botão 01")
+  }
+  Button(onClick = { /*TODO*/ }) {
+    Text(text = "Botão 01")
+  }
+}
+~~~
+
+### 1.6.2 verticalArrangement
+- parâmetro que permite alterar o arranjo vertical do conteúdo de uma Column.
+- valores:
+  - Top: alinha o conteúdo na parte superior da Column.
+  - Bottom: alinha todo o conteúdo na parte inferior da Column.
+  - Center: alinha todo o conteúdo no centro vertical da Column.
+  - SpaceAround: espalha verticalmente todo o conteúdo da Column, com espaço uniforme entre eles e mantendo um espaço uniforme no início e no final da coluna. 
+  - SpaceBetween: espalha verticalmente todo o conteúdo da Column, com espaço uniforme entre eles, mas não mantém espaço extra no início e no final da coluna.
+  - SpaceEvenly: espalha verticalmente todo o conteúdo da Column, com espaço uniforme entre eles. O mesmo espaço será colocado no início e no fim da coluna.
+- continuando, no exemplo iremos posicionar todos os botões na parte inferior da Column (todo o conteúdo da Column alinhado horizontalmente ao lado final/direito da Column e posicionado na parte inferior):
+
+~~~kotlin
+Column(
+  horizontalAlignment = Alignment.End,
+  verticalArrangement = Arrangement.Bottom,
+  modifier = Modifier
+    .background(Color.Magenta)
+    .fillMaxWidth().height(300.dp)
+) {
+  Button(onClick = { /*TODO*/ }) {
+    Text(text = "Botão 01")
+  }
+  Button(onClick = { /*TODO*/ }) {
+    Text(text = "Botão 01")
+  }
+  Button(onClick = { /*TODO*/ }) {
+    Text(text = "Botão 01")
+  }
+  Button(onClick = { /*TODO*/ }) {
+    Text(text = "Botão 01")
+  }
+}
+~~~
+
+- posicionar todos os botões ao centro da Column e com arranjo vertical uniforme (distribui os botões de forma uniforme na coluna, mantendo o mesmo espaçamento entre os botões e ao início e fim da coluna):
+
+~~~kotlin
+Column(
+  horizontalAlignment = Alignment.CenterHorizontally,
+  verticalArrangement = Arrangement.SpaceEvenly,
+  modifier = Modifier
+    .background(Color.Magenta)
+    .fillMaxWidth().height(300.dp)
+) {
+  Button(onClick = { /*TODO*/ }) {
+    Text(text = "Botão 01")
+  }
+  Button(onClick = { /*TODO*/ }) {
+    Text(text = "Botão 01")
+  }
+  Button(onClick = { /*TODO*/ }) {
+    Text(text = "Botão 01")
+  }
+  Button(onClick = { /*TODO*/ }) {
+    Text(text = "Botão 01")
+  }
+}
+~~~
+
+## 1.8 Alinhamento e Arranjo em Linhas
+
+- bastante similar às Columns; a diferença é que enquanto nas colunas fazemos alinhamento horizontal, nas linhas fazemos alinhamento vertical. - o mesmo ocorre com o arranjo, nas colunas fazemos arranjo vertical enquanto nas linhas fazemos arranjo horizontal. 
+- acrescentar dois botões na Row verde:
+
+~~~kotlin
+Row(
+  modifier = Modifier
+    .fillMaxWidth()
+    .height(150.dp)
+    .background(Color.Green)
+) {
+  Button(onClick = { /*TODO*/ }) {
+    Text(text = "Botão 02")
+  }
+  Button(onClick = { /*TODO*/ }) {
+    Text(text = "Botão 02")
+  }
+}
+~~~
+
+- o posicionamento padrão no interior de uma Row é no lado inicial/esquerdo e parte superior da linha.
+- acrescentar o parâmetro "verticalAlignment" com o valor “CenterVertically”, o parâmetro "horizontalArrangement" com o valor "SpaceBetween".
+
+~~~kotlin
+Row(
+    verticalAlignment = Alignment.CenterVertically,
+    horizontalArrangement = Arrangement.SpaceAround,
+    modifier = Modifier
+        .fillMaxWidth()
+        .height(150.dp)
+        .background(Color.Green)
+) {
+    Button(onClick = { /*TODO*/ }) {
+        Text(text = "Botão 02")
+    }
+    Button(onClick = { /*TODO*/ }) {
+        Text(text = "Botão 02")
+    }
+}
+~~~
 
 --- 
 
