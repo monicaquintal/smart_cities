@@ -32,7 +32,7 @@
 - [Cap 3A - A casa do Android](./fase01/trilha-android/capitulo3a.md)
 - [Cap 4A - Introdução ao Jetpack Compose](./fase01/trilha-android/capitulo4a.md)
 - [Cap 5A - Layouts e componentes básicos no Jetpack Compose](./fase01/trilha-android/capitulo5a.md)
-- Cap 6A - Componentes básicos com Jetpack Composes
+- [Cap 6A - Componentes básicos com Jetpack Composes]()
 - Cap 7A - Uso de Cards e Imagens
 - Cap 8A - Navegação e Fluxo entre telas
 - Cap 9A - Gestão de estado no Jetpack Compose
