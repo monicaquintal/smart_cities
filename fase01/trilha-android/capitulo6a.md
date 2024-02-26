@@ -300,7 +300,226 @@ package br.com.fiap.basiccomponents.ui.theme
   - é um parâmetro do composable Text que alinha o texto no seu interior. 
   - valores: End, Start, Justify e Center. 
 
-- para alinhar o composable Text em relação ao seu componente pai, precisamos utilizar o “Modifier”. Vamos centralizar oTextdo subtítulono centro da Column. 
+- para alinhar o composable Text em relação ao seu componente pai, utilizar o Modifier, nesse caso para centralizar o Text do subtítulo no centro da Column. 
+
+~~~kotlin
+@Composable
+    fun BasicComponentsScreen() {
+        Column(modifier = Modifier
+          .fillMaxWidth()
+          .background(Color.Black)) {
+          Text(
+            text = “FIAP”,
+            fontSize = 32.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color(237, 20, 91),
+            fontFamily = FontFamily.Serif,
+            modifier = Modifier
+              .background(Color.Yellow)
+              .fillMaxWidth(),
+            textAlign = TextAlign.End
+          )
+          Text(
+            text = “Desenvolvendo aplicações Android”,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.White,
+            fontFamily = Righteous,
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+          )
+        }
+      }
+~~~
+
+- no exemplo acima, não foi alinhado o texto no centro, e sim todo o composable Text no centro do composable pai, que é a Column. 
+
+## 2.1 Entrada de dados do usuário
+
+- há diversos composables que podem ser utilizados para que o usuário forneça dados ao aplicativo, sendo os mais utilizados: campos de texto editáveis, caixas de checagem, botões rádio e listas suspensas.
+
+## 2.2 Caixa de texto editável
+
+- um dos componentes mais importantes para a entrada de dados.
+- permitem ao usuário alterar o seu conteúdo. 
+
+> Antes de começarmos a incluir os novos componentes, faremos alguns ajustes nas versões do Kotline da biblioteca "material3" do Jetpack Compose. Abrir o arquivo "build.gradle" em nível de projeto, localizado na pasta "Gradle Scripts".
+
+~~~kotlin
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+    plugins {
+        id 'com.android.application' version '8.0.0' apply false
+        id 'com.android.library' version '8.0.0' apply false
+        //id 'org.jetbrains.kotlin.android' version '1.7.20' apply false
+        id 'org.jetbrains.kotlin.android' version '1.8.0' apply false
+    }
+~~~
+
+> Em seguida, abrir o arquivo "build.gradle" do módulo, arquivo em que estão todas as informações necessárias para compilação, empacotamento e geração do pacote de instalação final do app. 
+
+- alterar a versão das extensões do compilador Kotlin do Jetpack Compose:
+  - localizar o bloco "composeOptions" e alterar a versão do atributo "kotlinCompilerExtensionsVersion" para 1.4.0. 
+  - no bloco "dependencies", acrescentar a versão do pacote "material3". 
+
+~~~kotlin
+composeOptions {
+  //kotlinCompilerExtensionVersion '1.3.2'
+  kotlinCompilerExtensionVersion '1.4.0'
+  }
+  packagingOptions {
+    resources {
+      excludes += '/META-INF/{AL2.0,LGPL2.1}'
+    }
+  }
+
+dependencies {
+
+implementation 'androidx.core:core-ktx:1.8.0'
+implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
+implementation 'androidx.activity:activity-compose:1.5.1'
+implementation platform('androidx.compose:compose-bom:2022.10.00')
+implementation 'androidx.compose.ui:ui'
+implementation 'androidx.compose.ui:ui-graphics'
+implementation 'androidx.compose.ui:ui-tooling-preview'
+//    implementation 'androidx.compose.material3:material3'
+implementation 'androidx.compose.material3:material3:1.1.0'
+testImplementation 'junit:junit:4.13.2'
+androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+androidTestImplementation platform('androidx.compose:compose-bom:2022.10.00')
+androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
+debugImplementation 'androidx.compose.ui:ui-tooling'
+debugImplementation 'androidx.compose.ui:ui-test-manifest'
+}
+~~~
+
+- clicar em "Sync Now", e aguardar o Android Studio concluir o download de todas as novas bibliotecas.
+
+### 2.2.1 TextField
+
+- o composable que permite ao usuário digitar dados é o TextField".
+- inserir este composable, e utilizar o Modifier para que ele ocupe toda a largura da tela.
+
+~~~kotlin
+@Composable
+    fun BasicComponentsScreen() {
+        Column(modifier = Modifier
+        .fillMaxWidth()
+        .background(Color.Black)) {
+        Text(
+        text = "FIAP",
+        fontSize = 32.sp,
+        fontWeight = FontWeight.Bold,
+        color = Color(237, 20, 91),
+        fontFamily = FontFamily.Serif,
+        modifier = Modifier
+            .background(Color.Yellow)
+            .fillMaxWidth(),
+        textAlign = TextAlign.End
+        )
+        Text(
+        text = "Desenvolvendo aplicações Android",
+        fontSize = 16.sp,
+        fontWeight = FontWeight.Bold,
+        color = Color.White,
+        fontFamily = Righteous,
+        modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
+        TextField(
+          value = "", 
+          onValueChange = {},
+          modifier = Modifier.fillMaxWidth()
+        )
+        }
+    }
+~~~
+
+- o TextField possui dois parâmetros obrigatórios:
+  - ***value***: valor que será colocado dentro do TextField. 
+  - ***onValueChange***: parâmetro que recebe como valor uma função, por isso o valor deste parâmetro é “{}”. Dentro desse par de chaves podemos colocar uma instrução qualquer e ela será executada quando o value do TextField for alterado.
+
+~~~kotlin
+TextField(
+        value = "Android",
+        onValueChange = {},
+        modifier = Modifier.fillMaxWidth()
+      )
+~~~
+
+## 2.3 Gerenciando o estado do TextField
+
+- o estado em um aplicativo é qualquer valor que pode mudar ao longo do tempo: 
+  - quando estamos olhando para uma Interface de Usuário no Android, estamos observando seu estado atual.
+  - se um valor mudar, precisamos que a Interface também seja atualizada, ou seja, o estado mudou. 
+  - quando digitamos algo no TextField, estamos alterando o seu value, e essa mudança de estado causa a recomposição do TextField.
+  - porém, durante essa recomposição os parâmetros são carregados novamente e o value retorna ao seu valor inicial.
+  - logo, é necessário armazenarmos esse valor que está sendo digitado para que possamos lembrar dele na próxima recomposição. 
+
+> Para que o Android se "lembre" dos valores entre recomposições, utilizamos a `função mutableStateOf()`. 
+
+- no início da função de composição BasicComponentsScreen(), criar a variável de estado que armazenará o value do TextField.
+
+~~~kotlin
+var textFieldValue = remember {
+        mutableStateOf("")
+      }
+~~~
+
+- a variável textFieldValue é uma variável de estado, e o seu valor será lembrado entre as recomposições.
+- ajustar os parâmetros value e onValueChange do TextField.
+
+~~~kotlin
+TextField(
+        value = textFieldValue.value,
+        onValueChange = { novoValor ->
+          textFieldValue.value = novoValor
+        },
+        modifier = Modifier.fillMaxWidth()
+      )
+~~~
+
+- ao ocorrer a composição inicial do TextField, ele receberá o valor vazio, que é o valor de inicialização da variável de estado.
+- a cada caractere digitado, o método onValueChange do TextField nos retorna o valor atual que será atribuído à variável textFieldValue, que está armazenado na variável novoValor e que provocará a recomposição do TextField, pois seu estado mudou. Mas agora o valor será lembrado, e o value do TextField terá o comportamento que desejamos!
+
+## 2.4 Tipos de entrada
+
+- quando focamos em um TextField, o Android abre o teclado virtual para que possamos inserir o texto.
+- há diversos teclados para a digitação dos mais variados tipos de informação. 
+- é indicado que o teclado fornecido pelo Android esteja de acordo com o tipo de informação que vamos digitar.
+
+- no exemplo, acrescentar um novo TextField que será utilizado para digitar um valor numérico, então o ideal é que o teclado apresentado seja o numérico.
+
+~~~kotlin
+var quantidade = remember {
+        mutableStateOf("")
+      }
+      TextField(
+        value = "${quantidade.value}",
+        onValueChange = { novoValor ->
+          quantidade.value = novoValor
+        },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+      )
+~~~
+
+- a função KeyboardOptions permite que alteremos o teclado exibido para o usuário, e o comportamento enquanto digitamos.
+- o parâmetro keyboardType, por exemplo, da função KeyboardOptions diz ao Android que o teclado que será exibido deverá ser o numérico.
+
+- `Possíveis KeyboardType`:
+  - ***Number***: apresentará o teclado numérico.
+  - ***Text***: apresentará o tecado alfanumérico.
+  - ***Decimal***: apresentará o teclado numérico com teclas para ponto decimal.
+  - ***Email***: apresentará o teclado com o caractere @.
+  - ***NumberPassword***: apresenta o teclado numérico e não vemos os números digitados.
+  - ***Password***: apresenta o teclado alfanumérico e não vemos o que estamos digitando.
+  - ***Phone***: apresenta o teclado para discagem.
+  - ***Uri***: fornece o teclado ideal para digitarmos um endereço de Internet, por exemplo.
+
+
+
+
+
+
+
 
 
 
