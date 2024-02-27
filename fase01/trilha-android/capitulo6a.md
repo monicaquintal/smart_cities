@@ -514,9 +514,65 @@ var quantidade = remember {
   - ***Phone***: apresenta o teclado para discagem.
   - ***Uri***: fornece o teclado ideal para digitarmos um endereço de Internet, por exemplo.
 
+- também é possível definir como o texto será inserido. 
+- suponhamos que o primeiro TextField seja utilizado para inserirmos o nome completo de uma pessoa, neste caso seria interessante que ao digitarmos o espaço o teclado fique maiúsculo para digitarmos o sobrenome, como no exemplo:
 
+~~~kotlin
+TextField(
+        value = textFieldValue.value,
+        onValueChange = { novoValor ->
+          textFieldValue.value = novoValor
+        },
+        modifier = Modifier.fillMaxWidth(),
+        keyboardOptions = KeyboardOptions(
+          capitalization = KeyboardCapitalization.Words
+        )
+      )
+~~~
 
+- `KeyboardCapitalization`: valores Words, Characters, None e Sentences.
 
+## 2.5 Dicas de entrada
+
+### 2.5.1 Placeholder:
+- adicionar um `placeholder` ao segundo TextField.
+- o placeholder é um composable, então este parâmetro pode receber como valor o Text que será usado para exibir o texto.
+- o texto do placeholder é substituído pelo conteúdo digitado pelo usuário.
+
+~~~kotlin
+TextField(
+        value = "${quantidade.value}",
+        onValueChange = { novoValor ->
+          quantidade.value = novoValor
+        },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number), 
+        placeholder = {
+          Text(text = "Qual a quantidade?")
+        }
+      )
+~~~
+
+### 2.5.2 Label:
+- inicialmente parece um placeholder, mas ao clicarmos no TextField o texto será usado como uma etiqueta do TextField. 
+- adicionar o parâmetro label ao primeiro TextField.
+
+~~~kotlin
+TextField(
+        value = textFieldValue.value,
+        onValueChange = { novoValor
+          textFieldValue.value = novoValor
+        },
+        modifier = Modifier.fillMaxWidth(),
+        keyboardOptions = KeyboardOptions(
+          capitalization = KeyboardCapitalization.Words
+        ),
+        label = {
+          Text(text = "Nome e sobrenome")
+        }
+      )
+~~~
+
+## 2.6 Inserindo ícone ao TextField
 
 
 
