@@ -13,7 +13,7 @@
 - componente "Text":
   - é o mais básico.
   - permite exibir informações para o usuário.
-- criar um projeto no Android Studio chamado [Basic Components]().
+- criar um projeto no Android Studio chamado [Basic Components](./projects/BasicComponents/app/src/main/java/br/com/fiap/basiccomponents/MainActivity.kt).
 - criar uma função de composição chamada "BasicComponentsScreen", e inserir dois composables do tipo Text.
 
 ~~~kotlin
@@ -309,7 +309,7 @@ package br.com.fiap.basiccomponents.ui.theme
           .fillMaxWidth()
           .background(Color.Black)) {
           Text(
-            text = “FIAP”,
+            text = "FIAP",
             fontSize = 32.sp,
             fontWeight = FontWeight.Bold,
             color = Color(237, 20, 91),
@@ -320,7 +320,7 @@ package br.com.fiap.basiccomponents.ui.theme
             textAlign = TextAlign.End
           )
           Text(
-            text = “Desenvolvendo aplicações Android”,
+            text = "Desenvolvendo aplicações Android",
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
             color = Color.White,
@@ -435,7 +435,7 @@ debugImplementation 'androidx.compose.ui:ui-test-manifest'
 
 - o TextField possui dois parâmetros obrigatórios:
   - ***value***: valor que será colocado dentro do TextField. 
-  - ***onValueChange***: parâmetro que recebe como valor uma função, por isso o valor deste parâmetro é “{}”. Dentro desse par de chaves podemos colocar uma instrução qualquer e ela será executada quando o value do TextField for alterado.
+  - ***onValueChange***: parâmetro que recebe como valor uma função, por isso o valor deste parâmetro é {}. Dentro desse par de chaves podemos colocar uma instrução qualquer e ela será executada quando o value do TextField for alterado.
 
 ~~~kotlin
 TextField(
@@ -912,7 +912,7 @@ Spacer(modifier = Modifier.height(32.dp))
         )
     )
     Text(
-        text = “Kotlin”,
+        text = "Kotlin",
         color = Color.White
     )
     }
@@ -930,7 +930,7 @@ Spacer(modifier = Modifier.height(32.dp))
         )
     )
     Text(
-        text = “Java”,
+        text = "Java",
         color = Color.White
     )
     }
@@ -948,7 +948,7 @@ Spacer(modifier = Modifier.height(32.dp))
         )
     )
     Text(
-        text = “C#”,
+        text = "C#",
         color = Color.White
     )
     }
@@ -975,7 +975,7 @@ Row(modifier = Modifier.fillMaxWidth()) {
         unselectedColor = Color(0xffed145b)
       )
     )
-    Text(text = “MacOS”, color = Color.White)
+    Text(text ="MacOS", color = Color.White)
   }
   Row(verticalAlignment = Alignment.CenterVertically) {
     RadioButton(
@@ -986,7 +986,7 @@ Row(modifier = Modifier.fillMaxWidth()) {
         unselectedColor = Color(0xffed145b)
       )
     )
-    Text(text = “GNU/Linux”, color = Color.White)
+    Text(text = "GNU/Linux", color = Color.White)
   }
   Row(verticalAlignment = Alignment.CenterVertically) {
     RadioButton(
@@ -997,7 +997,7 @@ Row(modifier = Modifier.fillMaxWidth()) {
         unselectedColor = Color(0xffed145b)
       )
     )
-    Text(text = “Windows 11”, color = Color.White)
+    Text(text = "Windows 11", color = Color.White)
   }
 }
 ~~~
@@ -1029,7 +1029,7 @@ Row(modifier = Modifier.fillMaxWidth()) {
         unselectedColor = Color(0xffed145b)
       )
     )
-    Text(text = “MacOS”, color = Color.White)
+    Text(text = "MacOS", color = Color.White)
   }
   Row(verticalAlignment = Alignment.CenterVertically) {
     RadioButton(
@@ -1040,7 +1040,7 @@ Row(modifier = Modifier.fillMaxWidth()) {
         unselectedColor = Color(0xffed145b)
       )
     )
-    Text(text = “GNU/Linux”, color = Color.White)
+    Text(text = "GNU/Linux", color = Color.White)
   }
   Row(verticalAlignment = Alignment.CenterVertically) {
     RadioButton(
@@ -1051,7 +1051,7 @@ Row(modifier = Modifier.fillMaxWidth()) {
         unselectedColor = Color(0xffed145b)
       )
     )
-    Text(text = “Windows 11”, color = Color.White)
+    Text(text = "Windows 11", color = Color.White)
   }
 }
 ~~~
@@ -1067,7 +1067,7 @@ Row(modifier = Modifier.fillMaxWidth()) {
 
 ~~~kotlin
 Button(onClick = { /*TODO*/ }) {
-        Text(text = “Clique aqui!”)
+        Text(text = "Clique aqui!")
       }
 ~~~
 
@@ -1082,7 +1082,7 @@ Button(
         colors = ButtonDefaults.buttonColors(containerColor = Color.Magenta),
         border = BorderStroke(width = 3.dp, color = Color.White)
       ) {
-        Text(text = “Clique aqui!”)
+        Text(text = "Clique aqui!")
       }
 ~~~
 
