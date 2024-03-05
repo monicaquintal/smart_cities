@@ -34,7 +34,7 @@
 - [Cap 5A - Layouts e componentes básicos no Jetpack Compose](./fase01/trilha-android/capitulo5a.md)
 - [Cap 6A - Componentes básicos com Jetpack Composes](./fase01/trilha-android/capitulo6a.md)
 - [Cap 7A - Uso de Cards e Imagens](./fase01/trilha-android/capitulo7a.md)
-- Cap 8A - Navegação e Fluxo entre telas
+- [Cap 8A - Navegação e Fluxo entre telas](./fase01/trilha-android/capitulo8a.md)
 - Cap 9A - Gestão de estado no Jetpack Compose
 - Cap 10A - Internacionalização e Validação de entrada de dados
 - Cap 11A - Persistência de dados locais
