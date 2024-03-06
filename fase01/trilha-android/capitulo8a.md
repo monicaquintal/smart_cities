@@ -144,6 +144,126 @@ class MainActivity : ComponentActivity() {
 }
 ~~~
 
+- criar os outros arquivos da aplicação. 
+- na pasta screens do projeto, criar três arquivos:
+
+### a) arquivo MenuScreen.kt:
+
+~~~kotlin
+@Composable
+fun MenuScreen() {
+  Box(modifier = Modifier
+    .fillMaxSize()
+    .background(Color(0xFF2C4EC7))
+    .padding(32.dp)
+  ){
+    Text(
+      text = "MENU",
+      fontSize = 24.sp,
+      fontWeight = FontWeight.Bold,
+      color = Color.White
+    )
+    Column(
+      horizontalAlignment = Alignment.CenterHorizontally,
+      modifier = Modifier
+      .fillMaxWidth()
+      .align(Alignment.Center)
+    ) {
+      Button(
+        onClick = { /*TODO*/ },
+        colors = ButtonDefaults.buttonColors(Color.White),
+        modifier = Modifier.size(width = 200.dp, height = 48.dp)
+      ) {
+        Text(text = "Perfil", fontSize = 20.sp, color = Color.Blue)
+      }
+      Spacer(modifier = Modifier.height(16.dp))
+      Button(
+        onClick = { /*TODO*/ },
+        colors = ButtonDefaults.buttonColors(Color.White),
+        modifier = Modifier.size(width = 200.dp, height = 48.dp)
+      ) {
+        Text(text = "Pedidos", fontSize = 20.sp, color = Color.Blue)
+      }
+      Spacer(modifier = Modifier.height(16.dp))
+      Button(
+        onClick = { /*TODO*/ },
+        colors = ButtonDefaults.buttonColors(Color.White),
+        modifier = Modifier.size(width = 200.dp, height = 48.dp)
+      ) {
+        Text(text = "Sair", fontSize = 20.sp, color = Color.Blue)
+      }
+    }
+  }
+}
+~~~
+
+### b) arquivo PerfilScreen.kt:
+
+~~~kotlin
+@Composable
+fun PerfilScreen() {
+  Box(modifier = Modifier
+    .fillMaxSize()
+    .background(Color(0xFF329F6B))
+    .padding(32.dp)
+  ){
+    Text(
+      text = "PERFIL",
+      fontSize = 24.sp,
+      fontWeight = FontWeight.Bold,
+      color = Color.White
+    )
+    Button(
+      onClick = { /*TODO*/ },
+      colors = ButtonDefaults.buttonColors(Color.White),
+      modifier = Modifier.align(Alignment.Center)
+    ) {
+      Text(text = "Voltar", fontSize = 20.sp, color = Color.Blue)
+    }
+  }
+}
+~~~
+
+### c) arquido PedidosScreen.kt:
+
+~~~kotlin
+@Composable
+fun PedidosScreen() {
+  Box(modifier = Modifier
+    .fillMaxSize()
+    .background(Color(0xFFAFA9A9))
+    .padding(32.dp)
+  ){
+    Text(
+      text = "PEDIDOS",
+      fontSize = 24.sp,
+      fontWeight = FontWeight.Bold,
+      color = Color.White
+    )
+    Button(
+      onClick = { /*TODO*/ },
+      colors = ButtonDefaults.buttonColors(Color.White),
+      modifier = Modifier.align(Alignment.Center)
+    ) {
+      Text(text = "Voltar", fontSize = 20.sp, color = Color.Blue)
+    }
+  }
+}
+~~~
+
+### 1.1.3 Configurando o Navigation
+- com as telas criadas, configurar a navegação entre elas. 
+- para isso, utilizar a NavController, responsável por controlar o fluxo de navegação em uma aplicação Android. 
+  - é uma função com estado que observa a pilha de composables que criam as telas (essa pilha é chamada de `backstack`).
+
+
+
+
+
+
+
+
+
 
 
 --- 
