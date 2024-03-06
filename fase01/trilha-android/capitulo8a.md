@@ -114,6 +114,35 @@ fun LoginScreen() {
 
 - para executar a aplicação no emulador e ver o resultado da tela que acabamos de descrever, abrir o arquivo “MainActivity.kt” e adicionar a chamada para a função LoginScreen.
 
+~~~kotlin
+package br.com.fiap.navegandoentretelas
+
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.ui.Modifier
+import br.com.fiap.navegandoentretelas.sreens.LoginScreen
+import br.com.fiap.navegandoentretelas.ui.theme.NavegandoEntreTelasTheme
+
+class MainActivity : ComponentActivity() {
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContent {
+      NavegandoEntreTelasTheme {
+        Surface(
+          modifier = Modifier.fillMaxSize(),
+          color = MaterialTheme.colorScheme.background
+        ) {
+          LoginScreen()
+        }
+      }
+    }
+  }
+}
+~~~
 
 
 
