@@ -499,6 +499,154 @@ class MainActivity : ComponentActivity() {
 - vamos enviar uma String para a tela PerfilScreen quando o botão "Perfil" da tela Menu for pressionado. 
 - logo, acrescentar um parâmetro do tipo String na função PerfilScreen.
 
+~~~kotlin
+@Composable
+fun PerfilScreen(navController: NavController, nome: String) {
+  Box(modifier = Modifier
+    .fillMaxSize()
+    .background(Color(0xFF329F6B))
+    .padding(32.dp)
+  ){
+    Text(
+      text = "PERFIL - $nome",
+      fontSize = 24.sp,
+      fontWeight = FontWeight.Bold,
+      color = Color.White
+    )
+    Button(
+      onClick = { navController.navigate("menu") },
+      colors = ButtonDefaults.buttonColors(Color.White),
+      modifier = Modifier.align(Alignment.Center)
+    ) {
+      Text(text = "Voltar", fontSize = 20.sp, color = Color.Blue)
+    }
+  }
+}
+~~~
+
+- na função onCreate da MainActivity, acrescentar o parâmetro que deverá ser fornecido para a rota.
+
+~~~kotlin
+override fun onCreate(savedInstanceState: Bundle?) {
+  super.onCreate(savedInstanceState)
+  setContent {
+    NavegandoEntreTelasTheme {
+      Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
+      ) {
+        val navController = rememberNavController()
+        NavHost(
+          navController = navController,
+          startDestination = "login"
+        ) {
+          composable(route = "login") {
+            LoginScreen(navController) }
+          composable(route = "menu") {
+            MenuScreen(navController) }
+          composable(route = "pedidos") {
+            PedidosScreen(navController) }
+          composable(route = "perfil/{nome}") {
+            PerfilScreen(navController)
+          }
+        }
+      }
+    }
+  }
+}
+~~~
+
+- na função composable, recebemos o parâmetro NavBackStackEntry, que contém o valor do parâmetro que está sendo passado no path da rota.
+- recuperar este valor e passar na chamada para a função PerfilScreen.
+
+~~~kotlin
+override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContent {
+      NavegandoEntreTelasTheme {
+        Surface(
+          modifier = Modifier.fillMaxSize(),
+          color = MaterialTheme.colorScheme.background
+        ) {
+          val navController = rememberNavController()
+          NavHost(
+            navController = navController,
+            startDestination = "login"
+          ) {
+            composable(route = "login") {
+               LoginScreen(navController) }
+            composable(route = "menu") {
+               MenuScreen(navController) }
+            composable(route = "pedidos") {
+               PedidosScreen(navController) }
+            composable(route = "perfil/{nome}") {
+              val nome: String? =
+               it.arguments?.getString("nome", "")
+              PerfilScreen(navController, nome!!)
+            }
+          }
+        }
+      }
+    }
+  }
+~~~
+
+- ajustar o evento de clique da tela MenuScreen, para que passe o parâmetro "nome" para a tela PerfilScreen. 
+
+~~~kotlin
+@Composable
+fun MenuScreen(navController: NavController) {
+  Box(modifier = Modifier
+    .fillMaxSize()
+    .background(Color(0xFF2C4EC7))
+    .padding(32.dp)
+  ){
+    Text(
+      text = "MENU",
+      fontSize = 24.sp,
+      fontWeight = FontWeight.Bold,
+      color = Color.White
+    )
+    Column(
+      horizontalAlignment = Alignment.CenterHorizontally,
+      modifier = Modifier
+      .fillMaxWidth()
+      .align(Alignment.Center)
+    ) {
+      Button(
+        onClick = { 
+          navController.navigate("perfil/Mônica") 
+        },
+        colors = ButtonDefaults.buttonColors(Color.White),
+        modifier = Modifier.size(width = 200.dp, height = 48.dp)
+      ) {
+        Text(text = "Perfil", fontSize = 20.sp, color = Color.Blue)
+      }
+~~~
+
+> estamos passando o valor do parâmetro "nome" de forma manual, mas poderíamos obter esse dado de qualquer outra forma.
+
+### 1.2.2 Parâmetros opcionais
+- nem sempre a passagem de parâmetros é obrigatória; às vezes o parâmetro pode ser opcional.
+- configurar a tela Pedidos, de modo que a passagem de parâmetro seja opcional. 
+- começar ajustando o código do NavHost para a tela Pedidos no arquivo MainActivity.
+
+~~~kotlin
+composable(
+    route = "pedidos?cliente={cliente}",
+    arguments = listOf(navArgument(name = "cliente") {
+      defaultValue = "Sem cliente"
+    })
+  ) {
+    PedidosScreen(navController, it.arguments?.getString("cliente"))
+  }
+~~~
+
+- a diferença entre a abordagem anterior e essa é a forma como o parâmetro é passado, que lembra bastante o uso de "queryString". 
+- outra mudança importante é o parâmetro arguments, que devemos colocar um valor padrão, para caso o valor não for fornecido. 
+- no exemplo anterior, utilizamos o valor de "defaultValue" para "Sem cliente", ou seja, se ao chamarmos a tela Pedidos não fornecermos o valor, será utilizado "Sem cliente".
+
+
 
 
 
