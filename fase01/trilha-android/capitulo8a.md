@@ -19,7 +19,7 @@
 - através do Navigation é possível transportarmos dados de uma tela para outra, além de criarmos efeitos visuais durante a transição entre telas.
 
 ### 1.1.1 Adicionandoa biblioteca do Navigation
-- criar um projeto no Android Studio chamado [Navegando entre telas]().
+- criar um projeto no Android Studio chamado [Navegando entre telas](./projects/Navegandoentretelas/app/src/main/java/br/com/fiap/navegandoentretelas/).
 - apagar todas as funções, mantendo apenas a classe MainActivity e a função onCreate().
 - para utilizar a biblioteca Navigation é necessário adicionar uma dependência ao `arquivo build.gradle`. 
 
@@ -645,16 +645,341 @@ composable(
 - a diferença entre a abordagem anterior e essa é a forma como o parâmetro é passado, que lembra bastante o uso de "queryString". 
 - outra mudança importante é o parâmetro arguments, que devemos colocar um valor padrão, para caso o valor não for fornecido. 
 - no exemplo anterior, utilizamos o valor de "defaultValue" para "Sem cliente", ou seja, se ao chamarmos a tela Pedidos não fornecermos o valor, será utilizado "Sem cliente".
+- adicionar um parâmetro String na função PedidosScreen no arquivo PedidosScreen.kt, e utilizar na função o argumento recebido.
 
+~~~kotlin
+@Composable
+fun PedidosScreen(navController: NavController, cliente: String?) {
+  Box(modifier = Modifier
+    .fillMaxSize()
+    .background(Color(0xFFAFA9A9))
+    .padding(32.dp)
+  ){
+    Text(
+      text = "PEDIDOS - $cliente",
+      fontSize = 24.sp,
+      fontWeight = FontWeight.Bold,
+      color = Color.White
+    )
+    Button(
+      onClick = { navController.navigate("menu") },
+      colors = ButtonDefaults.buttonColors(Color.White),
+      modifier = Modifier.align(Alignment.Center)
+    ) {
+      Text(text = "Voltar", fontSize = 20.sp, color = Color.Blue)
+    }
+  }
+}
+~~~
 
+- quando executamos a aplicação, não passamos nenhum argumento para a tela Pedidos, então, foi utilizado o valor padrão "Sem cliente". 
+- fazer uma pequena alteração no botão que abre a tela Pedido no arquivo MenuScreen.kt para inserir o valor do parâmetro:
 
+~~~kotlin
+Button(
+    onClick = { navController.navigate("pedidos?cliente=FIAP") },
+    colors = ButtonDefaults.buttonColors(Color.White),
+    modifier = Modifier.size(width = 200.dp, height = 48.dp)
+  ) {
+    Text(text = "Pedidos", fontSize = 20.sp, color = Color.Blue)
+  }
+~~~
 
+### 1.2.3 Passando múltiplos parâmetros
+- é possível passar múltiplos valores entre as telas e definir o tipo do dado que será passado. 
+- para isso, utilizamos o `parâmetro arguments` da função composable.
+- alterar o código da MainActivity, para que possamos enviar os argumentos nome como um valor do tipo String e a idade como um valor do tipo Int para a tela de perfil. 
 
+~~~kotlin
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+      super.onCreate(savedInstanceState)
+      setContent {
+        NavegandoEntreTelasTheme {
+          Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+          ) {
+            val navController = rememberNavController()
+            NavHost(
+              navController = navController,
+              startDestination = "login",
+            ) {
+              composable(route = "login") { 
+                LoginScreen(navController) 
+              }
+              composable(route = "menu") { 
+                MenuScreen(navController) 
+              }
+              composable(route = "pedidos") { 
+                PedidosScreen(navController) 
+              }
+              composable(
+                route = "perfil/{nome}/{idade}",
+                arguments = listOf(
+                  navArgument("nome") {
+                    type = NavType.StringType
+                  },
+                  navArgument("idade") {
+                    type = NavType.IntType
+                  }
+                )
+              ) {
+                val nome: String? = 
+                  it.arguments?.getString("nome", "")
+                val idade: Int? = 
+                  it.arguments?.getInt("idade", 0)
+                PerfilScreen(navController, nome!!, idade!!)
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+~~~
 
+- através do parâmetro arguments da função composable, é possível enviar uma lista de argumentos.
+- o path do argumento route deverá contemplar todos os argumentos que se deseja passar.
+- na função PerfilScreen, adicionar o parâmetro "idade" na lista de argumentos e adicioná-lo ao composable Text. 
 
+~~~kotlin
+@Composable
+fun PerfilScreen(
+  navController: NavController,
+  nome: String,
+  idade: Int
+) {
+  Box(modifier = Modifier
+    .fillMaxSize()
+    .background(Color(0xFF329F6B))
+    .padding(32.dp)
+  ){
+    Text(
+      text = "PERFIL - $nome tem $idade anos.",
+      fontSize = 24.sp,
+      fontWeight = FontWeight.Bold,
+      color = Color.White
+    )
+    Button(
+      onClick = { navController.navigate("menu") },
+      colors = ButtonDefaults.buttonColors(Color.White),
+      modifier = Modifier.align(Alignment.Center)
+    ) {
+      Text(
+        text = "Voltar",
+        fontSize = 20.sp,
+        color = Color.Blue
+      )
+    }
+  }
+}
+~~~
 
+- na função MenuScreen, alterar o parâmetro onClick do botão "Perfil", para acrescentar a idade na rota destino.
 
+~~~kotlin
+@Composable
+fun MenuScreen(navController: NavController) {
+  Box(
+    modifier = Modifier
+      .fillMaxSize()
+      .background(Color(0xFF2C4EC7))
+      .padding(32.dp)
+  ) {
+    Text(
+      text = "MENU",
+      fontSize = 24.sp,
+      fontWeight = FontWeight.Bold,
+      color = Color.White
+    )
+    Column(
+      horizontalAlignment = Alignment.CenterHorizontally,
+      modifier = Modifier
+        .fillMaxWidth()
+        .align(Alignment.Center)
+    ) {
+      Button(
+        onClick = {
+          navController.navigate("perfil/Pedro/27")
+        },
+        colors = ButtonDefaults.buttonColors(Color.White),
+        modifier = Modifier.size(width = 200.dp, height = 48.dp)
+      ) {
+~~~
 
+## 1.3 Animação entre transição de telas
+
+- a troca entre as telas em uma aplicação Android ocorre de forma muito simples. 
+- permite incluir animação entre a transição para tornar a experiência do usuário mais agradável.
+
+### 1.3.1 Configuração da animação
+- é necessário adicionar uma biblioteca externa chamada `Accompanist Navigation Animation`. 
+- adicionar na sessão dependencies do arquivo build.gradle (Module:app) a seguinte linha:
+
+~~~kotlin
+implementation "com.google.accompanist:accompanist-navigation-animation:0.30.1"
+~~~
+
+### 1.3.2 Implementando a animação
+- fazer as seguintes alterações no método onCreate da classe MainActivity:
+
+~~~kotlin
+class MainActivity : ComponentActivity() {
+    @OptIn(ExperimentalAnimationApi::class)
+    override fun onCreate(savedInstanceState: Bundle?) {
+      super.onCreate(savedInstanceState)
+      setContent {
+        NavegandoEntreTelasTheme {
+          Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+          ) {
+            val navController = rememberAnimatedNavController()
+            AnimatedNavHost(
+              navController = navController,
+              startDestination = "login",
+            ) {
+              composable(route = "login") {
+                LoginScreen(navController)
+              }
+              composable(route = "menu") {
+                MenuScreen(navController)
+              }
+              composable(route = "pedidos") {
+                PedidosScreen(navController)
+              }
+              composable(
+                route = "perfil/{nome}/{idade}",
+                arguments = listOf(
+                  navArgument("nome") {
+                    type = NavType.StringType
+                  },
+                  navArgument("idade") {
+                    type = NavType.IntType
+                  }
+                )
+              ) {
+                val nome: String? =
+                  it.arguments?.getString(
+                    "nome",
+                    ""
+                  )
+                val idade: Int? =
+                  it.arguments?.getInt(
+                    "idade",
+                    0
+                  )
+                PerfilScreen(
+                  navController,
+                  nome!!,
+                  idade!!
+                )
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+~~~
+
+- as classes utilizadas para a implementação de animação de transição entre as telas precisam ser importadas para o projeto, portanto, certificar-se de que os imports estejam corretos. 
+
+~~~kotlin
+//import androidx.navigation.compose.NavHost
+//import androidx.navigation.compose.composable
+//import androidx.navigation.compose.rememberNavController
+
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.ui.Modifier
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
+import br.com.fiap.navegandoentretelas.sreens.LoginScreen
+import br.com.fiap.navegandoentretelas.sreens.MenuScreen
+import br.com.fiap.navegandoentretelas.sreens.PedidosScreen
+import br.com.fiap.navegandoentretelas.sreens.PerfilScreen
+import br.com.fiap.navegandoentretelas.ui.theme.NavegandoEntreTelasTheme
+𝗶𝗺𝗽𝗼𝗿𝘁 𝗰𝗼𝗺.𝗴𝗼𝗼𝗴𝗹𝗲.𝗮𝗰𝗰𝗼𝗺𝗽𝗮𝗻𝗶𝘀𝘁.𝗻𝗮𝘃𝗶𝗴𝗮𝘁𝗶𝗼𝗻.𝗮𝗻𝗶𝗺𝗮𝘁𝗶𝗼𝗻.𝗔𝗻𝗶𝗺𝗮𝘁𝗲𝗱𝗡𝗮𝘃𝗛𝗼𝘀𝘁
+𝗶𝗺𝗽𝗼𝗿𝘁 𝗰𝗼𝗺.𝗴𝗼𝗼𝗴𝗹𝗲.𝗮𝗰𝗰𝗼𝗺𝗽𝗮𝗻𝗶𝘀𝘁.𝗻𝗮𝘃𝗶𝗴𝗮𝘁𝗶𝗼𝗻.𝗮𝗻𝗶𝗺𝗮𝘁𝗶𝗼𝗻.𝗰𝗼𝗺𝗽𝗼𝘀𝗮𝗯𝗹𝗲
+𝗶𝗺𝗽𝗼𝗿𝘁 𝗰𝗼𝗺.𝗴𝗼𝗼𝗴𝗹𝗲.𝗮𝗰𝗰𝗼𝗺𝗽𝗮𝗻𝗶𝘀𝘁.𝗻𝗮𝘃𝗶𝗴𝗮𝘁𝗶𝗼𝗻.𝗮𝗻𝗶𝗺𝗮𝘁𝗶𝗼𝗻.𝗿𝗲𝗺𝗲𝗺𝗯𝗲𝗿𝗔𝗻𝗶𝗺𝗮𝘁𝗲𝗱𝗡𝗮𝘃𝗖𝗼𝗻𝘁𝗿𝗼𝗹𝗹𝗲𝗿
+~~~
+
+- ao executar, a aplicação não mudou, pois ainda não implementamos as animações que devem ocorrer na troca das telas.
+- é possível aplicar o efeito de transição de telas em dois momentos:
+  - `exitTransition`: a tela atual sai da visão do usuário.
+  - `startTransition`: a próxima tela entra na visão do usuário.
+- o efeito que queremos na transição de telas será:
+  - a tela atual desliza para a direita em um ciclo de 1s.
+  - a tela de destino desliza para a esquerda em um ciclo de 3s.
+
+~~~kotlin
+… trecho de Código omitido
+setContent {
+  NavegandoEntreTelasTheme {
+    Surface(
+      modifier = Modifier.fillMaxSize(),
+      color = MaterialTheme.colorScheme.background
+    ) {
+      val navController = rememberAnimatedNavController()
+      AnimatedNavHost(
+        navController = navController,
+        startDestination = "login",
+        exitTransition = {
+          slideOutOfContainer(towards =
+          AnimatedContentScope.SlideDirection.End,
+            animationSpec = tween(1000)
+          )
+        },
+        enterTransition = {
+          slideIntoContainer(towards =
+            AnimatedContentScope.SlideDirection.Start,
+            animationSpec = tween(3000)
+          )
+        }
+      ) {
+… trecho de código omitido
+~~~
+
+- em exitTransition, escolhemos a transição "slideOutOfContainer" ("deslizar para fora do container”); as configurações para essa animação utilizam os parâmetros:
+  - towards: indica a direção que a tela deverá seguir enquanto desliza. Para que a tela deslize para a direita, utilizamos "AnimatedContentScope.SlideDirection.End".
+  - animationSpec: indicamos que a transição deverá durar 1 segundo (1000 milissegundos). 
+- em enterTransition, escolhemos o efeito "slideIntoContainer" ("deslizar para dentro do container"); as configurações utilizadas foram:
+  - towards: definimos que a animação deverá ocorrer da direita para a esquerda através de "AnimatedContentScope.SlideDirection.Start".
+  - animationSpec: indicamos que a transição deverá durar 3 segundos (3000 milissegundos).
+
+### 1.3.3 Combinação de efeitos
+- é possível somar efeitos tanto para exitTransition quanto para startTransition. 
+- adicionar o sinal de mais (+) entre os efeitos de transição escolhidos. 
+- para adicionar um efeito de "desaparecimento gradual" durante a saída da tela, acrescentar o efeito "fadeOut".
+
+~~~kotlin
+… trecho de código omitido
+val navController = rememberAnimatedNavController()
+AnimatedNavHost(
+  navController = navController,
+  startDestination = "login",
+  exitTransition = {
+    //fadeOut(animationSpec = tween(1000))
+    slideOutOfContainer(towards =
+    AnimatedContentScope.SlideDirection.End,
+      animationSpec = tween(1000)
+    ) + fadeOut(animationSpec = tween(1000))
+  },
+  enterTransition = {
+    //fadeIn(animationSpec = tween(2000))
+    slideIntoContainer(towards =
+      AnimatedContentScope.SlideDirection.Start,
+      animationSpec = tween(3000) 
+  }
+) { … trecho de código omitido
+~~~ 
 
 --- 
 
