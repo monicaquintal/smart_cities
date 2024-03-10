@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Login</string>
+
+    // Strings personalizadas para o inglês
+    // que será o idioma padrão da aplicação
+    <string name="login">Entrar</string>
+    <string name="subtitle">Por favor, informe os seus dados</string>
+    <string name="email">Digeite o seu e-mail</string>
+    <string name="password">Digite a sua senha</string>
+    <string name="enter">Entrar</string>
+
+</resources>

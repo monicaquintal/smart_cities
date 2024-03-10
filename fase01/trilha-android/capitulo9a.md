@@ -33,8 +33,8 @@
 ### 1.1.1 Aplicativo para cálculo de juros simples
 - para praticar o State Hoisting, criar uma aplicação para cálculo de juros simples. 
 - começar criando uma única função com todos os componentes e estados. Depois, aplicaremos o conceito de elevação de estado e modularização da aplicação. 
-- criar um projeto no Android Studio com o nome [Cálculo de Juros](). 
-- substituir o código do arquivo MainActivity.kt que foi gerado automaticamente,pelo código:
+- criar um projeto no Android Studio com o nome [Cálculo de Juros](./projects/CalculodeJuros/app/src/main/java/br/com/fiap/calculodejuros/). 
+- substituir o código do arquivo MainActivity.kt que foi gerado automaticamente, pelo código:
 
 ~~~kotlin
 package br.com.fiap.calculodejuros

@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Login</string>
+
+    // Strings personalizadas para o inglês
+    // que será o idioma padrão da aplicação
+    <string name="login">Login</string>
+    <string name="subtitle">Please, provide your information</string>
+    <string name="email">Enter your e-mail</string>
+    <string name="password">Enter your password</string>
+    <string name="enter">Enter</string>
+</resources>
