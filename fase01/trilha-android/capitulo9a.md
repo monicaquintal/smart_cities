@@ -313,7 +313,364 @@ fun CaixaDeEntrada(
 }
 ~~~
 
+- utilizar a função CaixaDeEntrada na aplicação, para torná-la mais limpa.
+- abrir o arquivo MainActivity.kt, comentar o código da caixa de texto responsável pela digitação do capital e substituir pelo código:
 
+~~~kotlin
+// Caixas de entrada da Aplicação
+CaixaDeEntrada(
+  value = "",
+  placeholder = "Quanto deseja investir",
+  label = "Valor do investimento",
+  modifier = Modifier,
+  keyboardType = KeyboardType.Decimal
+)
+~~~
+
+### 1.1.3 Elevando o estado
+- agora o componente está sendo renderizado pela função CaixaDeEntrada, e ela será utilizada para renderizar todas as outras; e nesse momento entra a aplicação do State Hoisting. 
+- o parâmetro value da função CaixaDeEntrada deverá receber a variável de estado que está sendo mantida na função JurosScreen, que é hierarquicamente superior, ou seja, é ela que mantém o estado da tela. A função CaixaDeEntrada é ***stateless***, já que não precisa manter o estado.
+- quanto ao comportamento, precisamos passar uma função para a função de composição CaixaDeEntrada que será utilizada pelo parâmetro onValueChange do OutlinedTextField, o que permite que possamos passar comportamentos diferentes para cada caixa de entrada que criarmos. 
+- refatorar a função CaixaDeEntrada para que implemente o estado e o comportamento para as caixas de entrada da aplicação. 
+
+~~~kotlin
+@Composable
+fun CaixaDeEntrada(
+  value: String,
+  placeholder: String,
+  label: String,
+  modifier: Modifier,
+  keyboardType: KeyboardType,
+  atualizarValor: (String) -> Unit
+) {
+  OutlinedTextField(
+    value = value,
+    onValueChange = {
+      atualizarValor(it)
+    },
+    modifier = modifier
+      .fillMaxWidth()
+      .padding(top = 16.dp),
+    placeholder = {
+      Text(text = placeholder)
+    },
+    label = {
+      Text(text = label)
+    },
+    keyboardOptions = KeyboardOptions(keyboardType = keyboardType)
+  )
+}
+~~~
+
+- passar o parâmetro atualizarValor durante a chamada para a função CaixaDeEntrada.
+- no arquivo MainActivity.kt, alterar o código da caixa de texto responsável pela entrada do capital:
+
+~~~kotlin
+// Caixas de entrada da Aplicação
+CaixaDeEntrada(
+  value = capital,
+  placeholder = "Quanto deseja investir",
+  label = "Valor do investimento",
+  modifier = Modifier,
+  keyboardType = KeyboardType.Decimal
+){
+  capital = it
+}
+~~~
+
+- ao executar a aplicação no emulador, agora é possível digitar o valor do capital novamente; ao preencher os valores e clicar no botão calcular, a aplicação funcionará corretamente e calculará os juros e montante. 
+- alterar as outras caixas de texto:
+
+~~~kotlin
+// Caixas de entrada da Aplicação
+CaixaDeEntrada(
+  value = capital,
+  placeholder = "Quanto deseja investir",
+  label = "Valor do investimento",
+  modifier = Modifier,
+  keyboardType = KeyboardType.Decimal
+){
+  capital = it
+}
+CaixaDeEntrada(
+  value = taxa,
+  placeholder = "Qual a taxa de juros mensal?",
+  label = "Taxa de juros mensal",
+  modifier = Modifier,
+  keyboardType = KeyboardType.Decimal
+){
+  taxa = it
+}
+CaixaDeEntrada(
+  value = tempo,
+  placeholder = "Qual o período do investimento em meses?",
+  label = "Período em meses",
+  modifier = Modifier,
+  keyboardType = KeyboardType.Decimal
+){
+  tempo = it
+}
+~~~
+
+- neste exemplo foi realizada a modularização de um único componente, mas podemos modularizar componentes mais complexos. 
+- vamos ***criar uma função de composição para o card que exibe o resultado do investimento***: 
+  - criar um arquivo no pacote components com o nome "CardResultado"
+  - o estado ficará na função hierarquicamente superior que é a JurosScreen.
+
+~~~kotlin
+package br.com.fiap.calculodejuros.components
+
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+
+@Composable
+fun CardResultado(juros: Double, montante: Double) {
+  Card(
+    modifier = Modifier
+      .fillMaxWidth(),
+    colors = CardDefaults.cardColors(
+      containerColor = Color(0xFF4CAF50)
+    )
+  ) {
+    Column(
+      modifier = Modifier
+        //.fillMaxSize()
+        .padding(16.dp)
+    ) {
+      Text(
+        text = "Resultado",
+        fontSize = 18.sp,
+        fontWeight = FontWeight.Bold,
+        color = Color.White
+      )
+      Spacer(modifier = Modifier.height(16.dp))
+      Row(modifier = Modifier.fillMaxWidth()) {
+        Text(
+          text = "Juros",
+          modifier = Modifier.padding(end = 8.dp),
+          fontSize = 16.sp,
+          fontWeight = FontWeight.Bold
+        )
+        Text(
+          text = juros.toString(),
+          modifier = Modifier.padding(end = 8.dp),
+          fontSize = 16.sp,
+          fontWeight = FontWeight.Bold,
+          color = Color.White
+        )
+      }
+      Spacer(modifier = Modifier.height(8.dp))
+      Row(modifier = Modifier.fillMaxWidth()) {
+        Text(
+          text = "Montante",
+          modifier = Modifier.padding(end = 8.dp),
+          fontSize = 16.sp,
+          fontWeight = FontWeight.Bold
+        )
+        Text(
+          text = montante.toString(),
+          modifier = Modifier.padding(end = 8.dp),
+          fontSize = 16.sp,
+          fontWeight = FontWeight.Bold,
+          color = Color.White
+        )
+      }
+    }
+  }
+}
+~~~
+
+- substituir o trecho de código responsável por renderizar o card de resultado da MainActivity.kt pela chamada da função de composição.
+
+~~~kotlin
+package br.com.fiap.calculodejuros
+
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import br.com.fiap.calculodejuros.calculos.calcularJuros
+import br.com.fiap.calculodejuros.calculos.calcularMontante
+import br.com.fiap.calculodejuros.components.CaixaDeEntrada
+import br.com.fiap.calculodejuros.components.CardResultado
+import br.com.fiap.calculodejuros.ui.theme.CalculoDeJurosTheme
+
+class MainActivity : ComponentActivity() {
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContent {
+      CalculoDeJurosTheme {
+        // A surface container using the 'background' color from the theme
+        Surface(
+          modifier = Modifier.fillMaxSize(),
+          color = MaterialTheme.colorScheme.background
+        ) {
+          JurosScreen()
+        }
+      }
+    }
+  }
+}
+
+@Composable
+fun JurosScreen() {
+
+  var capital by remember { mutableStateOf("") }
+  var taxa by remember { mutableStateOf("") }
+  var tempo by remember { mutableStateOf("") }
+  var juros by remember { mutableStateOf(0.0) }
+  var montante by remember { mutableStateOf(0.0) }
+
+  Box(
+    modifier = Modifier.padding(16.dp),
+    contentAlignment = Alignment.Center
+  ) {
+    Column {
+      Text(
+        text = "Cálculo de Juros Simples",
+        modifier = Modifier.fillMaxWidth(),
+        fontSize = 20.sp,
+        color = Color.Red,
+        fontWeight = FontWeight.Bold,
+        textAlign = TextAlign.Center
+      )
+      Spacer(modifier = Modifier.height(32.dp))
+      // Formulário para entrada de dados
+      Card(
+        modifier = Modifier
+          .fillMaxWidth()
+      ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+          Text(
+              text = "Dados do Investimento",
+              fontWeight = FontWeight.Bold
+          )
+          // Caixas de entrada da Aplicação
+          CaixaDeEntrada(
+            value = capital,
+            placeholder = "Quanto deseja investir",
+            label = "Valor do investimento",
+            modifier = Modifier,
+            keyboardType = KeyboardType.Decimal
+          ){
+            capital = it
+          }
+          CaixaDeEntrada(
+            value = taxa,
+            placeholder = "Qual a taxa de juros mensal?",
+            label = "Taxa de juros mensal",
+            modifier = Modifier,
+            keyboardType = KeyboardType.Decimal
+          ){
+            taxa = it
+          }
+          CaixaDeEntrada(
+            value = tempo,
+            placeholder = "Qual o período do investimento em meses?",
+            label = "Período em meses",
+            modifier = Modifier,
+            keyboardType = KeyboardType.Decimal
+          ){
+            tempo = it
+          }
+          Button(
+            onClick = {
+              juros = calcularJuros(
+                capital = capital.toDouble(),
+                taxa = taxa.toDouble(),
+                tempo = tempo.toDouble()
+              )
+              montante = calcularMontante(
+                capital = capital.toDouble(),
+                juros = juros
+              )
+            },
+            modifier = Modifier
+              .fillMaxWidth()
+              .padding(top = 32.dp)
+          ) {
+            Text(text = "CALCULAR")
+          }
+        }
+      }
+      Spacer(modifier = Modifier.height(16.dp))
+      // Resultado da aplicação
+      CardResultado(juros = juros, montante = montante)
+    }
+  }
+}
+~~~
+
+- neste exemplo, modularizamos a aplicação em pequenas partes.
+- que tal criar uma função para componentizar o card com o formulário?
+
+## 1.2 Model View ViewModel – MVVM
+
+- já sabemos que é possível modularizar a aplicação de modo que cada componente seja uma pequena parte customizável que possuirá seu próprio estado e comportamento.
+- agora vamos aplicar uma arquitetura que separe as responsabilidades do código para melhorar a manutenção e a escalabilidade da aplicação - precisamos começar a pensar nas arquiteturas e, no desenvolvimento Android, utilizaremos o padrão MVVM, Model-View-ViewMode.
+
+### 1.2.1 O que é o padrão MVVM?
+- é um padrão arquitetural utilizado no desenvolvimento de aplicações Android.
+- o objetivo principal é separar as responsabilidades da aplicação em camadas.
+- MVVM é organizado em três partes:
+  - `Model`: 
+    - aqui temos a representação da camada de dados do aplicativo. 
+    - essa camada é responsável pelo acesso aos dados em um banco de dados ou requisições através da rede. 
+    - é a camada responsável por fornecer os dados que serão exibidos pela IU.
+  - `View`: 
+    - camada é responsável por exibir os dados ao usuário, além de permitir que o usuário interaja com a aplicação.
+    - é a IU da aplicação.
+  - `ViewModel`: 
+    - conecta a View e a Model.
+    - fornece os dados que serão exibidos pela View, assim como processa as entradas de usuário que podem resultar em atualização dos dados na Model. 
+    - também fornece suporte a dados observáveis através do LiveData, que atualiza os dados da View quando um dado é atualizado.
+
+<div align="center">
+<img src="../images/arquitetura-mvvm.png" width="40%"><br>
+<em>Arquitetura MVVM.</em><br>
+</div>
+<br>
 
 
 
