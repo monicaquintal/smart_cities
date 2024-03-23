@@ -39,7 +39,7 @@
 - [Cap 10A - Internacionalização e Validação de entrada de dados](./fase01/trilha-android/capitulo10a.md)
 - [Cap 11A - Persistência de dados locais](./fase01/trilha-android/capitulo11a.md)
 - [Cap 12A - Listas e Consumo de API externa](./fase01/trilha-android/capitulo12a.md)
-- Cap 13A - Animação e Multimídia
+- [Cap 13A - Animação e Multimídia](./fase01/trilha-android/capitulo13a.md)
 
 </details>
 <details>
@@ -57,3 +57,29 @@
 
 </details>
 <br>
+
+<h2>⌨️ FASE 2: DATABASE PROGRAMMING (de 20/03 até 23/04)</h2>
+
+<details>
+<summary>MASTERING RELATIONAL AND NON-RELATIONAL DATABASE</summary>
+
+- [Cap 1 - Programar dentro do banco de dados, o sonho](./fase02/capitulo01.md)
+- Cap 2
+- Cap 3
+- Cap 4
+- Cap 5
+- Cap 6
+- Cap 7
+- Cap 8
+- Cap 9
+- Cap 10
+
+</details>
+
+<details>
+<summary>ENTREPRENEURSHIP PROGRAM</summary>
+
+- Cap 11
+- Cap 12
+
+</details>
