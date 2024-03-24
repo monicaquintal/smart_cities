@@ -303,11 +303,214 @@ END;
   - **tipo de dados BFILE** (binary file, arquivo binário): usado para armazenar objetos grandes binários em arquivos do sistema operacional fora do banco de dados.
   - **tipo de dados NCLOB** (objeto grande de caractere do idioma nacional): usado para armazenar blocos grandes de dados NCHAR de byte único ou de bytes múltiplos de largura fixa no banco de dados, dentro e fora de linha.
 
+- ao declarar uma variável, usar a sintaxe:
 
+~~~sql
+identificador [CONSTANT] tipo de dados [NOT NULL]
+		[:= valor para inicialização | expr default]
+~~~
 
+- em que:
+  - ***Identificador***: é o nome da variável; identificadores não devem ter mais de 30 caracteres. O primeiro caractere deve ser uma letra, os demais podem ser letras, números ou símbolos especiais e não devem ser palavras reservadas nem possuir espaços entre os caracteres.
+  - ***CONSTANT***: restringe as variáveis para que o seu valor não possa ser alterado; constantes devem ser inicializadas.
+  - ***Tipo de dados***: são tipos de dados escalares, compostos, referenciais ou LOB.
+  - ***NOT NULL***: indica preenchimento obrigatório (variáveis NOT NULL devem ser inicializadas).
+  - ***Expr***: é uma expressão PL/SQL que pode ser uma literal, outra variável ou uma expressão que envolve operadores e funções.
 
+- para inicializar a variável, utiliza-se operador de atribuição (`:=`) ou a `palavra reservada DEFAULT`.
+  - se não for atribuído um valor inicial, terá NULL por default. 
+  - não é aconselhável identificar uma variável com nome igual ao nome das colunas de tabela usadas no bloco. 
+  - se as variáveis PL/SQL ocorrerem nas instruções SQL e tiverem o mesmo nome que uma coluna, o Oracle Server (2016) supõe que seja a coluna que esteja sendo referenciada.
 
+## 2.2 Tipos de dados escalares
 
+- armazena um valor único e não possui componentes internos.
+- classificados em quatro categorias: número, caractere, data e booleano. 
+- os tipos de dados de caractere e número possuem subtipos que associam um tipo básico a uma restrição (exemplo: INTEGER e POSITIVE são subtipos do tipo básico NUMBER). 
+
+<div align="center">
+
+Tipo de dado | Descrição
+-------------|-----------------
+VARCHAR2 (tamanho) | Armazena caracteres com tamanho variável com até 32.767 bytes; não há tamanho default para essas variáveis.
+NUMBER (tamanho, precisão) | Armazena números reais ou inteiros.
+DATE | Armazena datas e horas entre os períodos de 4712 a.C. e 9999 d.C.
+CHAR (tamanho) | Armazena caracteres de tamanho fixo até 32.767 bytes, tamanho default = 1 byte.
+BOOLEAN | Armazena um de três possíveis valores: TRUE, FALSE ou NULL.
+BINARY_INTEGER | Armazena números inteiros entre -2.147.483.647 e 2.147.483.647.
+PLS_INTEGER | Armazena números inteiros entre -2.147.483.647 e 2.147.483.647; estes valores requerem menos armazenamento e são mais rápidos que os valores NUMBER e BINARY_INTEGER. 
+
+</div>
+
+### 2.2.1 Alguns testes:
+
+### a) Testando a definição de variáveis:
+
+~~~sql
+SET SERVEROUTPUT ON
+DECLARE
+    v_teste VARCHAR2(30):='Hello, World';
+BEGIN
+	DBMS_OUTPUT.PUT_LINE(v_teste);
+END;       
+/
+~~~
+
+- o comando `SET SERVEROUTPUT ON` informa que as mensagens do programa devem ser exibidas na tela.
+
+### b) Exemplos de declaração de variáveis:
+
+~~~sql
+v_nascimento DATE; 
+-- aceita valores nulos
+-- não tem nenhum valor inicial atribuído
+
+v_data DATE := SYSDATE + 7;
+-- inicialização a partir de uma operação aritmética 
+-- (hoje + 7 dias)
+
+v_codigo NUMBER(2) NOT NULL := 10; 
+-- preenchimento obrigatório (NOT NULL)
+-- variável recebe valor inicial 10
+
+v_UF VARCHAR2(2) := 'SP'; 
+-- declaração e inicialização com valor SP
+-- os literais devem ser informados entre aspas simples
+
+v_loc VARCHAR2(2) DEFAULT 'RJ';
+-- valor default é RJ
+
+v_teste_logico BOOLEAN := (v_valor1 < v_valor2); 
+-- declaração da variável booleana.
+-- inicializada com o resultado da expressão:
+-- (v_valor1 < v_valor2).
+
+c_const CONSTANT NUMBER := 54;
+~~~
+
+## 2.3 Instrução SELECT em PL/SQL
+
+- é possível usar a instrução SELECT para recuperar dados do banco de dados. 
+- para isso, é necessário usar uma estrutura denominada `CURSOR` para recuperar mais de uma linha por vez. Porém, por enquanto, as consultas retornarão apenas uma linha (ORACLE, 2016).
+- sintaxe das instruções SELECT no PL/SQL:
+
+~~~sql
+SELECT colunas
+INTO	 {variáveis...| registro} 
+FROM	 tabela
+WHERE	 condição;
+~~~
+
+- em que:
+  - ***colunas***: colunas que retornarão dados à consulta; podem incluir funções de linhas, de grupo ou expressões SQL.
+  - ***Into***: cláusula obrigatória, usada para especificar os nomes das variáveis que armazenarão os valores que o SQL retornará a partir da cláusula SELECT. Deve-se oferecer uma variável para cada coluna, seguindo a mesma ordem.
+  - ***Variáveis***: nome das variáveis que irão armazenar o valor recuperado.
+  - ***Registro***: registro PL/SQL para armazenar os valores recuperados, a tabela que especifica o nome da tabela do banco de dados condição é composta de nomes de coluna, expressões, constantes e operadores de comparação, incluindo as variáveis PL/SQL e operadores.
+
+- exemplos:
+
+~~~sql
+SET SERVEROUTPUT ON
+DECLARE
+  v_nome VARCHAR2(30);
+  v_cargo VARCHAR2(30);
+BEGIN
+  SELECT ename, job
+  INTO v_nome, v_cargo
+  FROM emp
+  WHERE empno = 7934;
+DBMS_OUTPUT.PUT_LINE(v_nome);
+DBMS_OUTPUT.PUT_LINE(v_cargo);
+END;
+/
+~~~
+
+~~~sql
+SET SERVEROUTPUT ON
+DECLARE 
+  v_soma_sal NUMBER; 
+  v_deptno NUMBER NOT NULL := 10; 
+BEGIN
+  SELECT SUM(sal) 
+  INTO v_soma_sal
+  FROM emp
+  WHERE	deptno = v_deptno;
+DBMS_OUTPUT.PUT_LINE('A soma dos salários do departamento ' || v_deptno || ' é ' || v_soma_sal);
+END;
+/
+~~~
+
+## 2.4Instrução INSERT em PL/SQL
+
+- usada para incluir dados em uma tabela.
+- sintaxe similar à da linguagem SQL: 
+
+~~~sql
+DECLARE
+v_empno NUMBER := 11;
+v_ename VARCHAR2(13) := 'SANDRA';
+v_job VARCHAR2(13) := 'GERENTE';
+v_deptno NUMBER := 10;
+BEGIN
+   INSERT INTO emp(empno, ename, job, deptno)
+          VALUES (v_empno, v_ename, v_job, v_deptno);
+END;
+/
+~~~
+
+## 2.5 Instrução UPDATE em PL/SQL
+
+- usada para alterar dados em uma tabela.
+- sintaxe similar ao comando UPDATE da linguagem SQL.
+
+~~~sql
+DECLARE
+	v_sal_increase NUMBER := 2000;
+BEGIN
+	UPDATE emp
+	SET sal = sal + v_sal_increase
+	WHERE	job = 'ANALYST';
+END;
+/
+~~~
+
+## 2.6 Instrução DELETE em PL/SQL
+
+- usada para remover registros de uma tabela.
+- sintaxe similar ao comando DELETE da linguagem SQL.
+
+~~~sql
+DECLARE
+	v_deptno NUMBER := 10; 
+BEGIN							
+	DELETE FROM emp
+	WHERE deptno = v_deptno;
+END;
+/
+~~~
+
+## 2.7 Controle de Transação em PL/SQL
+
+- uma transação consiste em uma ou mais instruções SQL que, quando executadas, podem ser consideradas como uma única unidade.
+- ou seja, se uma instrução da transação falhar, a transação inteira falha e todas as instruções que foram executadas antes do ponto de falha são revertidas.
+- o início e o término de uma transação definem os pontos da consistência da base de dados.
+- os efeitos de todas as operações SQL realizadas dentro de uma transação são aplicados ao banco de dados (`COMMIT`) ou os efeitos de todas as operações SQL realizadas são completamente "desfeitos" e jogados fora (`ROLLBACK`).
+- em uma transação, locks ou bloqueios são obtidos no início e mantidos ao longo da vida de uma transação. Quando surge uma condição de erro, o banco de dados remove todas as alterações feitas pela transação.
+- em situações de erro, os bloqueios são liberados; nenhuma conexão é permitida até a consistência ser restaurada.
+
+~~~sql
+BEGIN
+	INSERT INTO dept VALUES ('A','A','A');
+  -- o 1°. campo da tabela DEPT é DEPTNO, numérico.
+  -- tentaremos inserir o valor 'A' (alfanumérico), em um campo numérico,
+  -- então esperamos que o comando falhe.
+	COMMIT;
+EXCEPTION
+	WHEN OTHERS THEN ROLLBACK;
+  -- instrui o programa a executar o comando ROLLBACK caso ocorra falha no programa
+END;
+/
+~~~
 
 --- 
 
