@@ -512,6 +512,22 @@ END;
 /
 ~~~
 
+---
+
+## FAST TEST
+
+### 1. Quais seções de um bloco lógico são obrigatórias?
+> Executável e fim.
+
+### 2. Qual recurso de programação não é possível declarar no PL/SQL?
+> Dicionários.
+
+### 3. De acordo com a terminologia da Oracle, o que melhor define um bloco?
+> Unidade básicade programação.
+
+### 4. Quais dos seguintes tipos de dados não é um tipo de dado escalar?
+> BLOB.
+
 --- 
 
 [Voltar ao início!](https://github.com/monicaquintal/smart_cities)
