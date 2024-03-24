@@ -64,7 +64,7 @@
 <summary>MASTERING RELATIONAL AND NON-RELATIONAL DATABASE</summary>
 
 - [Cap 1 - Programar dentro do banco de dados, o sonho](./fase02/capitulo01.md)
-- Cap 2
+- [Cap 2 - Programando dentro do banco de dados!](./fase02/capitulo02.md)
 - Cap 3
 - Cap 4
 - Cap 5
