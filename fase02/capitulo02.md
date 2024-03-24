@@ -142,10 +142,166 @@ DEPTNO | Código do departamento. | Numérico, inteiro com até 2 dígitos. Chav
 
 </div>
 
+- para verificar se a tabela DEPT e a tabela EMP foram criadas corretamente, executar o comando:
 
+~~~sql
+SELECT table_name FROM user_tables;
 
+-- OU --
 
+SELECT * FROM tab;
+~~~
 
+- para verificar se o conteúdo das tabelas foi inserido corretamente, executar os comandos:
+
+~~~sql
+SELECT * FROM dept;
+
+-- E --
+
+SELECT * FROM emp;
+~~~
+
+## 1.3 Estrutura da linguagem PL/SQL
+
+- é uma linguagem de programação de alto nível.
+- possui vários recursos de programa, como: declaração de constantes e variáveis, tipos de dados predefinidos, estruturas de seleção, estruturas de repetição, procedimentos, funções, pacotes.
+- tudo isso pode ser desenvolvido ***em módulos*** ou, usando a ***terminologia da Oracle***, `em blocos`. 
+
+### 1.3.1 Blocos
+- ***um bloco é a unidade básica de programação do PL/SQL***.
+- em um bloco PL/SQL podem-se usar:
+  - comandos SQL (como SELECT, INSERT, UPDATE e DELETE), e
+  - usar instruções como IF, THEN, ELSE. 
+- é possível criar ***blocos anônimos*** ou ***blocos nomeados***.
+
+### 1.3.1.1 Blocos anônimos
+- um `bloco anônimo` é um conjunto de instruções que não fica armazenado definitivamente no banco.
+- o conjunto de instruções é interpretado, executado e, mais tarde, descartado!
+
+~~~sql
+BEGIN
+	NULL;
+END;
+~~~
+
+### 1.3.1.2 Blocos nomeados
+- conjunto de instruções que fica armazenado no banco de dados. 
+- veremos esse assunto com mais detalhes ao longo dos capítulos.
+
+### 1.3.2 Estruturação da Linguagem PL/SQL
+- alinguagem PL/SQL é estruturada em blocos, e os programas podem ser divididos em blocos lógicos. 
+- podemos dividir o bloco PL/SQL em quatro seções:
+  - `DECLARATIVA` (opcional): 
+    - seção destinada à declaração das variáveis, cursores e exceções que serão utilizadas no bloco. 
+    - é iniciado pela palavra DECLARE.
+    - caso seja definida, deve ser a primeira estrutura do programa.
+  - `EXECUTÁVEL` (obrigatória):
+    - também conhecida como corpo do programa, área em que são descritos os passos necessários para realização da tarefa.
+    - podem ser utilizadas instruções SQL e/ou PL/SQL.
+    - é iniciado pela palavra BEGIN.
+  - `TRATAMENTO DE EXCEÇÕES` (opcional): 
+    - destinada ao tratamento das exceções geradas no bloco.
+    - devem ser descritas as ações a serem desempenhadas quando ocorrerem erros.
+    - iniciado pela palavra EXCEPTION.
+  - `FIM` (obrigatória): 
+    - destinado ao encerramento do programa. 
+    - todo programa PL/SQL deve ser finalizado usando a palavra END.
+
+~~~sql
+DECLARE (opcional)
+-- Aqui definimos as variáveis e outras estruturas que veremos mais a frente
+BEGIN (obrigatório)
+-- Aqui usamos instruções SQL e PL/SQL
+EXCEPTION (opcional)
+-- Aqui definimos as ações que serão tomadas quando ocorrer alguma exceção entro do programa
+END; (obrigatório)
+~~~
+
+> As palavras `DECLARE, BEGIN e EXCEPTION não são seguidas de ponto e vírgula`, mas `a palavra END tem um ponto e vírgula no final`. Lembre-se de colocar um ponto e vírgula ao final de todos os comandos SQL e PL/SQL usados em seu programa PL/SQL!
+
+## 1.4 Blocos Anônimos
+
+- blocos anônimos não ficam armazenados na base de dados. 
+  - como consequência, não podem ser chamados por outros blocos PL/SQL e devem ser compilados a cada utilização.
+  - é possível incorporar um bloco anônimo em uma aplicação ou executá-lo interativamente no SQL*Plus.
+- importante observar que a recompilação de um programa a cada vez que é reexecutado, consome recursos importantes de processamento e memória do servidor de banco de dados e pode impactar diretamente no desempenho geral do sistema.
+- exemplo da estrutura de um bloco em PL/SQL:
+
+~~~sql
+DECLARE 
+		v_variavel varchar2(5);
+BEGIN 
+		Select nome_coluna
+	into v_variavel
+		from nome_tabela;
+EXCEPTION 
+		When exception_name then
+END; 
+/
+~~~
+
+- analisando o código:
+  - na primeira linha aparece a palavra-chave DECLARE. Nesta seção, definir as constantes e variáveis que serão usadas no programa. Note que não há um ponto e vírgulaapós a palavra DECLARE!
+  - na segunda linha é declarado o nome de uma variável chamada V_VARIAVEL. Após o nome da variável, informamos o tipo de dados que aceitará e, em seguida, o tamanho máximo dessa variável. Nesse caso, V_VARIAVEL aceitará valores alfanuméricos (VARCHAR2) com tamanho de até cinco caracteres (5). Note que há um ponto e vírgula logo após a definição da variável!
+  - a terceira linha mostra a palavra-chave BEGIN. A seção executável inicia nesse ponto. Também não há um ponto e vírgula após a palavra BEGIN.
+  - a quarta linha mostra o início de uma seleção, SELECT NOME_COLUNA. Como o comando não terminou, ainda não foi usado um ponto e vírgula.
+  - a quinta linha traz o comando INTO (específico do PL/SQL) V_VARIAVEL, que indica que o conteúdo da coluna NOME_DA_COLUNA será armazenado na variável V_VARIÁVEL. Ainda não terminamos de escrever o comando, então ainda não colocaremos ponto e vírgula.
+  - a sexta linha informa de qual tabela extrairemos os dados por meio do comando FROM NOME_TABELA. Desta vez, colocaremos o ponto e vírgula para indicar que o comando encerrou.
+  - na sétima linha aparece a palavra-chave EXCEPTION. Nessa seção iremos tratar as exceções encontradas durante a execução do programa. Note que não há um ponto e vírgula após a palavra Exception.
+  - a oitava linha mostra a sintaxe incompleta de como capturamos a exceção para tratá-la.
+  - a nona linha encerra o programa com a palavra-chave END; desta vez temos um ponto e vírgula após a palavra END.
+  - a décima linha mostra uma / (barra). Quando estamos trabalhando com a interface SQL*Plus, é esse caractere que encerra o editor PL/SQL e executa o bloco anônimo.
+  - lembrando, as `palavras-chave BEGIN e END são as únicas obrigatórias`.
+
+<div align="center">
+<h2>2. VARIÁVEIS</h2>
+</div>
+
+- são campos definidos pelo usuário e podem ser usadas para armazenar dados temporariamente. 
+- normalmente, as variáveis são definidas e usadas em tempo de execução, isto é, ***são criadas quando o programa é executado e deixam de existir quando o programa é encerrado***.
+- podem ser utilizadas para:
+  - `manipulação de valores armazenados`: 
+    - variáveis podem ser usadas para cálculo e manipulação de outros dados sem acessar o banco de dados.
+    - ou seja, após os valores em memória, não há necessidade de outros acessos para complemento da informação armazenada.
+  - `reutilização`:
+    - quando declaradas, podem ser usadas repetidamente em uma aplicação simplesmente referenciando-as em outras instruções, incluindo outras instruções declarativas.
+  - `facilitar a manutenção`: 
+    - pode-se declarar variáveis baseadas na estrutura das colunas das tabelas ou em outras variáveis (%TYPE e %ROWTYPE). 
+    - se uma definição subjacente for alterada, a declaração da variável é atualizada em tempo de execução. 
+    - isso permite a independência dos dados, reduz custos de manutenção e permite que os programas se adaptem de acordo com as alterações realizadas no banco de dados.
+  - `passar valores`: aos subprogramas PL/SQL por meio de parâmetros.
+  - `exibir os resultados`: em um bloco PL/SQL por meio de variáveis de saída.
+
+- a declaração e a inicialização das variáveis são realizada sna seção declarativa de qualquer subprograma pacote ou bloco PL/SQL. 
+- as declarações alocam espaço de armazenamento para um valor, especificam seus tipos de dados e nomeiam a localização de armazenamento para que se possa referenciá-los.
+- as declarações poderão também atribuir um valor inicial e impor a restrição NOT NULL.
+- ao atribuir novos valores às variáveis na seção executável, o valor existente da variável é substituído pelo novo e é necessário declarar uma variável antes de referenciá-la em outras instruções, incluindo outras instruções declarativas.
+
+## 2.1 Tipos de Variáveis
+
+- todas as variáveis PL/SQL têm um tipo de dados, o qual especifica um formato de armazenamento, restrições e uma faixa válida de valores.
+- a linguagem PL/SQL suporta quatro categorias de tipos de dados:
+  - `Escalares`: 
+    - armazenam um único valor. 
+    - os principais tipos de dados são aqueles que correspondem aos tipos de coluna nas tabelas do Oracle Server.
+    - exemplo: VACHAR2, NUMBER, CHAR, entre outros.
+    - a linguagem PL/SQL também suporta variáveis booleanas.
+  - `Compostos`:
+    - comportam o armazenamento de diferentes valores. 
+    - os tipos compostos em PL/SQL são registro, tabelas e matrizes. 
+  - `Referenciais`:
+    - armazenam valores, chamados de indicadores, que designam outros itens de programa. 
+    - exemplo de tipos referenciais é o REF CURSOR.
+  - `LOB` (large object):
+    - armazenam blocos de dados não estruturados (como texto, imagens gráficas, videoclipes e formatos de arquivo para armazenar sons) de até 4 gigabytes em tamanho. 
+    - os tipos de dados LOB fornecem acesso eficiente, aleatório e em intervalos aos dados, podendo ser atributos de um tipo de objeto.
+
+- ***variáveis LOB*** podem ser classificadas como:
+  - **tipo de dados CLOB** (character large object, objeto grande de caractere): usado para armazenar blocos grandes de dados com caracteres de um único byte no banco de dados.
+  - **tipo de dados BLOB** (binary large object, objeto grande binário): usado para armazenar objetos binários grandes no banco de dados em linha (dentro de uma linha de tabela) ou fora de linha (fora da linha de tabela).
+  - **tipo de dados BFILE** (binary file, arquivo binário): usado para armazenar objetos grandes binários em arquivos do sistema operacional fora do banco de dados.
+  - **tipo de dados NCLOB** (objeto grande de caractere do idioma nacional): usado para armazenar blocos grandes de dados NCHAR de byte único ou de bytes múltiplos de largura fixa no banco de dados, dentro e fora de linha.
 
 
 
