@@ -447,4 +447,20 @@ END;
 
 --- 
 
+## FAST TEST
+
+### 1. Quais são as 3 formas de trabalharmos com estruturas de seleção em PL/SQL?
+> IF THEN / IF THEN ELSE / IF THEN ELSE ELSIF.
+
+### 2. Qual é a melhro estrutura de repetição para garantir o Loop enquanto uma condição verdadeira?
+> O Loop While.
+
+### 3. Em uma cláusula AND, na qual uma das expressões possui valor NULO, qual é o comportamento esperado?
+> O teste retornará falso, pois não é possível saber o resultado da expressão e compará-la corretamente com a segunda expressão.
+
+### 4. Qual é o objetivo de utilizar LABELs em Loops?
+> Garantir que a leitura do código seja intuitiva.
+
+---
+
 [Voltar ao início!](https://github.com/monicaquintal/smart_cities)

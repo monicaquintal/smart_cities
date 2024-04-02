@@ -66,7 +66,7 @@
 - [Cap 1 - Programar dentro do banco de dados, o sonho](./fase02/capitulo01.md)
 - [Cap 2 - Programando dentro do banco de dados!](./fase02/capitulo02.md)
 - [Cap 3 - O banco respeitando decisões](./fase02/capitulo03.md)
-- Cap 4
+- [Cap 4 - Malabarismo dentro do Oracle](./fase02/capitulo04.md)
 - Cap 5
 - Cap 6
 - Cap 7
