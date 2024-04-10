@@ -1,7 +1,7 @@
 <div align="center">
 <a href="https://github.com/monicaquintal" target="_blank"><img align="right" height="120px" src="../assets/logo.png" /></a>
 <h1>FASE 2 - DATABASE PROGRAMMING</h1>
-<h2>Capítulo 06: </h2>
+<h2>Capítulo 06: Tratando exceções, desta vez no BD.</h2>
 </div>
 
 <div align="center">
@@ -177,26 +177,186 @@ EXCEPTION
 
 <div align="center">
 
-
+Valor SQLCODE | Descrição
+---------------|--------------------
+0 | Nenhuma exceção encontrada.
+1 | Exceção definida pelo usuário.
++100 | Exceção NO_DATA_FOUND.
+Número negativo | Número de erro do servidor Oracle.
 
 </div>
 
+### 1.2.2 Exceções nomeadas pelo desenvolvedor
+- similares às exceções predefinidas.
+- a diferença é que precisam ser declaradas na seção DECLARE e chamadas por meio da instrução RAISE. 
+- exemplo:
 
+~~~sql
+DECLARE
+  e_meu_erro EXCEPTION;
+  emprec emp%ROWTYPE; CURSOR cursor_emp IS 
+         SELECT empno, ename 
+         FROM emp 
+         WHERE empno = 1111;
+BEGIN
+   OPEN cursor_emp;
+   LOOP
+      FETCH cursor_emp INTO emprec.deptno, emprec.sal;
+      IF cursor_emp%NOTFOUND THEN
+         RAISE e_meu_erro;
+      END IF;
+         DBMS_OUTPUT.PUT_LINE ('Codigo : ' || emprec.empno);
+         DBMS_OUTPUT.PUT_LINE ('Nome : ' || emprec.ename);
+      EXIT WHEN cursor_emp%NOTFOUND;
+   END LOOP;
+EXCEPTION
+   WHEN E_MEU_ERRO THEN
+         DBMS_OUTPUT.PUT_LINE ('Codigo nao cadastrado');
+         ROLLBACK;
+END;
+/
+~~~
 
+- nesse exemplo, na seção DECLARE, definida a exceção E_MEU_ERROO usando o atributo EXCEPTION. 
+- na seção executável, estamos testando, com a cláusula IF, se %NOTFOUND retornou o valor TRUE, ou seja, se a consulta não retornar dados, o programa acionará a exceção E_MEU_ERRO. A seção EXCEPTION capturará o erro, emitirá a mensagem “Codigo não cadastrado” e desfará qualquer alteração que ainda não tenha sido gravada com a instrução ROLLBACK.
 
+### 1.2.3 Associar exceções a erros-padrão do servidor
+- algumas exceções declaradas pelo usuário podem ser associadas a erros Oracle predefinidos, mas não nomeados, da seguinte maneira:
 
+~~~sql
+PRAGMA EXCEPTION_INIT(nome_exceção, código_Oracle_erro);
+/
+~~~
 
+- onde:
+  - nome_exceção: deve ser colocado na área declarativa (DECLARE).
+  - codigo_Oracle_erro: código do erro dentro do padrão Oracle que irá ser associado à exceção declarada.
 
+- `PRAGMA EXCEPTION_INIT` é uma diretiva de compilação que informa o compilador para associar um nome de exceção a um número de erro do Oracle, permitindo que possa ser consultada qualquer exceção interna por nome e criado um HANDLER específico. 
 
+> ***PRAGMA*** (ou pseudoinstruções) é uma palavra-chave que significa que a instrução é uma diretiva de compilador não processada ao executar o bloco PL/SQL. Em vez disso, orienta o compilador do PL/SQL para interpretar todas as ocorrências do nome da exceção dentro do bloco como o número de erro do Oracle Server associado.
 
+- exemplo:
 
+~~~sql
+DECLARE 
+  e_meu_erro EXCEPTION; 
+  PRAGMA EXCEPTION_INIT (e_meu_erro, -2292); 
+BEGIN
+  DELETE FROM dept 
+  WHERE deptno = 10; 
+  COMMIT; 
+EXCEPTION WHEN e_meu_erro THEN 
+  DBMS_OUTPUT.PUT_LINE ('Integridade Referencial Violada');
+  ROLLBACK; 
+END;
+/
+~~~
 
+### 1.2.4 Procedimento RAISE_APPLICATION_ERROR
+- utilizado para comunicar uma exceção predefinida interativamente,retornando um código ou uma mensagem de erro não padronizado.
+- permite relatar erros para a aplicação e evitar o retorno de exceções não tratáveis.
 
+~~~sql
+RAISE_APPLICATION_ERROR (numero_erro,	mensagem [, {TRUE | FALSE}]);
+~~~
 
+- onde:
+  - número_erro: número especificado pelo usuário para a exceção entre –20000 e –20999.
+  - mensagem: mensagem especificada pelo usuário para a exceção. Trata-se de uma string de caracteres com até 2.048 bytes.
+  - TRUE | FALSE: parâmetro Booleano opcional (Se TRUE, o erro será colocado na pilha de erros anteriores. Se FALSE, o default, o erro substituirá todos os erros anteriores).
+- o procedimento RAISE_APPLICATION_ERROR pode ser usado tanto na seção de exceção quanto na seção executável.
+- exemplo:
 
+~~~sql
+DECLARE 
+  cinco NUMBER := 5; 
+BEGIN 
+  DBMS_OUTPUT.PUT_LINE (cinco / ( cinco - cinco )); 
+EXCEPTION 
+  WHEN ZERO_DIVIDE THEN 
+    RAISE_APPLICATION_ERROR (-20901, 'Erro aritmetico. Reveja o programa'); 
+  WHEN OTHERS THEN DBMS_OUTPUT.PUT_LINE ('Erro imprevisto'); 
+END; /
 
+ERROR at line 1:
+ORA-20901: Erro aritmetico. Reveja o programa
+~~~
 
+- também podemos usar RAISE_APPLICATION_ERROR na seção executável, como no exemplo:
 
+~~~sql
+DECLARE 
+  e_meu_erro EXCEPTION; 
+  PRAGMA EXCEPTION_INIT (e_meu_erro, -2292); 
+BEGIN 
+  DELETE FROM dept
+  WHERE deptno = 33;
+  IF SQL%NOTFOUND THEN
+    RAISE_APPLICATION_ERROR (-20901, 'Departamento Inexistente');
+      ROLLBACK;
+    END IF;
+    COMMIT; 
+EXCEPTION
+  WHEN e_meu_erro THEN 
+    DBMS_OUTPUT.PUT_LINE ('Integridade Referencial Violada'); 
+    ROLLBACK; 
+END; /
+
+ERROR at line 1:
+ORA-20901: Departamento Inexistente
+~~~
+
+### 1.2.5 Propagar uma exceção para um bloco externo
+- em vez de se capturar uma exceção dentro do bloco PL/SQL, é possível propagar a exceção para permitir que seja tratada pelo ambiente de chamada. Cada ambiente de chamada tem seu modo de exibir e acessar erros.
+- se o código PL/SQL criar uma exceção e o bloco atual não tiver um HANDLER, a exceção propagará em blocos delimitados sucessivos até localizar um HANDLER. Se nenhum desses blocos tratá-la, o resultado será uma exceção não tratável no ambiente de HOST (chamador).
+- quando a exceção propaga para um bloco delimitado, as ações executáveis restantes desse bloco são ignoradas. Uma vantagem desse comportamento é que se pode delimitar instruções que exigem seus próprios tratamentos de erro exclusivos em seu próprio bloco, enquanto deixa o tratamento de exceção mais geral para o bloco delimitado.
+- exemplo:
+
+~~~sql
+DECLARE
+   cod erros.cod_erro%TYPE;
+   msg erros.msg_erro%TYPE;
+   cinco NUMBER := 5;
+BEGIN
+    BEGIN
+        DELETE FROM dept
+         WHERE deptno = 10;
+    EXCEPTION
+       WHEN ZERO_DIVIDE THEN
+            DBMS_OUTPUT.PUT_LINE ('Erro no bloco interno');
+    END;
+    DBMS_OUTPUT.PUT_LINE (cinco / ( cinco - cinco ));
+EXCEPTION
+    WHEN OTHERS THEN
+        cod := SQLCODE;
+        msg := SUBSTR(SQLERRM, 1, 100);
+        insert into erros values (USER, SYSDATE, cod, msg);
+END;
+/
+~~~
+
+- nesse exemplo, há dois blocos PL/SQL aninhados. 
+- a instrução DELETE está no bloco mais interno e a divisão por zero está no bloco mais externo. 
+- ao tentar efetuar a exclusão do departamento 10, ocorre um erro de violação de integridade referencial.
+- o programa procura dentro do bloco mais interno uma forma de tratar esse erro. Caso não encontre, transfere o erro para a seção de EXCEPTION do bloco mais externo que insere o código de erro na tabela ERROS. 
+- caso não fosse tratado no bloco mais externo, o programa propagaria o erro para o ambiente chamador.
+
+--- 
+
+## FAST TEST
+
+### 1. Qual é o principal comando para abrir um bloco de tratamento de erros em PL/SQL?
+> EXCEPTION.
+
+### 2. Podemos identificar um código de erro através da função SQLCODE em um bloco. Qual output não é válido patra este comando?
+> ORA-.
+
+### 3. Referente a exceções definidas pelo usuário, qual das alternativas é incorreta?
+> Exceções definidas pelo usuário podem sobrescrever exceções nomeadas do Oracle.
+
+### 4. O que são exceções nomeadas?
+> Erros conhecidos, portanto, com um código e nome atrelados.
 
 --- 
 
