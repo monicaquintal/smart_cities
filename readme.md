@@ -68,7 +68,7 @@
 - [Cap 3 - O banco respeitando decisões](./fase02/capitulo03.md)
 - [Cap 4 - Malabarismo dentro do Oracle](./fase02/capitulo04.md)
 - [Cap 5 - Objetos no Oracle!](./fase02/capitulo05.md)
-- Cap 6
+- [Cap 6 - Tratando exceções, desta vez no BD](./fase02/capitulo06.md)
 - Cap 7
 - Cap 8
 - Cap 9
