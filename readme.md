@@ -70,7 +70,7 @@
 - [Cap 5 - Objetos no Oracle!](./fase02/capitulo05.md)
 - [Cap 6 - Tratando exceções, desta vez no BD](./fase02/capitulo06.md)
 - [Cap 7 - Muito a processar antes de persistir](./fase02/capitulo07.md)
-- Cap 8
+- [Cap 8 - Crie suas próprias funções no Oracle](./fase02/capitulo08.md)
 - Cap 9
 - Cap 10
 
