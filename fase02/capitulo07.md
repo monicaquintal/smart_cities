@@ -1,7 +1,7 @@
 <div align="center">
 <a href="https://github.com/monicaquintal" target="_blank"><img align="right" height="120px" src="../assets/logo.png" /></a>
 <h1>FASE 2 - DATABASE PROGRAMMING</h1>
-<h2>Capítulo 07: Muito a processar antes de persistir</h2>
+<h2>Capítulo 07: Muito a processar antes de persistir.</h2>
 </div>
 
 <div align="center">
@@ -335,17 +335,17 @@ END;
 
 ## FAST TEST
 
-### 1. 
+### 1. Para a passagem de parâmetros de forma identificada, qual o sinal de atribuição utilizado?
+> =>.
 
+### 2. Qual a melhor definição para uma STORED PROCEDURE?
+> Bloco de código nomeado que pode ser executado com parâmetros de entrada e-/ou saída sozinho ou dentro de outros blocos.
 
+### 3. Quais das seguintes características não estão presentes em uma PROCEDURE?
+> Procedures possuem tratamento de esceção predefinido.
 
-
-
-
-
-
-
-
+### 4. Um parâmetro que será utilizado tanto na entrada de valores para a procedure, quanto na saída deve ser declarado como:
+> IN OUT.
 
 --- 
 
