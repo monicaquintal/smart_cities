@@ -5,7 +5,7 @@
 </div>
 
 <div align="center">
-<h2>1. CRIE SUAS PRÓPRIAS FUNÇÕES NOORACLE</h2>
+<h2>1. CRIE SUAS PRÓPRIAS FUNÇÕES NO ORACLE</h2>
 </div>
 
 - Muito parecidas com as procedures, as funções têm como características o retorno de valores e a utilização como parte de uma expressão.
