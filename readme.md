@@ -72,7 +72,7 @@
 - [Cap 7 - Muito a processar antes de persistir](./fase02/capitulo07.md)
 - [Cap 8 - Crie suas próprias funções no Oracle](./fase02/capitulo08.md)
 - [Cap 9 - Empacotando os elementos do banco](./fase02/capitulo09.md)
-- Cap 10
+- [Cap 10 - Gatilhos Mágicos](./fase02/capitulo10.md)
 
 </details>
 
