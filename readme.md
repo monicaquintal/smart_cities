@@ -79,7 +79,7 @@
 <details>
 <summary>ENTREPRENEURSHIP PROGRAM</summary>
 
-- Cap 11
+- [Cap 11 - Identificando oportunidades](./fase02/capitulo11.md)
 - Cap 12
 
 </details>

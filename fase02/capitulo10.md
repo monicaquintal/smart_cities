@@ -757,7 +757,7 @@ ROLLBACK;
 ### 2. Um gatilho DML precisa estar atrelado a:
 > Uma tabela.
 
-### 3. QUando devemos utilizar FOR EACH ROW em um gatilho?
+### 3. Quando devemos utilizar FOR EACH ROW em um gatilho?
 > Para executar um comando individualmente para cada linha da tabela, possibilitando lógicas específicas dependendo dos registros.
 
 --- 
