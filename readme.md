@@ -80,6 +80,6 @@
 <summary>ENTREPRENEURSHIP PROGRAM</summary>
 
 - [Cap 11 - Identificando oportunidades](./fase02/capitulo11.md)
-- Cap 12
+- [Cap 12 - Validating your startup!](./fase02/capitulo12.md)
 
 </details>
