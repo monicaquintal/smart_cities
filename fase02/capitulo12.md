@@ -265,6 +265,52 @@ O paciente não gosta de esperar para ser atendido. | Como você se sente ao esp
     - Survey Monkey. 
     - Typeform.
 
+### 1.7.4 Realizando entrevistas imparciais
+- entrevistas não devem ser interrogatório, e sim um bate papo; quanto mais descontraído, melhor, porque gera mais empatia.
+- antes de abordar sobre o objetivo da reunião, inicie a conversa com assuntos aleatórios, buscando algum tipo de conexão. Olhe para o cliente como uma pessoa, tente entender como se comporta, o que gosta, no que acredita, para tentar encontrar uma conexão e empatia. 
+- não existem regras nem melhores práticas, e sim um objetivo: buscar uma conexão com a pessoa. 
+- depois de quebrar o gelo, faça novamente a introdução do motivo da reunião,buscando envolver a pessoa, engrandecendo o projeto, a oportunidade e a experiência que ela compartilhará, e comece suas perguntas.
+- nem todas as entrevistas acontecerão da mesma maneira, pois cada pessoa tem o seu comportamento.
+- tente lembrar de que o foco é validar as hipóteses mais críticas,levantadas no ecossistema e na jornada; faça perguntas que direcionem para as dúvidas que queira esclarecer.
+- se possível e com a permissão da pessoa, grave a conversa para ouvi-la depois e analisar os insights. Caso não seja possível, tente anotar todos os principais insights na entrevista.
+- o objetivo nas entrevistas é aprender sobre os clientes e o mercado, ou seja, deixar o cliente falar. 
+- além das dúvidas e do processo planejado da entrevista, pergunte por informações complementares, como: “Onde buscam informações do seu dia a dia?”, “Com quem se relacionam?”, “Quais evento participam?”, “Como se capacitam?”, “O que leem?”, “Quais estratégias adotam em relação aos concorrentes?”; ou seja, entenda o comportamento do cliente de maneira holística.
+- por fim, sempre peça indicações; ampliar o Network, fazendo conexões relevantes que possam agregar mais expertise e maturidade para sua visão de negócio.
+
+## 1.8 Resultados
+
+### 1.8.1 Análise de resultados dos experimentos
+- agora é hora de rever e consolidar respostas e insights, documentá-los e compará-los com a matriz de hipóteses.
+- para cada hipótese é preciso extrair respostas categóricas: “sim” ou “não” (se foram validadas ou não), consolidá-las e compará-las com o critério de aceitação que definimos. 
+
+Hipótese | Critério de aceitação | Respostas positivas | Validação
+---------|-----------------------|------------------|-------------
+O setor financeiro do hospital emite relatório de despesas para o convênio médico. | 70% | 80% | Validada
+A autorização pelo convênio médico é lenta. | 80% | 60% | Invalidada
+O paciente não gosta de esperar para ser atendido. | 85% | 95% | Validada
+
+- depois de validado todo o conjunto inicial de hipóteses, analisar se as suposições e dúvidas da Matriz CSD tornaram-se certezas, e se essas certezas nos dão bases para continuar o processo. Quais foram as lições aprendidas e as lições ainda não aprendidas?
+- não precisamos nos preocupar se nossas hipóteses foram invalidadas e se o que imaginávamos não é real. Na verdade, esse é o maior insight que devemos adquirir neste processo, pois permitirá sermos enxutos e errarmos rápido.
+
+> "Nenhum plano de negócio sobrevive ao primeiro contato com clientes".
+
+- se as hipóteses foram invalidadas e identificamos que o problema base da nossa solução não é real, precisamos `pivotar` (mudar radicalmente o rumo do negócio) - tanto o problema que levantamos para o cliente, assim como o próprio cliente. 
+- seguindo todas as etapas ciclicamente, em um certo momento, teremos uma base sólida para tomar as decisões para o nosso negócio: pivotar, revalidar ou seguir para as próximas etapas no desenvolvimentoda solução de negócio. 
+
+---
+
+## FAST TEST
+
+### 1. Sobre as dimensões do job to be done, qual opção corresponde a um job social?
+> O cliente frequenta a academia para ter um corpo atlético e receber elogios na internet.
+
+### 2. Sobre o conceito de tamanho de mercado (TAM, SAM, SOM), é correto afirmar que:
+> TAM, SAM, SOM é útil para demonstrar aos investidores o potencial de crescimento e posicionamento de um negócio, mas também para te dar recortes diferenciados para inovar.
+
+### Qual a importância de validar o problema sem pensar na solução?
+> Evitar algum viés de construir o negócio de uma forma que agrada o empreendedor, mas não o cliente.
+
+
 
 --- 
 
