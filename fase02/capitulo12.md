@@ -127,11 +127,143 @@
   - extremo 1:pessoas que assistem a seriados diariamente, diversos episódios seguidos e que aguardam ansiosamente por novas temporadas.
   - extremo 2: pessoas que assistem a seriados esporadicamente, com baixa frequência e baixa regularidade.
 
+- cada extremo possui uma necessidade, uma experiência e uma jornada, sendo que uma vez compreendidas todas elas, é possível balizar a maior quantidade de necessidades possíveis, baseadas em seu comportamento. 
+- ***uma vez identificados esses grupos, o desafio passa a ser recrutá-los***.
+- a maneira mais simples e eficaz são as indicações em seu Network (conexões de trabalho, familiares ou amigos que se encaixem nesses grupos); faça contato e busque adeptos a colaborar com feedbacks. 
+- caso não consiga encontrar tais grupos em seu Network, busque atalhos. 
+- algumas `estratégias que podem ser utilizadas` são: 
+  - busque e participe de grupos de discussão sobre o assunto no Facebook.
+  - descubra influenciadores que discutam o tema no Linkedin.
+  - busque canais no Youtube que abordem o tema, analisando a quantidade de seguidores e comentários dos vídeos.
+  - participe de meetups e eventos do segmento.
+  - busque perfis extremos ou pessoas que poderiam direcioná-lo no aplicativo BeerOrCoffee, aplicativo para fortalecer Network e promover conexões.
+- caso os atalhos não sejam encontrados, tentar abordar clientes extremos, individualmente, buscando recrutar pelo menos uma quantidade de clientes que possam gerar insights relevantes.
+
+### 1.5.3 Jornada do usuário
+- é o processo de ponta a ponta, que o cliente ou usuário realiza em determinado processo. 
+- para mapeá-la e estudá-la, segue representação gráfica de todas as atividades que seu cliente/usuário realiza, em determinado contexto, mapeando todos os relacionamentos com diferentes pessoas, produtos e serviços, respectivas percepções e expectativas sobre cada etapa.
+- o objetivo é entender em detalhes as atividades do cliente, e o principal é descobrir suas dores e desconfortos no processo.
+- primeiramente, precisamos compreender todas as atividades que ele executa e as suas relações (`touchpoints`), presentes no contexto "Ir ao hospital em busca de tratamento médico". 
+
+<div align="center">
+<img src="./images/touchpoints.png" width="60%"><br>
+<em>Jornada do usuário - paciente.</em>
+<br>
+</div>
+
+## 1.6 Foque no problema
+
+- agora, temos uma visão clara de todas as etapas deste processo e todos os touchpoints com que o cliente se relaciona.
+- a próxima etapa é entender qual a percepção e o sentimento do usuário em cada uma das etapas. 
+- neste ponto, não devemos pensar nas possíveis soluções (apesar de difícil e tentador), temos que focar nos problemas: onde estão, como eles acontecem e o que os provocam. 
+- a figura abaixo ilustra as percepções do usuário em cada uma das etapas.
+
+<div align="center">
+<img src="./images/jornada-e-percepcoes.png" width="60%"><br>
+<em>Jornada do usuário "paciente" com suas respectivas percepções.</em>
+<br>
+</div>
+
+- mapeadas todas as percepções do usuário, chegamos a mais um objetivo do processo: `identificar quais atividades geram desconforto e percepções negativas`, sendo que essas dores resolvidas podem gerar uma percepção de valor pelo nosso cliente. 
+- apesar do grande esforço empregado no mapeamento concreto da jornada do usuário, tudo o que levantamos até agora baseou-se apenas em nosso conhecimento e em nossas vivências - são hipóteses.
+- precisamos, a partir de todas as hipóteses levantadas, entender o que temos certeza, o que supomos e o que ainda não sabemos sobre esse processo.
+
+### 1.6.1 Matriz CSD (Certeza, Suposição e Dúvidas)
+- é uma ferramenta que nos ajuda a categorizar todas as hipóteses levantadas em três categorias: 
+  - certeza (eu já sei), 
+  - suposição (talvez seja útil) e 
+  - dúvidas.
+- ***objetivo***: identificar o que ainda não sabemos ou temos dúvida a respeito do nosso ecossistema, clientes (extremos ou não), jornada do usuário e as suas percepções - ou seja, evidenciar as hipóteses.
+- à medida que o projeto for validado, a disposição dos itens nesta matriz será alterada aos poucos, sendo que quanto menor o número de itens em suposição ou dúvida, maior o nível de maturidade da Startup.
+- logo, o objetivo é ***olhar para a jornada desenhada, os pontos de dor identificados, posicioná-los e classificá-los nas colunas***. 
+- a ideia é classificar mais "suposições" e "dúvidas" do que "certezas". 
+
+> só classifique "certezas" se você sofre das dores por também se enquadrar na jornada que está analisando - se você pode ser o cliente da sua própria solução. 
+
+### 1.6.2 Hipóteses > Experimentos> Resultados
+- apesar de parecer que já conhecemos os problemas do cliente, ainda sabemos muito pouco, são meros achismos/hipóteses, as quais precisam ser postas à prova em experimentos, a fim de testá-las sob o ponto de vista do cliente.
+- apenas feedbacks dos clientes podem direcionar nesta jornada, e estes feedbacks acontecem lá fora, onde os clientes vivem e se relacionam, no seu dia a dia e no seu ambiente. 
+- o processo de Hipóteses > Experimento > Resultados é cíclico; deve ser executado diversas vezes até que insights necessários sejam gerados. 
+- primeiramente entender quais insights precisamos ter (hipóteses), qual a maneira mais rápida e simples de alcançá-los (experimento), e quais aprendizados serão obtidos no experimento (resultados).
+
+### 1.6.3 Hipóteses
+- nesta etapa, precisamos entender quais das hipóteses que levantamos são as mais relevantes e críticas para nosso cliente, porque caso sejam invalidadas, a ideia de proposta de solução também será.
+- categorizar as suposições e dúvidas da Matriz CSD em dois critérios: ***hipóteses de ecossistema*** e ***hipóteses de jornada***. 
+- lembrando que estamos olhando para as hipóteses com foco em problemas e não em soluções.
+- sendo:
+  - `Hipóteses de ecossistema`:
+    - todos os elementos de negócios que mapeamos no ecossistema do cliente, assim como todas as relações entre eles. 
+    - analisar o ecossistema e identificar todas as dúvidas e incertezas nesse model, e categoriza-los como "Hipóteses de ecossistema" na Matriz CSD.
+  - `Hipóteses da jornada do usuário`: 
+    - atividades da jornada do usuário e suas respectivas percepções. 
+    - categorizar como "Hipóteses da jornada do usuário".
+
+### 1.6.4 Delimitando o escopo de validação
+- precisamos agora entender quais dessas hipóteses são as mais críticas e podem nos direcionar a compreender se nossa visão é válida ou não. 
+- portando, precisamos delimitar o ***escopo de validação***. 
+- delimitar inicialmente o escopo de validação das hipóteses mais críticas e, uma vez validadas, seguir para o próximo conjunto de hipóteses restantes, permanecendo em um processo cíclico de aprendizado,até que seja possível extrair os fatos a partir dessas hipóteses.
+- portanto, realizar uma bateria de experimentos.
+
+## 1.7 Experimentos
+
+- são maneiras de testar as dúvidas existentes na suposição de problema.
+- devem seguir o DNA do modelo Startup, sendo rápidos e enxutos, efetivos e assertivos independentemente de seu resultado ser certo ou errado. 
+- procurar entender qual teste (mais simples) poderíamos realizar para conseguir aprendizado. 
+- experimentos para validação do problema:
+  - entrevistas pessoais.
+  - entrevistas on-line (formulários de pesquisa ou ligações).
+
+### 1.7.1 Planejando entrevistas
+- antes de agendar entrevistas, considerar as validações como ações planejadas, seguidas de um plano com um objetivo final.
+- considerar as seguintes etapas no planejamento de uma entrevista:
+  - ***determinar o objetivo do experimento***: Quais são as hipóteses a serem validadas e qual o aprendizado buscaremos?
+  - ***determinar tamanho da amostragem***: Delimitar o número de possíveis clientes (extremos ou não) que farão parte do experimento.
+  - ***determinar critérios de aceitação***: Qual o critério de aceitação considerado para cada hipótese em validação no experimento? Se o critério de aceitação é 70% (70 pessoas de 100 responderem como certa a sua hipótese), ela passa a se tornar uma hipótese validada, um fato. Caso contrário, sua hipótese é invalidada (não representa algo real). Não existe regra para definir este critério, verifique quão crítica é a hipótese e atribua o critério que represente menor risco para o projeto (**mais crítica > critério alto, menos crítica, critério mais baixo**). 
+  - ***fazer perguntas abertas***: perguntas fechadas são as que direcionam a resposta do entrevistado para SIM ou NÃO. Perguntas abertas fomentam respostas mas ricas que façam o entrevistado responder contando uma história.
+
+### 1.7.2 Buscando os clientes e agendando reuniões
+- um dos grandes desafios iniciais é contatar possíveis clientes para compor o tamanho determinado da amostragem. 
+- iniciar sempre a partir do seu Network, por ser uma porta aberta e mais rápida para encontrá-los. 
+- sempre buscar clientes visionários e públicos adeptos à transformação e inovação, pois serão mais receptivos. 
+- é importante gerar contextualização e empatia para que, a partir do primeiro contato, seja possível estender para diversos outros. 
+- indicações tendem a funcionar muito bem.
+- introduzir uma história inicial de referência, explicando o motivo da ligação e que gostaria de ouvir o ponto de vista de uma pessoa especialista no assunto.
+- pensar em outras maneiras de diminuir barreiras, de engrandecer e envolver o ouvinte no contexto, para que ele se sinta importante e parte do processo. 
+- proponhauma reunião curta (quinze minutos), tomar um café para bater um papo sobre o assunto. Determine o dia e horário e sele o compromisso. 
+- as rejeições são comuns, então não se preocupe e nem se frustre com isso. Caso os clientes não possam conversar, sugira ligar em outro horário, peça indicações de quem poderia ajudar e evite terminar o contato sem pelo menos apresentar alternativas de contato.
+
+- evitar perguntas no formato:
+
+Hipótese | Pergunta | Respostas
+---------|----------|------------
+O setor financeiro do hospital emite relatório de despesas para o convênio médico. | Você emite relatório de despesas para o convênio? | Sim/Não
+A autorização pelo convênio médico é lenta. | A autorização pelo convênio médico é lenta? | Sim/Não
+O paciente não gosta de esperar para ser atendido | Você não gosta de esperar para ser atendido? | Sim/Não
 
 
+- focar em perguntas no formato:
 
+Hipótese | Pergunta | Resposta
+--------|-----------|-------------
+O setor financeiro do hospital emite relatório de despesas para o convênio médico. | Como é o processo de emissão de relatório de despesas para o convênio médico? | Detalhes do processo.
+A autorização pelo convênio médico é lenta. | Quais são as dificuldades na autorização de um atendimento pelo convênio médico? | Detalhes do processo.
+O paciente não gosta de esperar para ser atendido. | Como você se sente ao esperar para ser atendido? | Detalhes da percepção do cliente.
 
-
+- as perguntas devem ser desenhadas de maneira imparcial, nunca direcionando o entrevistado à resposta que deseja ouvir. 
+- formular perguntas utilizando as estruturas: "Como funciona...", "Qual o problema...", "Quais as dificuldades...", "O que você sente quando...".
+- fazer perguntas-chave como:
+  - Como é a rotina do processo?
+  - Quais as grandes dificuldades e maiores problemas que você enfrenta?
+  - Como você resolve esse problema hoje?
+  - Quanto custa esse problema para você?
+  - Como você imagina qual seria a melhor maneira de resolvê-lo?
+- essas perguntas também podem ser estruturadas em `formulários on-line` e divulgadas em meios digitais. Neste contexto, é interessante direcioná-las um pouco mais, não deixando tão abertas, pois não será possível extrair detalhes da experiência do usuário com a mesma profundidade. 
+  - estruturar as perguntas para que elas não sejam tendenciosas.
+  - formulários on-line contam com uma estrutura de relatórios que facilitam a análise de respostas e consolidação de insights.
+  - exemplos das principais ferramentas:
+    - Google forms.
+    - Survey Monkey. 
+    - Typeform.
 
 
 --- 
