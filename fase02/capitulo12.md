@@ -310,7 +310,96 @@ O paciente não gosta de esperar para ser atendido. | 85% | 95% | Validada
 ### Qual a importância de validar o problema sem pensar na solução?
 > Evitar algum viés de construir o negócio de uma forma que agrada o empreendedor, mas não o cliente.
 
+---
 
+## QUIZ
+
+### 1. A Linguagem PL/SQL é uma linguagem de programação de alto nível, que possui diversos recursos. Assinale as opções que correspondem a estes recursos:
+> Declaração de constantes e variáveis, Pacotes, APIs, Procedimentos, Funções.
+
+### 2. Quando ocorre uma exceção, é possível identificar o código ou a mensagem de erro associado por meio de funções específicas. Assinale a alternativa que identifica, respectivamente quais são estas funções:
+> SQLCODE e SQLERRM.
+
+### 3. Veja a seguinte PROCEDURE, criada para atualizar o valor do salário de um empregado:
+~~~sql
+CREATE OR REPLACE PROCEDURE reajuste
+(v_cogido_emp IN emp.empno%type, v_porcentagem IN number)
+IS
+BEGIN
+UPDATE emp
+  SET sal = sal + (sal*(v_porcentagem / 100))
+WHERE empno = v_codigo_emp;
+  COMMIT;
+END reajuste;
+~~~
+Considere o código que segue para testar a Procedure mencionada:
+~~~sql
+SELECT empno, sal
+  FROM emp
+  WHERE empno = 7839;
+
+EXECUTE reajuste (7839, 10);
+  FROM emp;
+  WHERE empno = 7839;
+~~~
+Assinale a alternativa que representa uma conclusão correta sobre este teste da Procedure “reajuste”:
+> O salário do funcionário 7839 sofre um reajuste de 10%.
+
+### 4. No PL/SQL podemos criar procedures e funções para finalidades específicas. Assinale as opções exemplificam diferenças entre procedures e funções:
+> Procedures podem retornar nenhum, um ou vários valores; Funções contém a cláusula RETURN no cabeçalho; Função retorna obrigatoriamente um valor para a rotina que a chamou; Uma procedure pode devolver um valor para a rotina que a chamou.
+
+### 5. Analise a FUNCTION que segue:
+~~~sql
+CREATE OR REPLACE FUNCTION descobrir_salario
+  (p_id IN emp.empno%TYPE)
+RETURN NUMBER
+IS
+  v_salario emp.sal%TYPE := 0;
+BEGIN
+  SELECT sal INTO v_salario
+    FROM emp
+    WHERE empno = p_id;
+    RETURN v_salario;
+END descobrir_salario;
+~~~
+Veja o código utilizado para testar a função apresentada:
+~~~sql
+SELECT empno, DESCOBRIR_SALARIO(empno)
+  FROM emp;
+~~~
+Assinale a alternativa que corresponde a uma conclusão correta sobre este teste realizado na função “descobrir_salario”:
+> O teste exibe o código de cada funcionário e executa a função DESCOBRIR_SALARIO com o código de cada funcionário como entrada e retorna o salário de cada um deles.
+
+### 6. Pacotes são áreas de armazenamento de (assinale as opções corretas):
+> Procedures, Functions, Cursores, Constantes, Variáveis
+
+### 7. Assinale a alternativa INCORRETA, sobre PACKAGES:
+> Packages podem ter duas partes: uma especificação e um corpo. A especificação define as queries para os cursores e o código dos subprogramas, já o corpo define a interface do package.
+
+### 8. Os gatilhos (TRIGGERS) podem ser utilizados para os seguintes propósitos (assinale todas as opções corretas):
+> Prevenir transações inválidas, Registrar o histórico de alterações em uma tabela, Auditoria. 
+
+### 9. Analise o trecho de código abaixo, referente à criação de um gatilho (TRIGGER):
+~~~sql
+SET SERVEROUTPUT ON
+
+CREATE OR REPLACE TRIGGER mudancas_salariais
+BEFORE UPDATE ON emp
+FOR EACH ROW
+DECLARE
+  saldo number;
+BEGIN
+  saldo := :NEW.sal - :OLD.sal;
+  DBMS_OUTPUT.PUT_LINE('Salario Anterior: ' || :OLD.sal);
+  DBMS_OUTPUT.PUT_LINE('Salario Novo: ' || :NEW.sal);
+  DBMS_OUTPUT.PUT_LINE('Diferença Salarial: ' || saldo);
+~~~
+Considere as sentenças que seguem, baseadas no código apresentado:
+- I - A opção FOR EACH ROW, indica que será executado uma vez para cada linha que a operação modifica.
+- II - Não é possível determinar a utilidade da variável “saldo”.
+- III - O gatilho “MUDANCAS_SALARIAIS” é acionado antes da atualização dos dados da tabela EMP (BEFORE UPDATE ON EMP).
+Podemos afirmar, em relação ao código e às sentenças apresentadas (assinale a alternativa correta):
+> São corretas as sentenças I e III.
 
 --- 
 
