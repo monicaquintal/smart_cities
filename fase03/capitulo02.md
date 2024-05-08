@@ -777,6 +777,45 @@ public class Main {
 	- o nome “utils” é costumeiramente utilizado para incluirmos classes que são úteis ao projeto de uma forma geral, que fornecem algum recurso que as outras classes utilizarão.
 - no pacote “utils”, acrescentar uma classe chamada “Conexao”, que será responsável por entregar um objeto “EntityManager”. 
 
+~~~java
+package br.com.fiap.utils;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
+
+public class Conexao {
+	public static final EntityManagerFactory EMF = Persistence.createEntityManagerFactory("games");
+	
+	public static EntityManager getEntityManager() {
+		return EMF.createEntityManager();
+	}	
+}
+~~~
+
+- acima, vemos o conteúdo da classe “Conexao”, que possui um atributo estático chamado “EMF” já inicializada do tipo “EntityManagerFactory”. 
+- nessa classe construímos tambémum método estático chamado “getEntityManager()” que retorna um objeto “EntityManager”. 
+- o atributo e o método são estáticos para que não seja necessário a instanciação do objeto “Conexao”. 
+- com a classe “Conexao” concluída, codificar a classe “GameDao” para que possamos utilizá-la sempre que precisarmos persistir um “Game” no banco de dados. 
+
+~~~java
+package br.com.fiap.dao;
+
+import br.com.fiap.model.Game;
+import jakarta.persistence.EntityManager;
+
+public class GameDao {
+	private EntityManager em;
+	
+	public GameDao(EntityManager em) {
+		this.em = em;
+	}
+	
+	public void salvar(Game game) {
+		em.persist(game);
+	}
+}
+~~~
 
 
 
