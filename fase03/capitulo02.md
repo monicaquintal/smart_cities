@@ -658,7 +658,135 @@ public class Main {
 - ao rodar a aplicação, neste ponto ocorreu uma exceção/um erro, e segundo a mensagem, o que está faltando é a criação de uma sequência no banco de dados Oracle.
 - ***criar a sequência***, que deve ter o mesmo nome que informamos no parâmetro “generator” da anotação “@GeneratedValue” da classe Game. Passo a passo:
   - 1. Abra a aplicação “OracleSQL Developer”, localize no painel de conexões o item “Sequências”.
-  - 2. 
+  - 2. Clique com o botão direito do mouse no item “Sequências” e selecione “Nova Sequência...”.
+	- 3. Na janela “Criar Sequência”, preencher os campos (nome: TBL_GAMES_SEQ, começar com: 1, incremento: 1).
+
+- ao executar a aplicação, não há erro, e o log mostra que o Hibernate localiza a sequência criada, mas ao consultar o banco de dados não há nenhum game cadastrado, nem tabela criada.
+- para resolver este problema temos ***duas soluções***: 
+	- a primeira é criar a tabela manualmente no banco de dados 
+	- e a segunda é deixar por conta do Hibernate este trabalho. 
+
+- vamos deixar que o Hibernate faça o trabalho pesado: `acrescentar mais uma propriedade no arquivo “persistence.xml”`:
+
+~~~xml
+<?xml version="1.0" encoding="UTF-8"?>
+
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd"
+             version="2.2">
+	<persistence-unit name="games" transaction-type="RESOURCE_LOCAL">
+		
+		<properties>
+			<property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
+			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/db_games"/>
+			<property name="javax.persistence.jdbc.user" value="fiap"/>
+			<property name="javax.persistence.jdbc.password" value="1234"/>
+			
+			<property name="hibernate.show_sql" value="true"/>
+			<property name="hibernate.hbm2ddl.auto" value="update"/>
+			
+		</properties>
+		
+	</persistence-unit>
+
+</persistence>
+~~~
+
+- a `propriedade “hibernate.hbm2ddl.auto”` delega ao Hibernate a tarefa de criar as tabelas automaticamente de acordo com o mapeamento das classes Java.
+- se uma classe está mapeada, mas não existe no banco uma entidade equivalente, o Hibernate se encarregará de criar a tabela para nós. 
+- o valor “update” para essa propriedade garantirá que qualquer alteração na classe seja refletida na entidade.
+
+> ***ATENÇÃO***: Habilitar a atualização do banco de forma automática é perigoso em um banco de dados de produção (banco que os usuários estão utilizando).
+
+- ao executarmos a aplicação, veremos no log a execução da instrução SQL para a criação da tabela “tbl_games”. Mas, ao consultar a tabela no banco de dados, ela está vazia.
+- isso ocorre porque precisamos iniciar uma transação para que a persistência ocorra com sucesso:
+
+~~~java
+package br.com.fiap;
+
+import java.time.LocalDate;
+
+import br.com.fiap.model.Game;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
+
+public class Main {
+
+	public static void main(String[] args) {
+		
+		Game game1 = new Game();
+		game1.setTitulo("Mega Man 1");
+		game1.setCategoria("Plataforma");
+		game1.setDataLancamento(LocalDate.of(1987, 12, 1));
+		game1.setFinalizado(true);
+		game1.setProdutora("Capcom");
+		game1.setValor(128.0);
+		
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("games");
+		EntityManager em = emf.createEntityManager();
+		
+		em.getTransaction().begin();
+		em.persist(game1);
+		em.getTransaction().commit();
+		em.close();
+		
+	}
+
+}
+~~~
+
+- as instruções inseridas possuem as seguintes atribuições:
+	- linha 25: iniciar uma transação com o banco de dados - método “begin()”.
+	- linha 26: executar o método de persistência; nesse caso, será a inclusão de um novo registro.
+	- linha 27: efetivar a transação através do método “commit()” da transação.
+	- linha 28: executar o método “close()” do objeto EntityManager para liberar recursos não mais necessários.
+
+- ao executar a aplicação novamente, veremos a instrução SQL de inclusão de registro no banco de dados.
+- ao consultar o banco de dados novamente, veremos que o registro do game foi inserido com sucesso.
+
+> Código completo desta sessão [aqui](https://github.com/FIAP/ON_TDS_JAVA_ADVANCED/tree/persistence_config).
+
+<div align="center">
+<h2>3. PADRÃO DAO – DATA ACCESS OBJECT</h2>
+</div>
+
+- até agora criamos nossa classe de domínio com as anotações necessárias para o mapeamento das entidades no banco, e realizamos os testes no método “main” da classe principal. 
+- vamos, a partir desse momento, organizar a estrutura do nosso projeto de modo a torná-lo mais flexível para mudanças futuras.
+
+## 3.1 O padrão DAO – Data Access Object
+
+- quando falamos de classe, no paradigma orientado a objetos, estamos falando sobre a implementação da “receita” de um objeto, ou seja, a classe apenas define como o objeto é, através das propriedades ou atributos e o que o objeto faz, através dos seus métodos. 
+- ao incluirmos os métodos de persistência desse objeto em um banco de dados, estamos nos referindo ao que fazer com o objeto, ou seja, a inclusão, atualização ou exclusão de um objeto do banco de dados não é um comportamento inerente ao objeto, mas algo que é feito com o objeto que já existe. 
+- logo, quando pensamos nos métodos de persistência de um objeto, faz mais sentido criarmos uma classe que implemente esses comportamentos. 
+	- se nossa aplicação possui uma classe que define o que é e o que faz um Game, precisamos de uma outra classe que sabe como persistir este objeto Game no banco. 
+	- surgiu daí a ideia do padrão DAO!
+
+> O padrão DAO foi pensado de forma a separar as regras de negócio das regras de acesso ao banco de dados. Deste modo, teremos as classes de domínio da aplicação e as classes de acesso aos dados (DAO): Class Game > ClassGameDAO > JDBC > BD.
+
+- por questão de organização, quando desenvolvemos uma aplicação Java, criamos os pacotes (estrutura de pastas) para organizar as classes por tipo ou função. 
+- é comum as classes de domínio ficarem em um pacote “model” ou “domain”, e as classes de persistência em outro pacote, geralmente chamada de “dao”.
+
+### 3.1.1 Método DAO de inclusão (persist)
+- organizar o nosso projeto para aplicarmos minimamente esse conceito.
+- acrescentar ao projeto “games” um pacote chamado “dao” no pacote raiz “br.com.fiap”. 
+- no pacote “dao”, que acabamos de criar, acrescentar uma classe chamada “GameDao”. 
+- a classe “GameDao” será responsável por persistir um objeto Game no banco de dados, então será necessário que tenha acesso a um objeto “EntityManager”. 
+	- ***sempre que formos persistir algum objeto no banco utilizaremos um “EntityManager”, então é interessante criarmos uma classe “auxiliar” que será responsável por entregar um objeto “EntityManager” sempre que precisarmos dele*** - `pacote “utils”` no pacote raiz do projeto. 
+	- o nome “utils” é costumeiramente utilizado para incluirmos classes que são úteis ao projeto de uma forma geral, que fornecem algum recurso que as outras classes utilizarão.
+- no pacote “utils”, acrescentar uma classe chamada “Conexao”, que será responsável por entregar um objeto “EntityManager”. 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
