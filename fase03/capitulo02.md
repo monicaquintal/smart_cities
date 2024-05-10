@@ -806,6 +806,92 @@ import jakarta.persistence.EntityManager;
 
 public class GameDao {
 	private EntityManager em;
+	// declarado atributo do tipo EntityManager
+
+	public GameDao(EntityManager em) {
+		this.em = em;
+		// construtor da classe GameDao
+	}
+	
+	public void salvar(Game game) {
+		em.persist(game);
+		// método salvar
+	}
+}
+~~~
+
+- alterar o código-fonte da classe “Main” de modo a utilizar a classe “GameDao” que foi criada:
+
+~~~java
+package br.com.fiap;
+
+import java.time.LocalDate;
+
+import br.com.fiap.dao.GameDao;
+import br.com.fiap.model.Game;
+import br.com.fiap.utils.Conexao;
+import jakarta.persistence.EntityManager;
+
+public class Main {
+
+	public static void main(String[] args) {
+		
+		Game game1 = new Game();
+		game1.setTitulo("Batletoads");
+		game1.setCategoria("Luta");
+		game1.setDataLancamento(LocalDate.of(1992, 8, 1));
+		game1.setFinalizado(true);
+		game1.setProdutora("Tradewest");
+		game1.setValor(99.89);
+		
+		EntityManager em = Conexao.getEntityManager();
+		/*
+		* criado um EntityManager utilizando método 
+		* getEntityManager() da classe Conexao
+		*/
+
+		GameDao gameDao = new GameDao(em);
+		/* 
+		* criado um objeto do tipo GameDao; 
+		* no construtor da classe foi passado o EntityManager.
+		*/
+
+		em.getTransaction().begin();
+		// iniciada uma transação de dados com o banco de dados.
+		gameDao.salvar(game1);
+		// chamada do método salvar() do GameDao
+		em.getTransaction().commit();
+		// commit/confirmação da transação
+		em.close();
+	}
+}
+~~~
+
+- retorno ao executar a aplicação:
+
+~~~
+Hibernate: select TBL_GAMES_SEQ.nextval from dual
+Hibernate: insert into tbl_games (categoria,data_lancamento,finalizado,produtora,titulo,valor,id) values (?,?,?,?,?,?,?)
+~~~
+
+- ao efetuar a consulta no banco de dados, podemos confirmar que o novo game foi inserido na tabela tbl_games.
+
+### 3.1.2 Método DAO para atualização de registro
+
+- para atualizar os dados de um registro existente no banco de dados será necessário utilizar o `método merge()` da EntityManager. 
+- ele recebe como parâmetro o objeto que desejamos alterar na tabela.
+- importante lembrar que o objeto já existe no banco, então temos o id que será utilizado para efetuar a atualização.
+- acrescentar o método atualizar() na classe GameDao:
+
+~~~java
+package br.com.fiap.dao;
+
+import br.com.fiap.model.Game;
+import jakarta.persistence.EntityManager;
+
+public class GameDao {
+	
+	private EntityManager em;
 	
 	public GameDao(EntityManager em) {
 		this.em = em;
@@ -814,8 +900,141 @@ public class GameDao {
 	public void salvar(Game game) {
 		em.persist(game);
 	}
+	
+	public void atualizar(Game game) {
+		em.merge(game);
+	}
+	
 }
 ~~~
+
+- implementar as alterações na classe Main:
+
+~~~java
+package br.com.fiap;
+
+import java.time.LocalDate;
+
+import br.com.fiap.dao.GameDao;
+import br.com.fiap.model.Game;
+import br.com.fiap.utils.Conexao;
+import jakarta.persistence.EntityManager;
+
+public class Main {
+
+	public static void main(String[] args) {
+		
+		Game game1 = new Game();
+		game1.setId(4L);
+		game1.setTitulo("Batletoads");
+		game1.setCategoria("Luta");
+		//game1.setDataLancamento(LocalDate.of(1992, 8, 1));
+		game1.setDataLancamento(LocalDate.of(1991, 6, 1));
+		game1.setFinalizado(true);
+		//game1.setProdutora("Tradewest");
+		game1.setProdutora("Tradewest, Rare");
+		game1.setValor(99.89);
+		
+		EntityManager em = Conexao.getEntityManager();
+		GameDao gameDao = new GameDao(em);
+		
+		em.getTransaction().begin();
+		//gameDao.salvar(game1);
+		gameDao.atualizar(game1);
+		em.getTransaction().commit();
+		em.close();	
+	}
+}
+~~~
+
+- ao executar a aplicação, o log no console mostra que antes da atualização (update) foi executado uma instrução de busca (select), para localizar o objeto a partir do id. 
+
+~~~
+Hibernate: select g1_0.id,g1_0.categoria,g1_0.data_lancamento,g1_0.finalizado,g1_0.produtora,g1_0.titulo,g1_0.valor from tbl_games g1_0 where g1_0.id=?
+Hibernate: update tbl_games set categoria=?,data_lancamento=?,finalizado=?,produtora=?,titulo=?,valor=? where id=?
+~~~
+
+### 3.1.3 Método DAO para exclusão de registro
+- utilizar o `método remove()` da EntityManager. 
+- incluir na classe GameDao o método remover():
+
+~~~java
+package br.com.fiap.dao;
+
+import br.com.fiap.model.Game;
+import jakarta.persistence.EntityManager;
+
+public class GameDao {
+	
+	private EntityManager em;
+	
+	public GameDao(EntityManager em) {
+		this.em = em;
+	}
+	
+	public void salvar(Game game) {
+		em.persist(game);
+	}
+	
+	public void atualizar(Game game) {
+		em.merge(game);
+	}
+	
+	public void remover(Game game) {
+		Game gameExcluir = em.find(Game.class, game.getId());
+		em.remove(gameExcluir);
+	}	
+}
+~~~
+
+- alterar o código-fonte da classe Main para remover o game cujo id é 2:
+
+~~~java
+package br.com.fiap;
+
+import java.time.LocalDate;
+
+import br.com.fiap.dao.GameDao;
+import br.com.fiap.model.Game;
+import br.com.fiap.utils.Conexao;
+import jakarta.persistence.EntityManager;
+
+public class Main {
+
+	public static void main(String[] args) {
+		
+		Game game1 = new Game();
+		game1.setId(2L);
+		game1.setTitulo("Batletoads");
+		game1.setCategoria("Luta");
+		//game1.setDataLancamento(LocalDate.of(1992, 8, 1));
+		game1.setDataLancamento(LocalDate.of(1991, 6, 1));
+		game1.setFinalizado(true);
+		//game1.setProdutora("Tradewest, Rare");
+		game1.setProdutora("Tradewest, Rare");
+		game1.setValor(99.89);
+		
+		EntityManager em = Conexao.getEntityManager();
+		GameDao gameDao = new GameDao(em);
+		
+		em.getTransaction().begin();
+		//gameDao.salvar(game1);
+		//gameDao.atualizar(game1);
+		gameDao.remover(game1);
+		em.getTransaction().commit();
+		em.close();		
+	}
+}
+~~~
+
+- ao executar o programa, o log deverá mostrar que o comando enviado ao banco de dados foi o DELETE:
+
+~~~
+Hibernate: select g1_0.id,g1_0.categoria,g1_0.data_lancamento,g1_0.finalizado,g1_0.produtora,g1_0.titulo,g1_0.valor from tbl_games g1_0 where g1_0.id=?
+Hibernate: delete from tbl_games where id=?
+~~~
+
+## 3.2 Efetuando consultas no banco de dados com a JPA
 
 
 
