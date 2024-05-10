@@ -1036,8 +1036,228 @@ Hibernate: delete from tbl_games where id=?
 
 ## 3.2 Efetuando consultas no banco de dados com a JPA
 
+- executar o script a seguir, para ter 5 registros para manipular no banco de dados.
 
+~~~sql
+DELETE FROM tbl_games;
+INSERT INTO tbl_games (id, categoria, data_lancamento, finalizado, produtora, titulo, valor)
+	VALUES(1, 'PLATAFORMA', TO_DATE('1988-10-23', 'YYYY-MM-DD'), 1, 'NINTENDO', 'SUPER MARIO WORLD 3', 359.99);
+INSERT INTO tbl_games (id, categoria, data_lancamento, finalizado, produtora, titulo, valor)
+	VALUES(2, 'RPG', TO_DATE('1986-02-21', 'YYYY-MM-DD'), 1, 'NINTENDO', 'THE LEGEND OF ZELDA', 499.99);
+INSERT INTO tbl_games (id, categoria, data_lancamento, finalizado, produtora, titulo, valor)
+	VALUES(3, 'TIRO', TO_DATE('1988-12-24', 'YYYY-MM-DD'), 0, 'CAPCOM', 'MEGA MAN 2', 299.99);
+INSERT INTO tbl_games (id, categoria, data_lancamento, finalizado, produtora, titulo, valor)
+	VALUES(4, 'TIRO', TO_DATE('1986-01-01', 'YYYY-MM-DD'), 1, 'HUDSON SOFT', 'ADVENTURE ISLAND', 199.99);
+INSERT INTO tbl_games (id, categoria, data_lancamento, finalizado, produtora, titulo, valor)
+	VALUES(5, 'AVENTURA', TO_DATE('1987-08-28', 'YYYY-MM-DD'), 0, 'KONAMI', 'CASTLELVANIA II', 669.99);
+~~~
 
+### 3.2.1 Buscar registro pela chave-primária
+- a é a forma mais simples. 
+- já utilizamos este método no método remover() da classe GameDao - utilizamos o método find() para localizar o registro que queríamos excluir, e devolve a entidade com o estado Managed.
+- implementar na classe GameDao um método responsável por buscar um game pelo id. 
+
+~~~java
+package br.com.fiap.dao;
+
+import br.com.fiap.model.Game;
+import jakarta.persistence.EntityManager;
+
+public class GameDao {
+	
+	private EntityManager em;
+	
+	public GameDao(EntityManager em) {
+		this.em = em;
+	}
+	
+	public void salvar(Game game) {
+		em.persist(game);
+	}
+	
+	public void atualizar(Game game) {
+		em.merge(game);
+	}
+	
+	public void remover(Game game) {
+		Game gameExcluir = em.find(Game.class, game.getId());
+		em.remove(gameExcluir);
+	}
+	
+	public Game buscarGamePeloId(Game game) {
+		return em.find(Game.class, game.getId());
+		// caso o id não exista, retornará um objeto Game nulo.
+	}	
+}
+~~~
+
+- sobrescrever o método toString() da classe Game para que possamos exibir os dados do game de uma forma personalizada:
+
+~~~java
+package br.com.fiap.model;
+
+import jakarta.persistence.*;
+import java.time.LocalDate;
+
+@Entity
+@Table(name = "tbl_games")
+
+public class Game {
+	
+	@Id
+	@GeneratedValue(
+			strategy = GenerationType.SEQUENCE,
+			generator = "TBL_GAMES_SEQ")
+	@SequenceGenerator(
+			name = "TBL_GAMES_SEQ",
+			sequenceName = "TBL_GAMES_SEQ",
+			allocationSize = 1)
+	private Long id;
+	
+	private String titulo;
+	
+	@Column(name="data_lancamento")
+	private LocalDate dataLancamento;
+	
+	private Double valor;
+	private String produtora;
+	private Boolean finalizado;
+	private String categoria;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getTitulo() {
+		return titulo;
+	}
+
+	public void setTitulo(String titulo) {
+		this.titulo = titulo;
+	}
+
+	public LocalDate getDataLancamento() {
+		return dataLancamento;
+	}
+
+	public void setDataLancamento(LocalDate dataLancamento) {
+		this.dataLancamento = dataLancamento;
+	}
+
+	public Double getValor() {
+		return valor;
+	}
+
+	public void setValor(Double valor) {
+		this.valor = valor;
+	}
+
+	public String getProdutora() {
+		return produtora;
+	}
+
+	public void setProdutora(String produtora) {
+		this.produtora = produtora;
+	}
+
+	public Boolean getFinalizado() {
+		return finalizado;
+	}
+
+	public void setFinalizado(Boolean finalizado) {
+		this.finalizado = finalizado;
+	}
+
+	public String getCategoria() {
+		return categoria;
+	}
+
+	public void setCategoria(String categoria) {
+		this.categoria = categoria;
+	}
+	
+	@Override
+	public String toString() {
+		return "ID:" + this.id + ""
+				+ "\nTITULO: " + this.titulo + ""
+				+ "\nPRODUTORA: " + this.produtora + ""
+				+ "\nCATEGORIA: " + this.categoria + ""
+				+ "\nLANÇAMENTO: " + this.dataLancamento + ""
+				+ "\nFINALIZADO: " + this.finalizado + ""
+				+ "\nVALOR: " + this.valor;
+	}
+}
+~~~
+
+- implementar na classe Main a chamada para o método buscarGamePeloId.
+
+~~~java
+package br.com.fiap;
+
+import java.time.LocalDate;
+import br.com.fiap.dao.GameDao;
+import br.com.fiap.model.Game;
+import br.com.fiap.utils.Conexao;
+import jakarta.persistence.EntityManager;
+
+public class Main {
+
+	public static void main(String[] args) {
+		
+		EntityManager em = Conexao.getEntityManager();
+		
+		//cadastrar(em);
+		pesquisar(em);
+		
+		em.close();
+		
+	}
+	
+	public static void pesquisar(EntityManager em) {
+		
+		GameDao gameDao = new GameDao(em);
+		Game game = new Game();
+		game.setId(2L);
+		Game gameEncontrado = gameDao.buscarGamePeloId(game);
+		
+		if (gameEncontrado != null) {
+			System.out.println(gameEncontrado.toString());
+		} else {
+			System.out.println("Game não encontrado!");
+		}
+		
+	}
+	
+	public static void cadastrar(EntityManager em) {
+		Game game1 = new Game();
+		game1.setTitulo("Ikari Warriors");
+		game1.setCategoria("Arcade");
+		game1.setDataLancamento(LocalDate.of(1986, 1, 1));
+		game1.setFinalizado(true);
+		game1.setProdutora("SNK");
+		game1.setValor(256.88);
+		
+		GameDao gameDao = new GameDao(em);
+		
+		em.getTransaction().begin();
+		gameDao.salvar(game1);
+		game1.setTitulo("Ikari Warriors SNK");
+		em.getTransaction().commit();
+	}
+
+}
+~~~
+
+- no código acimaforam feitas as alterações:
+	- 1. Criado o método cadastrar().
+	- 2. Criado o método pesquisar().
+	- 3. No método main da classe Main, estamos instanciando uma EntityManager e, em seguida, chamando o método de cadastro ou de pesquisa. 
+	
+### 3.2.2 Utilizando a JPQL – Java Persistence Query Language
 
 
 
