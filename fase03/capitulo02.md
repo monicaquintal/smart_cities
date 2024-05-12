@@ -1702,8 +1702,407 @@ public class Main {
 		- ocorre quando apenas UM objeto de uma classe se relaciona com apenas UM objeto de outra classe.
 		- anotação **@OneToOne** representa esse relacionamento na JPA.
 	- `One-to-Many`: 
-		- ocorre quando UM objeto de uma classe está associado com MUITOS objetos de outra classe.  Para representar esse relacionamento utilizamos a anotação “@OneToMany” na JPA.4.Many-to-Many: usamos esse relacionamento quando “MUITOS” objetos de uma  classe  estão  associados  a  “MUITOS”  objetos  de  outra  classe.  A anotação “@ManyToMany” é usada na JPA para representar esse tipo de relacionamento
+		- ocorre quando UM objeto de uma classe está associado com MUITOS objetos de outra classe. 
+		- anotação **@OneToMany** na JPA.
+	- `Many-to-Many`: 
+		- quando MUITOS objetos de uma classe estão associados a MUITOS objetos de outra classe. 
+		- anotação **@ManyToMany**.
 
+- o relacionamento entre entidades pode ocorrer de duas formas:
+	- `Unidirecional`: 
+		- quando a associação entre duas entidades só pode ser navegada em uma única direção.
+		- se a entidade A está relacionada com a entidade B de forma unidirecional, será possível acessar os dados da entidade B a partir da entidade A, mas da entidade B não é possível acessar os dados da entidade A, já que o fluxo ocorre em uma única direção que é de A para B.
+	- `Bidirecional`: 
+		- a associação entre duas entidades pode ser navegada em duas direções.
+		- ou seja, se a entidade A está relacionada com a entidade B de forma bidirecional, então será possível acessar os dados da entidade B a partir da entidade A, e será possível acessar os dados da entidade A partindo da entidade B, pois o fluxo ocorre nas duas direções.
+
+## 5.2 Implementação de relacionamento entre entidades - Unidirecional
+
+- durante a utilização da aplicação de gestão de games, foi notado que não há uma padronização nos nomes das categorias dos games, o que está causando inconsistência no banco, então precisamos corrigir. 
+- a solução que pode resolver esse problema é a criação de uma tabela no banco de dados que contenha as categorias cadastradas: ao cadastrar um novo game, podemos utilizar a categoria previamente inserida no sistema. Caso a categoria não exista, basta cadastrá-la e ela estará disponível para uso no futuro.
+- criar uma classe Categoria no pacotr model com dois atributos: identificador e nome da categoria. 
+- refatorar a classe “Game” para implementar a melhoria proposta.
+
+### a) classe Categoria:
+
+~~~java
+package br.com.fiap.model;
+
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "tbl_categorias")
+public class Categoria {
+
+    @Id
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "TBL_CATEGORIAS_SEQ"
+    )
+    @SequenceGenerator(
+            name = "TBL_CATEGORIAS_SEQ",
+            sequenceName = "TBL_CATEGORIAS_SEQ",
+            allocationSize = 1
+    )
+    private Long id;
+
+    @Column(name = "nome_categoria")
+    private String nomeCategoria;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getNomeCategoria() {
+        return nomeCategoria;
+    }
+
+    public void setNomeCategoria(String nomeCategoria) {
+        this.nomeCategoria = nomeCategoria;
+    }
+}
+~~~
+
+### b) classe CategoriaDao:
+- será responsável por conter os métodos de persistência para os objetos Categorias.
+
+~~~java
+package br.com.fiap.dao;
+
+import br.com.fiap.model.Categoria;
+import jakarta.persistence.EntityManager;
+
+public class CategoriaDao {
+	
+	private EntityManager em;
+
+	public CategoriaDao(EntityManager em) {
+		this.em = em;
+	}
+	
+	public void salvar(Categoria categoria) {
+		em.persist(categoria);
+	}
+}
+~~~
+
+- no exemplo, ficou definido que um game deve ter apenas uma categoria.
+- ou seja, MUITOS games se relacionam com apenas UMA categoria: MANY Games TO ONE Categoria.
+- portanto, adicionar o relacionamento entre as classes Game e Categoria utilizando a JPA. 
+
+### c) na Classe Game, teremos:
+
+~~~java
+package br.com.fiap.model;
+
+import jakarta.persistence.*;
+import java.time.LocalDate;
+
+@Entity
+@Table(name = "tbl_games")
+public class Game {
+    @Id
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "TBL_GAMES_SEQ")
+    @SequenceGenerator(
+            name = "TBL_GAMES_SEQ",
+            sequenceName = "TBL_GAMES_SEQ",
+            allocationSize = 1)
+    private Long id;
+
+    private String titulo;
+
+    @Column(name = "data_lancamento")
+    private LocalDate dataLancamento;
+
+    private Double valor;
+    private String produtora;
+    private Boolean finalizado;
+
+    @ManyToOne
+    private Categoria categoria;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
+    public LocalDate getDataLancamento() {
+        return dataLancamento;
+    }
+
+    public void setDataLancamento(LocalDate dataLancamento) {
+        this.dataLancamento = dataLancamento;
+    }
+
+    public Double getValor() {
+        return valor;
+    }
+
+    public void setValor(Double valor) {
+        this.valor = valor;
+    }
+
+    public String getProdutora() {
+        return produtora;
+    }
+
+    public void setProdutora(String produtora) {
+        this.produtora = produtora;
+    }
+
+    public Boolean getFinalizado() {
+        return finalizado;
+    }
+
+    public void setFinalizado(Boolean finalizado) {
+        this.finalizado = finalizado;
+    }
+
+    public Categoria getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
+    }
+
+    @Override
+    public String toString() {
+        return "ID:" + this.id + ""
+                + "\nTITULO: " + this.titulo + ""
+                + "\nPRODUTORA: " + this.produtora + ""
+                + "\nCATEGORIA: " + this.categoria.getNomeCategoria() + ""
+                + "\nLANÇAMENTO: " + this.dataLancamento + ""
+                + "\nFINALIZADO: " + this.finalizado + ""
+                + "\nVALOR: " + this.valor;
+    }
+
+}
+~~~
+
+### IMPORTANTE:
+
+- para testar se tudo está funcionando, ***lembrar que o arquivo persistence.xml possui ainstrução "&lt;propertyname="hibernate.hbm2ddl.auto"value="update"/&gt;"***, que configura a JPA para atualizar o banco de dados quando houver qualquer alteração nas classes que estão anotadas com a anotação @Entity!!!
+- para que os testes não tenham influência de outras configurações, ***apagar todas as tabelas do banco de dados***. 
+	- executar no banco de dados o `comando drop table tbl_games`. 
+	- em seguida, executar o `comando show tables` para certificar-se que o banco de dados esteja vazio.
+
+- agora que o ambiente está preparado, ***implementar as modificações na classe Main***. 
+
+### a) método cadastrar():
+- substituir na classe Main o método cadastrar() pela nova implementação:
+
+~~~java
+public static void cadastrar(EntityManager em) {
+    // Criamos uma categoria
+    Categoria luta = new Categoria();
+    luta.setNomeCategoria("LUTA");
+
+    // Criamos uma instância de CategoriaDao
+    CategoriaDao categoriaDao = new CategoriaDao(em);
+
+    // Iniciamos uma transação de dados no banco
+    em.getTransaction().begin();
+
+    // Chamamos o método salvar de CategoriaDao
+    // para persistir uma categoria no banco
+    categoriaDao.salvar(luta);
+
+    // Criamos um game da categoria luta
+    Game game1 = new Game();
+    game1.setTitulo("Mortal Kombat");
+    game1.setCategoria(luta);
+    game1.setDataLancamento(LocalDate.of(1992, 8, 1));
+    game1.setFinalizado(true);
+    game1.setProdutora("ACCLAIM");
+    game1.setValor(256.88);
+
+    // Criação de uma instância de GameDao
+    GameDao gameDao = new GameDao(em);
+
+    // Chamamos o método salvar de GameDao
+    // para persistir um game no banco
+    gameDao.salvar(game1);
+
+    // Efetuamos o commit para sincronizar
+    // no banco de dados todas as alterações
+    em.getTransaction().commit();
+
+    // Fechamos a EntityManager
+    em.close();
+}
+~~~
+
+### b) cadastrar():
+- no método main da classe Main devemos chamar apenas pelo método cadastrar(). 
+
+~~~java
+public static void main(String[] args) {
+    
+    EntityManager em = Conexao.getEntityManager();
+
+    cadastrar(em);
+    //pesquisar(em);
+    //listarTodosOsGames(em);
+    //buscarGamePeloNome(em);
+    //buscarGamesPorFaixaDeValores(em);
+
+    em.close();
+
+}
+~~~
+
+- ao executar a aplicação, no final do log de saída da aplicação, foram executadas 5 instruções SQL no banco, sendo:
+	- criação da tabela “tbl_categoria” de acordo com as anotações JPA na classe “Categoria”.
+	- criação da tabela “tbl_games”, de acordo com as anotações JPA na classe “Game”.
+	- criação da sequência “TBL_CATEGORIAS_SEQ”, caso ainda não exista.
+	- alteração na tabela “tbl_games” para adição de uma chave-estrangeira que faz referência a tabela “tbl_categoria”, por conta da anotação “@ManyToOne” no atributo “categoria” da classe “Game”.
+	- inclusão do objeto “categoria” na tabela “tbl_categoria”.
+	- inclusão do objeto “game” na tabela “tbl_games”.
+
+> executar no BD os comandos: "select * from tbl_categorias;" e "select * from tbl_games;".
+
+### c) listarTodosOsGames():
+- com os dados inseridos no banco de dados, executar o método de listagem de todos os games. 
+- comente no método “main” da classe “Main” a chamada para a função “cadastrar()” e remova o comentário da função “listarTodosOsGames()”. 
+
+~~~java
+public class Main {
+
+	public static void main(String[] args) {
+	    
+	    EntityManager em = Conexao.getEntityManager();
+
+	    //cadastrar(em);
+	    //pesquisar(em);
+	    listarTodosOsGames(em);
+	    //buscarGamePeloNome(em);
+	    //buscarGamesPorFaixaDeValores(em);
+
+	    em.close();
+
+	}
+	
+	public static void cadastrar(EntityManager em) {
+	    // Criamos uma categoria
+	    Categoria luta = new Categoria();
+	    luta.setNomeCategoria("LUTA");
+
+	    // Criamos uma instância de CategoriaDao
+	    CategoriaDao categoriaDao = new CategoriaDao(em);
+
+	    // Iniciamos uma transação de dados no banco
+	    em.getTransaction().begin();
+
+	    // Chamamos o método salvar de CategoriaDao
+	    // para persistir uma categoria no banco
+	    categoriaDao.salvar(luta);
+
+	    // Criamos um game da categoria luta
+	    Game game1 = new Game();
+	    game1.setTitulo("Mortal Kombat");
+	    game1.setCategoria(luta);
+	    game1.setDataLancamento(LocalDate.of(1992, 8, 1));
+	    game1.setFinalizado(true);
+	    game1.setProdutora("ACCLAIM");
+	    game1.setValor(256.88);
+
+	    // Criação de uma instância de GameDao
+	    GameDao gameDao = new GameDao(em);
+
+	    // Chamamos o método salvar de GameDao
+	    // para persistir um game no banco
+	    gameDao.salvar(game1);
+
+	    // Efetuamos o commit para sincronizar
+	    // no banco de dados todas as alterações
+	    em.getTransaction().commit();
+
+	    // Fechamos a EntityManager
+	    em.close();
+	}
+	
+	public static void listarTodosOsGames(EntityManager em) {
+	GameDao gameDao = new GameDao(em);
+	List<Game> games = gameDao.listarTodosOsGames();
+	
+	for (Game game : games) {
+		System.out.println(game);
+		System.out.println("------------------------");
+	}
+}
+
+}
+~~~
+
+- foram executadas duas instruções SQL: a primeira é executada na tabela “tbl_games” e a segunda na tabela “tbl_categoria”.
+
+- inserir mais um game de luta no banco:
+
+~~~java
+public static void cadastrar(EntityManager em) {
+		
+	// Criamos uma categoria
+	Categoria luta = new Categoria();
+	//luta.setNomeCategoria("LUTA");
+	luta.setId(1L);
+	
+	// Criamos uma instância de CategoriaDao
+	//CategoriaDao categoriaDao = new CategoriaDao(em);
+	
+	// Iniciamos uma transação de dados no banco
+	em.getTransaction().begin();
+	
+	// Chamamos o método salvar de CategoriaDao
+	// para persistir uma categoria no banco
+	//categoriaDao.salvar(luta);
+	
+	// Criamos um jogo da categoria luta
+	Game game1 = new Game();
+	game1.setTitulo("Street Fighter II");
+	game1.setCategoria(luta);
+	game1.setDataLancamento(LocalDate.of(1992, 2, 1));
+	game1.setFinalizado(true);
+	game1.setProdutora("Capcom");
+	game1.setValor(399.99);
+	
+	// Criação de uma instância de GameDao
+	GameDao gameDao = new GameDao(em);
+	
+	// Chamamos o método salvar de GameDao
+	// para persistir um jogo no banco
+	gameDao.salvar(game1);
+	
+	// Efetuamos o commit para sincronizar
+	// no banco de dados todas as alterações
+	em.getTransaction().commit();
+	
+	// Fechamos a EntityManager
+	em.close();
+}
+~~~
+
+- antes de executar o código, remover o comentário da chamada para a função “cadastrar()” no método “main” da classe “Main” e comentar a chamada para a função “listarTodosOsGames”.
+- ao analisarmos o log de saída no console, veremos a instrução “INSERT” do SQL sendo executado.
+
+- para concluir os testes de utilização de mapeamento entre entidades de forma unidirecional,
 
 
 
