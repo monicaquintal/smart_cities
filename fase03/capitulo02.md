@@ -1258,8 +1258,451 @@ public class Main {
 	- 3. No método main da classe Main, estamos instanciando uma EntityManager e, em seguida, chamando o método de cadastro ou de pesquisa. 
 	
 ### 3.2.2 Utilizando a JPQL – Java Persistence Query Language
+- permite a consulta de dados utilizando critérios mais sofisticados de busca. 
+- bastante parecida com a linguagem SQL.
+- para praticar como a JPQL funciona, introduziremos 3 novos métodos na classe GameDao:
+	- método 1: utilizado para listar todos os games da tabela tbl_games, ordenando pelo título em ordem ascendente.
+	- método 2: será utilizado para listar os games com base em seus títulos.
+	- método 3: retornará do banco de dados todo os games situados em uma faixa de valores.
 
+### a) método listarTodosOsGames():
 
+~~~java
+package br.com.fiap.dao;
+
+import java.util.List;
+
+import br.com.fiap.model.Game;
+import jakarta.persistence.EntityManager;
+
+public class GameDao {
+
+	private EntityManager em;
+
+	public GameDao(EntityManager em) {
+		this.em = em;
+	}
+
+	public void salvar(Game game) {
+		em.persist(game);
+	}
+
+	public void atualizar(Game game) {
+		em.merge(game);
+	}
+
+	public void remover(Game game) {
+		Game gameExcluir = em.find(Game.class, game.getId());
+		em.remove(gameExcluir);
+	}
+
+	public Game buscarGamePeloId(Long id) {
+		return em.find(Game.class, id);
+	}
+
+	public List<Game> listarTodosOsGames() {
+		
+		String jpqlQuery = "SELECT g FROM Game g ORDER BY g.titulo ASC";
+		return em.createQuery(jpqlQuery, Game.class).getResultList();
+	}
+}
+~~~
+
+- a principal diferença reside no fato de que não utilizamos o nome da tabela no banco de dados, mas sim do nome da classe Game, que está mapeada para a entidade tbl_games no banco de dados.
+- implementar um novo método na classe Main para testar a busca de todos os games:
+
+~~~java
+package br.com.fiap;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import br.com.fiap.dao.GameDao;
+import br.com.fiap.model.Game;
+import br.com.fiap.utils.Conexao;
+import jakarta.persistence.EntityManager;
+
+public class Main {
+
+	public static void main(String[] args) {
+		
+		EntityManager em = Conexao.getEntityManager();
+		
+		//cadastrar(em);
+		//pesquisar(em);
+		listarTodosOsGames(em);
+		
+		em.close();
+		
+	}
+	
+	public static void listarTodosOsGames(EntityManager em) {
+		GameDao gameDao = new GameDao(em);
+		List<Game> games = gameDao.listarTodosOsGames();
+		
+		for (Game game : games) {
+			System.out.println(game);
+			System.out.println("------------------------");
+		}
+	}
+	
+	public static void pesquisar(EntityManager em) {
+		// CÓDIGO OMITIDO...
+	}
+	
+	public static void cadastrar(EntityManager em) {
+		// CÓDIGO OMITIDO...
+	}
+
+}
+~~~
+
+- nesse exemplo, o Hibernate executou uma instrução SELECT no banco de dados, e o resultado foi apresentado em ordem ascendente pelo título dos games.
+
+### b) método buscarGamePeloNome():
+
+~~~java
+package br.com.fiap.dao;
+
+import java.util.List;
+
+import br.com.fiap.model.Game;
+import jakarta.persistence.EntityManager;
+
+public class GameDao {
+
+	private EntityManager em;
+
+	// TRECHO DE CÓDIGO OMITIDO...
+
+	public List<Game> listarTodosOsGames() {
+
+		String jpqlQuery = "SELECT g FROM Game g ORDER BY g.titulo ASC";
+		return em.createQuery(jpqlQuery, Game.class).getResultList();
+
+	}
+
+	public List<Game> buscarGamePeloNome(String titulo) {
+
+		String jpqlQuery = "SELECT g FROM Game g WHERE g.titulo = :titulo ";
+		return em.createQuery(jpqlQuery, Game.class)
+				.setParameter("titulo", titulo)
+				.getResultList();
+	}
+}
+~~~
+
+- testando o método no arquivo Main:
+
+~~~java
+package br.com.fiap;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import br.com.fiap.dao.GameDao;
+import br.com.fiap.model.Game;
+import br.com.fiap.utils.Conexao;
+import jakarta.persistence.EntityManager;
+
+public class Main {
+
+	public static void main(String[] args) {
+		
+		EntityManager em = Conexao.getEntityManager();
+		
+		//cadastrar(em);
+		//pesquisar(em);
+		//listarTodosOsGames(em);
+		buscarGamePeloNome(em);
+		
+		em.close();
+		
+	}
+	
+	public static void buscarGamePeloNome(EntityManager em) {
+		GameDao gameDao = new GameDao(em);
+		List<Game> games = gameDao.buscarGamePeloNome("mega man 2".toUpperCase());
+		
+		for (Game game : games) {
+			System.out.println(game);
+			System.out.println("------------------------");
+		}
+	}
+	
+	public static void listarTodosOsGames(EntityManager em) {
+		GameDao gameDao = new GameDao(em);
+		List<Game> games = gameDao.listarTodosOsGames();
+		
+		for (Game game : games) {
+			System.out.println(game);
+			System.out.println("------------------------");
+		}
+	}
+	
+	public static void pesquisar(EntityManager em) {
+		// CÓDIGO OMITIDO...
+	}
+	
+	public static void cadastrar(EntityManager em) {
+		// CÓDIGO OMITIDO...
+	}
+}
+~~~
+
+### c) método buscarGamesPorFaixaDeValores():
+
+~~~java
+package br.com.fiap.dao;
+
+import java.util.List;
+
+import br.com.fiap.model.Game;
+import jakarta.persistence.EntityManager;
+
+public class GameDao {
+
+	private EntityManager em;
+
+	public GameDao(EntityManager em) {
+		this.em = em;
+	}
+
+	public void salvar(Game game) {
+		em.persist(game);
+	}
+
+	public void atualizar(Game game) {
+		em.merge(game);
+	}
+
+	public void remover(Game game) {
+		Game gameExcluir = em.find(Game.class, game.getId());
+		em.remove(gameExcluir);
+	}
+
+	public Game buscarGamePeloId(Long id) {
+		return em.find(Game.class, id);
+	}
+
+	public List<Game> listarTodosOsGames() {
+
+		String jpqlQuery = "SELECT g FROM Game g ORDER BY g.titulo ASC";
+		return em.createQuery(jpqlQuery, Game.class).getResultList();
+
+	}
+
+	public List<Game> buscarGamePeloNome(String titulo) {
+
+		String jpqlQuery = "SELECT g FROM Game g WHERE g.titulo = :titulo ";
+		return em.createQuery(jpqlQuery, Game.class)
+				.setParameter("titulo", titulo)
+				.getResultList();
+
+	}
+	
+	public List<Game> buscarGamesPorFaixaDeValores(Double valorIncial, Double ValorFinal) {
+
+		String jpqlQuery = "SELECT g FROM Game g WHERE g.valor BETWEEN :valorInicial AND :valorFinal ORDER BY g.titulo ASC ";
+		return em.createQuery(jpqlQuery, Game.class)
+				.setParameter("valorInicial", valorIncial)
+				.setParameter("valorFinal", ValorFinal)
+				.getResultList();
+	}
+}
+~~~
+
+- implementando o teste na classe Main:
+
+~~~java
+package br.com.fiap;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import br.com.fiap.dao.GameDao;
+import br.com.fiap.model.Game;
+import br.com.fiap.utils.Conexao;
+import jakarta.persistence.EntityManager;
+
+public class Main {
+
+	public static void main(String[] args) {
+		
+		EntityManager em = Conexao.getEntityManager();
+		
+		//cadastrar(em);
+		//pesquisar(em);
+		//listarTodosOsGames(em);
+		//buscarGamePeloNome(em);
+		buscarGamesPorFaixaDeValores(em);
+		
+		em.close();
+		
+	}
+	
+	public static void buscarGamesPorFaixaDeValores(EntityManager em) {
+		GameDao gameDao = new GameDao(em);
+		List<Game> games = gameDao.buscarGamesPorFaixaDeValres(150.0, 300.0);
+		
+		for (Game game : games) {
+			System.out.println(game);
+			System.out.println("------------------------");
+		}
+	}
+	
+	public static void buscarGamePeloNome(EntityManager em) {
+		// TRECHO DE CÓDIGO OMITIDO...	}
+	
+	public static void listarTodosOsGames(EntityManager em) {
+		// TRECHO DE CÓDIGO OMITIDO...	}
+	
+	public static void pesquisar(EntityManager em) {
+		// TRECHO DE CÓDIGO OMITIDO...	}
+	
+	public static void cadastrar(EntityManager em) {
+		// TRECHO DE CÓDIGO OMITIDO...
+	}
+}
+~~~
+
+> [Códigos da aula aqui.](https://github.com/FIAP/ON_TDS_JAVA_ADVANCED/tree/dao)
+
+<div align="center">
+<h2>4. CICLO DE VIDA DA JPA</h2>
+</div>
+
+- são um conjunto de estados pelos quais uma entidade passa durante sua existência. 
+- tem a ver com o nível de controle que a JPA tem sobre os objetos na aplicação.
+- estão divididos em 4 estados:
+	- `Transient` (Transitório):
+		- quando um objeto se encontra em estado “transient” ele não está sendo gerenciado pela EntityManager, e qualquer alteração neste objeto não será sincronizado com o banco de dados.
+		- consideramos o estado “transient" quando o objeto é criado através da palavra-chave “new”, mas ainda não foi persistido no banco de dados.
+		- `Managed` (Gerenciado):
+			- o estado do objeto passa para o estado “managed” quando ele é persistido pela primeira vez, utilizando o método “persist()” da EntityManager. 
+			- neste estado o objeto está sendo “monitorado” e qualquer alteração feita será sincronizada com o banco de dados ao utilizarmos os métodos “commit()” ou “flush()”.
+		-`Detached` (Desanexado):
+			- um objeto torna-se “detached” quando o EntityManager que o estava gerenciando é fechado, ou a entidade foi desanexada de forma explícita utilizando o método “detach()”.
+			- neste estado as mudanças no objeto não serão atualizadas no banco de dados.
+		- `Removed` (Removido):
+			- o objeto torna-se “removed” quando é excluído do banco de dados. 
+			- a entidade pode ser utilizada no código, mas está marcada para remoção na próxima sincronização.
+
+## 4.1 Experimentando o ciclo de vida da JPA
+
+- testar algumas possibilidades em relação ao ciclo de vida da JPA. 
+
+### a) Exemplo 1: "Objeto em estado Transient":
+
+~~~java
+package br.com.fiap;
+
+import java.time.LocalDate;
+
+import br.com.fiap.games.dao.GameDao;
+import br.com.fiap.games.model.Game;
+import br.com.fiap.games.utils.Conexao;
+import jakarta.persistence.EntityManager;
+
+public class Main {
+
+	public static void main(String[] args) {
+		
+		Game game1 = new Game();
+		game1.setTitulo("Street Fighter II");
+		game1.setCategoria("Luta");
+		game1.setDataLancamento(LocalDate.of(1991, 6, 1));
+		game1.setFinalizado(true);
+		game1.setProdutora("Capcom");
+		game1.setValor(99.89);
+		
+		EntityManager em = Conexao.getEntityManager();
+		GameDao gameDao = new GameDao(em);
+		
+		em.getTransaction().begin();
+       //gameDao.salvar(game1);
+		em.getTransaction().commit();
+		em.close();	
+	}
+}
+~~~
+
+- na linha 14, realizamos a instanciação do objeto utilizando a palavra-chave "new", o que coloca o objeto em um estado Transient. 
+- em nenhum momento, o método persist é invocado. 
+- portanto, mesmo ao chamar o commit na linha 27, nada ocorre, pois não existe nenhuma entidade em estado Managed e o registro do novo jogo não é adicionado ao banco de dados.
+- ao remover o comentário da linha 26, para que ocorra a chamada para o método persist que está na classe GameDao, o objeto será colocado em estado Managed. 
+- ao chamar o método commit da EntityManager, todos os objetos que estiverem em estado Managed serão sincronizados e o novo jogo será adicionado ao banco.
+- enquanto o método close não for chamado, os objetos que foram persistidos manterão o estado Managed e qualquer alteração executada nesses objetos serão sincronizados com o banco. 
+
+- efetuando mais um teste:
+
+~~~java
+package br.com.fiap.games;
+
+import java.time.LocalDate;
+
+import br.com.fiap.games.dao.GameDao;
+import br.com.fiap.games.model.Game;
+import br.com.fiap.games.utils.Conexao;
+import jakarta.persistence.EntityManager;
+
+public class Main {
+
+	public static void main(String[] args) {
+		
+		Game game1 = new Game();
+		game1.setTitulo("Ikari Warriors");
+		game1.setCategoria("Arcade");
+		game1.setDataLancamento(LocalDate.of(1986, 1, 1));
+		game1.setFinalizado(true);
+		game1.setProdutora("SNK");
+		game1.setValor(256.88);
+		
+		EntityManager em = Conexao.getEntityManager();
+		GameDao gameDao = new GameDao(em);
+		
+		em.getTransaction().begin();
+		gameDao.salvar(game1);
+      game1.setTitulo("Ikari Warriors SNK");
+		em.getTransaction().commit();
+		
+		em.close();
+		
+	}
+}
+~~~
+
+- ao executarmos o programa, o novo game será colocado em estado Managed logo após a chamada para persist: a partir desse momento já possui um id, mas ainda não foi sincronizado com o banco. 
+- após a chamada do commit, as alterações serão sincronizadas no banco. 
+- ao analisar o log no console, notamos que houve a execução de duas instruções SQL no banco: uma de INSERT e outra de UPDATE, porque antes da sincronização houve uma alteração no objeto e essa alteração foi refletida no banco de dados.
+- importante destacar que ***um objeto só pode ser efetivamente sincronizado com o banco de dados quando está em estado Managed***.
+- no caso da alteração ou exclusão de um objeto, é necessário colocá-lo em estado Managed.
+- a figura abaixo mostra quais são os estado possíveis que uma entidade pode assumir e quais são os métodos utilizados para gerenciar esses estados:
+
+<div align="center">
+<img src="./assets/ciclo-de-vida-entidade.png" width="50%"><br>
+<em>Ciclo de vida de uma entidade.</em>
+<br>
+</div>
+
+<div align="center">
+<h2>5. RELACIONAMENTO ENTRE ENTIDADES</h2>
+</div>
+
+- um banco de dados relacional é composto por várias entidades que se relacionam através de chaves-primárias e chaves estrangeiras.
+- a JPA, através do Hibernate, permite que façamos o mapeamento entre classes e entidades levando em conta essa situação.
+
+## 5.1 Tipos de relacionamento
+
+- os principais tipos de relacionamento implementados na JPA são:
+	- `Many-to-One`: 
+		- MUITOS objetos de uma classe se relacionam com apenas UM objeto de outra classe.
+		- utilizamos a anotação **@ManyToOne** para representar esse relacionamento.
+	- `One-to-One`: 
+		- ocorre quando apenas UM objeto de uma classe se relaciona com apenas UM objeto de outra classe.
+		- anotação **@OneToOne** representa esse relacionamento na JPA.
+	- `One-to-Many`: 
+		- ocorre quando UM objeto de uma classe está associado com MUITOS objetos de outra classe.  Para representar esse relacionamento utilizamos a anotação “@OneToMany” na JPA.4.Many-to-Many: usamos esse relacionamento quando “MUITOS” objetos de uma  classe  estão  associados  a  “MUITOS”  objetos  de  outra  classe.  A anotação “@ManyToMany” é usada na JPA para representar esse tipo de relacionamento
 
 
 
