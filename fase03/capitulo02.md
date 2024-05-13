@@ -5,7 +5,7 @@
 </div>
 
 <div align="center">
-1. A PERSISTÊNCIA DE DADOS
+<h2>1. A PERSISTÊNCIA DE DADOS</h2>
 </div>
  
 ## 1.1 O que é JPA?
@@ -2102,15 +2102,274 @@ public static void cadastrar(EntityManager em) {
 - antes de executar o código, remover o comentário da chamada para a função “cadastrar()” no método “main” da classe “Main” e comentar a chamada para a função “listarTodosOsGames”.
 - ao analisarmos o log de saída no console, veremos a instrução “INSERT” do SQL sendo executado.
 
-- para concluir os testes de utilização de mapeamento entre entidades de forma unidirecional,
+- para concluir os testes de utilização de mapeamento entre entidades de forma unidirecional, ***efetuar agora uma consulta de game através do id***. 
+- no método main da classe Main, remover o comentário da chamada do método pesquisar() e comentar a chamada para o método cadastrar().
+- ao executar a aplicação, será possível notar que a instrução SELECT enviada ao banco de dados está fazendo uso da cláusula LEFT JOIN, ou seja, de forma automática o Hibernate está efetuando uma consulta de JOIN entre as duas entidades.
 
+## 5.3 Implementação de relacionamento entre entidades - Bidirecional
 
+- associação BIDIRECIONAL: a partir da entidade Categoria será possível listar os games da associação.
+- antes de prosseguir, apagar as tabelas do banco de dados, para termos uma estrutura limpa e que não haja nada que possa interferir na estrutura das tabelas.
+- a regra de negócio mudou um pouco:
+	- o tipo de relacionamento de Game com Categoria continuará sendo ManyToOne, pois muitos jogos podem pertencer a uma mesma categoria. 
+	- porém, a associação da classe Categoria com Game será do tipo OneToMany: uma categoria pode ter muitos games, o que será necessário para que tenhamos a possibilidade de listar todos os games que pertençam a determinada categoria.
 
+- nova implementação da classe Game:
 
+~~~java
+package br.com.fiap.model;
 
+import jakarta.persistence.*;
+import java.time.LocalDate;
 
+@Entity
+@Table(name = "tbl_games")
+public class Game {
+    @Id
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "TBL_GAMES_SEQ")
+    @SequenceGenerator(
+            name = "TBL_GAMES_SEQ",
+            sequenceName = "TBL_GAMES_SEQ",
+            allocationSize = 1)
+    private Long id;
 
+    private String titulo;
 
+    @Column(name = "data_lancamento")
+    private LocalDate dataLancamento;
+
+    private Double valor;
+    private String produtora;
+    private Boolean finalizado;
+
+    @ManyToOne
+    @JoinColumn(name = "categoria_id")
+    private Categoria categoria;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    // TRECHO DE CÓDIGO OMITIDO...
+}
+~~~
+
+- implementar a associação da entidade Categoria para a entidade Game:
+
+~~~java
+package br.com.fiap.model;
+
+import jakarta.persistence.*;
+
+import java.util.List;
+
+@Entity
+@Table(name = "tbl_categorias")
+public class Categoria {
+
+    @Id
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "TBL_CATEGORIAS_SEQ"
+    )
+    @SequenceGenerator(
+            name = "TBL_CATEGORIAS_SEQ",
+            sequenceName = "TBL_CATEGORIAS_SEQ",
+            allocationSize = 1
+    )
+    private Long id;
+
+    @Column(name = "nome_categoria")
+    private String nomeCategoria;
+
+    @OneToMany(mappedBy = "categoria")
+    private List<Game> games;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getNomeCategoria() {
+        return nomeCategoria;
+    }
+
+    public void setNomeCategoria(String nomeCategoria) {
+        this.nomeCategoria = nomeCategoria;
+    }
+
+    public List<Game> getGames() {
+        return games;
+    }
+
+    public void setGames(List<Game> games) {
+        this.games = games;
+    }
+}
+~~~
+
+- implementar o método buscarCategoriaPeloId() na classe CategoriaDao:
+
+~~~java
+package br.com.fiap.dao;
+
+import br.com.fiap.model.Categoria;
+import jakarta.persistence.EntityManager;
+
+import java.util.List;
+
+public class CategoriaDao {
+
+    private EntityManager em;
+
+    public CategoriaDao(EntityManager em) {
+        this.em = em;
+    }
+
+    public void salvar(Categoria categoria) {
+        em.persist(categoria);
+    }
+
+    public Categoria buscarCategoriaPeloId(Categoria categoria){
+        return em.find(Categoria.class, categoria.getId());
+    }
+
+}
+~~~
+
+- para visualizar o retorno de forma mais organizada, sobrescrever na classe Categoria o método toString():
+
+~~~java
+package br.com.fiap.model;
+
+import jakarta.persistence.*;
+
+import java.util.List;
+
+@Entity
+@Table(name = "tbl_categorias")
+public class Categoria {
+
+    @Id
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "TBL_CATEGORIAS_SEQ"
+    )
+    @SequenceGenerator(
+            name = "TBL_CATEGORIAS_SEQ",
+            sequenceName = "TBL_CATEGORIAS_SEQ",
+            allocationSize = 1
+    )
+    private Long id;
+
+    @Column(name = "nome_categoria")
+    private String nomeCategoria;
+
+    @OneToMany(mappedBy = "categoria")
+    private List<Game> games;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getNomeCategoria() {
+        return nomeCategoria;
+    }
+
+    public void setNomeCategoria(String nomeCategoria) {
+        this.nomeCategoria = nomeCategoria;
+    }
+
+    public List<Game> getGames() {
+        return games;
+    }
+
+    public void setGames(List<Game> games) {
+        this.games = games;
+    }
+
+    @Override
+    public String toString() {
+        return "Categoria{" +
+                "id=" + id +
+                ", nomeCategoria='" + nomeCategoria + ''' +
+                ", games=" + games +
+                '}';
+    }
+}
+~~~
+
+- na classe Main:
+
+~~~java
+package br.com.fiap;
+
+import br.com.fiap.dao.CategoriaDao;
+import br.com.fiap.dao.GameDao;
+import br.com.fiap.model.Categoria;
+import br.com.fiap.model.Game;
+import br.com.fiap.utils.Conexao;
+import jakarta.persistence.EntityManager;
+
+import java.time.LocalDate;
+import java.util.List;
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        EntityManager em = Conexao.getEntityManager();
+
+        //cadastrar(em);
+        //pesquisar(em);
+        //listarTodosOsGames(em);
+        //buscarGamePeloNome(em);
+        //buscarGamesPorFaixaDeValores(em);
+        buscarCategoriaPeloId(em);
+
+        em.close();
+
+    }
+
+    public static void buscarCategoriaPeloId(EntityManager em) {
+        CategoriaDao gameDao = new CategoriaDao(em);
+        Categoria categoria = new Categoria();
+        categoria.setId(1L);
+        Categoria categoriaEncontrada = gameDao.buscarCategoriaPeloId(categoria);
+        System.out.println(categoriaEncontrada.toString());
+    }
+
+    // TRECHO DE CÓDIGO OMITIDO...
+~~~
+
+---
+
+## FAST TEST
+
+### 1. Como é chamada a interface comum para mapeamento objeto-relacional entre objetos Java e entidades no banco de dados?
+> JPA - Java Persistence API.
+
+### 2. Qual é o framework de mapeamento objeto-relacional mais popular no ecossistema Java?
+> Hibernate.
+
+### 3. Qual é a principal finalidade do padrão DAO?
+> Separar as regras de negócio das regras de acesso a dados.
+
+### 4. Em um ambiente JPA, as configurações do mapeamento objeto-entidade são efetuadas em qual arquivo?
+> persistence.xml.
 
 --- 
 

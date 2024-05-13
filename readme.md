@@ -90,9 +90,9 @@
 <details>
 <summary>JAVA ADVANCED</summary>
 
-- [Cap 1](./fase03/capitulo01.md)
-- [Cap 2](./fase03/capitulo02.md)
-- [Cap 3]()
+- [Cap 1 - Mergulhando no Java](./fase03/capitulo01.md)
+- [Cap 2 - A Persistência de Dados](./fase03/capitulo02.md)
+- [Cap 3 - O REST com Spring Boot](./fase03/capitulo03.md)
 - [Cap 4]()
 - [Cap 5]()
 - [Cap 6]()
