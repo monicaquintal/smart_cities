@@ -124,7 +124,87 @@ Atualizar | UPDATE | HTTP/HTTPS | www.fiap.com.br:8080/api/alunos
 
 > Como o servidor sabe qual é o endpoint que queremos utilizar? Ele será escolhido de acordo com o método HTTP utilizado na chamada do recurso. 
 
-## 1.5 Padrão JSON
+## 1.5 Padrão JSON (JavaScript Object Notation)
+
+- é um padrão de formatação empregado para representar dados em uma estrutura de texto. 
+- atualmente é o padrão mais utilizado para o envio e recebimento de dados em webservices, pois proporciona uma alternativa eficaz para a troca de informações entre sistemas e plataformas distintas.
+- com o JSON é possível representar objetos na forma de texto seguindo uma sintaxe de chave-valor bastante simples. 
+- exemplo: representar um objeto “aluno” que contenha rm, nome, telefone, email, data de nascimento, aluno ativo e média geral.
+
+~~~json
+{
+  "rm": "1100",
+  "nome": "Maria da Silva",
+  "telefone": "(11)95555-5555",
+  "email": "maria@email.com",
+  "dataNascimento": "1999-05-28",
+  "alunoAtivo": true,
+  "mediaGeral": 8.5
+}
+~~~
+
+- como é possível observar, o JSON existe na forma de uma String, onde o conteúdo é delineado por chaves “{}” e cada par campo-valor é notado entre aspas duplas e separado por dois pontos. 
+- é um formato flexível e compatível entre as diversas linguagens de programação e plataformas.
+- para representar uma lista de alunos utilizamos a representação na forma de matriz - exemplo:
+
+~~~json
+[
+    {
+      "rm": "1100",
+      "nome": "Maria da Silva",
+      "telefone": "(11)95555-5555",
+      "email": "maria@email.com",
+      "dataNascimento": "1999-05-28",
+      "alunoAtivo": true,
+      "mediaGeral": 8.5
+    },
+    {
+      "rm": "2200",
+      "nome": "Paulo Roberto",
+      "telefone": "(11)95555-1111",
+      "email": "paulo.roberto@email.com",
+      "dataNascimento": "1987-09-12",
+      "alunoAtivo": false,
+      "mediaGeral": 6.7
+    },
+    {
+      "rm": "3300",
+      "nome": "Ana Gomes",
+      "telefone": "(11)95555-2222",
+      "email": "ana.gomes@email.com",
+      "dataNascimento": "2004-11-03",
+      "alunoAtivo": true,
+      "mediaGeral": 10.0
+    }
+  ]
+~~~
+
+## 1.6 Framework Spring Boot
+
+### 1.6.1 Spring Framework:
+- lançado em 2003 por Rod Johnson.
+- fornece uma série de ferramentas que simplificam o desenvolvimento,promovem a aplicação de boas práticas e facilitam a modularização e escalabilidade das aplicações.
+- características:
+  - 1. `Injeção de dependência ou IoC (Inversion of Control)`: onde um objeto recebe a instância de outra classe que ele depende para realizar alguma tarefa específica, facilitando a reutilização de código, testes unitários e manutenção.
+  - 2. `Modularização`: o ecossistema Spring é composto por vários módulos que podem ser usados de acordo com as necessidades de desenvolvimento. Os módulos mais utilizados são:
+    - a. ***Spring Data***: responsável pela persistência de dados através do uso da especificação JPA.
+    - b. ***Spring Web***: responsável pelo gerenciamento de requisições web.
+    - c. ***Spring Security***: responsável pela autenticação e autorização.
+    - d. ***Spring MVC***: oferece a arquitetura para o desenvolvimento de aplicações web baseados no padrão Model-View-Controller.
+    - e. ***Spring Cloud***: fornece um conjunto de ferramentas e bibliotecas para o desenvolvimento de aplicações utilizando a arquitetura de microsserviços.
+
+### 1.6.2 Spring Boot:
+- desenvolver aplicações utilizando esse ecossistema pode ser um tanto complexo, por conta da variedade de recursos e configurações necessárias para o funcionamento da estrutura. 
+- assim, foi criado dentro da família Spring Framework o projeto Spring Boot.
+- tem como objetivo facilitar e agilizar o desenvolvimento de aplicações Java baseados na webe de microsserviços por meio do desenvolvimento opinativo, onde já são fornecidas as configurações e padrões de projeto predefinidos e seguindo as boas práticas.
+- portanto, Spring Boot é uma ferramenta que reduz o trabalho com configuração, fornecendo configurações automáticas que permitem ao desenvolvedor iniciar o projeto rapidamente e seguindo as melhores práticas.
+
+<div align="center">
+<h2>2. PROJETO EXEMPLO</h2>
+</div>
+
+
+
 
 
 
