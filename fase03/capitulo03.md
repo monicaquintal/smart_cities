@@ -203,11 +203,64 @@ Atualizar | UPDATE | HTTP/HTTPS | www.fiap.com.br:8080/api/alunos
 <h2>2. PROJETO EXEMPLO</h2>
 </div>
 
+- desenvolvimento de uma aplicação para pessoas que desejam controlar o consumo de calorias diárias.
+- especificações:
 
+### a) Descrição:
+- desenvolver a aplicação Backend de um sistema de acompanhamento e controle de consumo diário de calorias. 
+- a aplicação deverá ser multiusuária.
+- cada usuário poderá registrar os alimentos consumidos ao longo do dia em suas principais refeições: café da manhã, almoço, lanche da tarde e jantar.
+- cada usuário poderá realizar os seguintes registros diários:
+  - 1. Lançamento de Alimentos:
+    - a) O usuário deve ser capaz de adicionar alimentos consumidos durante o dia, especificando a refeição correspondente (café da manhã, almoço, lanche da tarde, jantar).
+    - b) Se o alimento não estiver cadastrado no sistema, o usuário deve ter a opção de cadastrá-lo, informando as quantidades de carboidratos, gorduras totais e proteínas por 100 gramas.
+  - 2. Histórico de Pesagem:
+    - a) O sistema deve permitir que o usuário registre sua pesagem, incluindo o peso, a data da pesagem e o Índice de Massa Corporal (IMC) calculado com base nesses dados.
+    - b) O histórico de pesagem será mantido para que o usuário possa acompanhar seu progresso ao longo do tempo
 
+### b) Requisitos Técnicos:
+  - 1. A aplicação deverá ser desenvolvida utilizando o framework Spring Boot.
+  - 2. Para armazenar informações, como alimentos, registros diários de consumo e histórico de pesagem, será utilizado banco de dados Oracle Database.
+  - 3. Desenvolva APIs para permitir o cadastro de alimentos, lançamentos diários e registros de pesagem.
+  - 4. Forneça endpoints para recuperar dados históricos, permitindo que os usuários visualizem seus registros anteriores.
 
+### c) Diagrama lógico do banco de dados:
 
+<div align="center">
+<img src="./assets/exemplo-diagrama-logico.png" width="50%"><br>
+<em>Diagrama lógico do banco de dados.</em><br>
+</div>
 
+## 2.1 Criação de um projeto com Spring Boot
+
+- para facilitar a criação de um projeto Spring Boot, a equipe do Projeto Spring criou uma ferramenta chamada `Spring Initializr`, que fornece uma interface web bastante simples para criação de projetos Spring Boot de maneira rápida e atendendo as boas práticas. 
+- os projetos criados no Spring Initializr podem ser importados para as principais IDEs Java, como Eclipse ou IntelliJ.
+
+> Para começar a criação do projeto, abrir o [Spring Initializr](https://start.spring.io/).
+
+- detalhes importantes: 
+  - ***Ferramenta de build***: usaremos o Maven, que será responsável por gerenciar as dependências do projeto e outros detalhes sobre a construção do projeto.
+  - ***Versão do Spring Boot***: durante a produção do material, a versão estável do Spring Boot é a 3.2.1. As versões que apresentam a palavra “SNAPSHOT” ainda estão em desenvolvimento.
+  - ***Group***: usado para identificar exclusivamente o projeto, portanto, deve-se utilizar o domínio reverso da organização, que no nosso caso é a FIAP. Usaremos o grupo ***br.com.fiap***.
+  - ***Artifact***: definir o nome do projeto, que será "calorias".
+  - ***Packaging***: define como o projeto será empacotado para deploy. A opção “jar” gera um arquivo compactado com todas as classes do projeto. A opção “war”, é utilizada para o deployda aplicação em um container web. As aplicações com Spring Boot, possuem o container web Tomcat embarcado, então a escolha aqui será “jar”.
+  - ***Versão do Java***: dependendo da versão, recursos do Java podem ou não estar disponíveis. É uma boa prática utilizar uma versão LTS(Long Term Support). No momento de construção desse material a [versão 21](https://download.oracle.com/java/21/latest/jdk-21_windows-x64_bin.exe) é a mais atual. Certifique-se de que o Java Development Kit (JDK)esteja instalado no seu PC.
+
+- antes de finalizar, é necessário adicionar as dependências do projeto. 
+- estamos criando uma aplicação Backend web com arquitetura REST e que disponibilizará endpoints que serão acessados pelos clientes da API, então precisaremos da biblioteca Spring Web, que possui todos os recursos necessários para implementação de aplicações RESTful com arquitetura MVC através do Spring MVC, além de fornecer ocontainer Tomcat que será responsável por efetuar as requisições e respostar HTTP da aplicação.
+
+- Passos para `adicionar as dependências do projeto`:
+  - 1. Clique no botão “ADD DEPENDENCIES...”, no lado superior direito da tela.
+  - 2. Digite a palavra “web” no campo de busca no menu suspenso que será aberto. Segure a tecla CTRL enquanto clica na opção “Spring Web”.
+  - 3. Digite no campo de busca de dependências a palavra “dev” e clique na opção “Spring Boot DevTools”.
+    - o Spring Boot DevTools implementa algumas funcionalidades úteis ao desenvolvedor, como o “LiveReload”, que efetua a reinicialização da aplicação sempre que alguma alteração efetuada no código for gravada.
+  - 4. Clique fora do menu suspenso, e retornará à tela principal do Spring Initializr.
+
+- gerar o arquivo do projeto, que consiste em um arquivo compactado com todas as configurações do projeto: clicar no botão “GENERATE” na parte inferior da tela.
+
+<div align="center">
+<h2>3. IMPORTANDO O PROJETO PARA A IDE</h2>
+</div>
 
 
 
