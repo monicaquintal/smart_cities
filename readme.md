@@ -104,7 +104,7 @@
 <details>
 <summary>ENTREPRENEURSHIP PROGRAM</summary>
 
-- [Cap 9]()
+- [Cap 9 - Startup: Modelo de Negócios](./fase03/capitulo09.md)
 - [Cap 10]()
 
 </details>

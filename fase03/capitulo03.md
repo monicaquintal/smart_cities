@@ -1,7 +1,7 @@
 <div align="center">
 <a href="https://github.com/monicaquintal" target="_blank"><img align="right" height="120px" src="../assets/logo.png" /></a>
 <h1>FASE 3 - FRAMEWORKS JAVA</h1>
-<h2>Capítulo 03: O REST com Spring Boot</h2>
+<h2>Capítulo 03: O REST com Spring Boot<./h2>
 </div>
 
 <div align="center">
@@ -262,7 +262,9 @@ Atualizar | UPDATE | HTTP/HTTPS | www.fiap.com.br:8080/api/alunos
 <h2>3. IMPORTANDO O PROJETO PARA A IDE</h2>
 </div>
 
-
+- para abrir o projeto gerado no Spring Initializr, executar os passos:
+  - 1. Descompacte o arquivo calorias.zip. 
+  - 2. Com o projeto descompactado, abra o IntelliJ e clique no botão “Open”.
 
 
 
