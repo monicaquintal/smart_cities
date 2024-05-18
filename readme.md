@@ -105,6 +105,6 @@
 <summary>ENTREPRENEURSHIP PROGRAM</summary>
 
 - [Cap 9 - Startup: Modelo de Negócios](./fase03/capitulo09.md)
-- [Cap 10]()
+- [Cap 10 - Startup: Exploring the Canvas](./fase03/capitulo10.md)
 
 </details>
