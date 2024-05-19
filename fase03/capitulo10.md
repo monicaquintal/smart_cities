@@ -260,23 +260,136 @@
 - parte dessas tarefas poderá ser realizada pela equipe da nossa Startup(atividades-chave), e parte por parceiros de negócios (parceiros-chave).
 
 <div align="center">
-<img src="./assets//lado-esquerdo-canvas.png" width="50%"><br>
+<img src="./assets/lado-esquerdo-canvas.png" width="50%"><br>
 <em>Lado esquerdo do Canvas do Modelo do Negócio.</em><br>
 </div>
 
+### f) ***Seções Parceiros-chave e Atividades-chave***:
 
+- nesse momento, devemos compreender todas as tarefas e processos que precisam ser realizados e definir o que será o “core” da nossa Startup.
+- inspirar-se em modelos como: Apple, Uber ou Airbnb.
+  - no caso da Apple, são parceiros que realizam tarefas como montar equipamentos, apps, processadores etc, enquanto preocupam-se com a imagem da marca, design, marketing etc.
+  - Uber e Airbnb nãol precisam se preocupar com manutenção dos carros ou imóveis, pagamento de taxas, roubos ou sinistros; cabe aos proprietários desses bens, que estão ocupando o papel de Parceiros de negócio.
 
+<div align="center">
+<img src="./assets/parceiros-e-atividades.png" width="50%"><br>
+<em>Quadrante Parceiros-Chave e Atividades-Chave do Canvas do Modelo do Negócio.</em><br>
+</div>
 
+- perguntas que irão ajudar.:
+  - ***Atividades-chave***:
+    - quais atividades-chave serão realizadas para a concretização da proposta de valor?
+    - quais outras atividades-chave para a execução dos canais de distribuição, para o relacionamento com clientes e para a geração de receitas?
+    - o que devemos canalizar de energias para gerar escala?
+  - ***Parceiros-chave***:
+    - quem são os parceiros-chave?
+    - quem são os fornecedores-chave?
+    - quais recursos-chave serão adquiridos dos parceiros?
+    - quais atividades-chave serão executadas pelos parceiros?
+    - quem fará as tarefas que tiram a escala do nosso negócio?
+    - quais tarefas tiram a escala do nosso negócio?
 
+### g) ***Seção Recursos-chave***:
 
+- se definimos quais serão as atividades “core” e o que será realizado por nossos parceiros de negócios, é possível definir também de quais recursos precisaremos. 
+- exemplo: se entendermos que o desenvolvimento e a manutenção de um aplicativo serão a nossa atividade “core”, logo é possível inferir a necessidade das pessoas, licenças de software, entre outros recursos,para executarmos essa tarefa.
 
+<div align="center">
+<img src="./assets/recursos-chave.png" width="50%"><br>
+<em>Quadrante Recursos-Chave do Business Model Canvas.</em><br>
+</div>
 
+- perguntas que irão ajudar nessa definição.
+  - Recursos-chave:
+    - quais recursos-chave serão necessários para a concretização da proposta de valor?
+    - quais outros recursos-chave serão demandados pelos canais de distribuição para relacionamento com clientes e para a geração de receitas?
+    - quais recursos precisaremos ter para criar, sustentar e entregar o produto e ou serviço?
 
+### h) ***Seção Custos***:
 
+- último campo a ser preenchido do Business Model Canvas. 
+- analisaremos os recursos que precisamos ter para construir e entregar ao mercado os produtos e/ou serviços da nossa Startup.
+- há custos fixos e custos variáveis, ou seja, alguns custos ocorrem quando geramos receita/venda. Por exemplo, os impostos ou taxas de entrega.
+- ficar atento aos custos fixos de nossa Startup, ou seja, todo o recurso financeiro que sai da Startup sem ter sido gerado diretamente por uma receita/venda. 
 
+<div align="center">
+<img src="./assets/custos.png" width="50%"><br>
+<em>Quadrante de Custos do Business Model Canvas.</em><br>
+</div>
 
+- perguntas que podem ajudar a definir a estrutura dos custos do modelo de negócio:
+  - Estrutura de custos:
+    - quais são os custos mais relevantes no modelo de negócio planejado?
+    - quais recursos-chave são os mais caros?
+    - quais atividades-chave são as mais onerosas?
 
+## 1.6 Dicas para aproveitar melhor o Business Model Canvas
 
+- 1. ***Rascunhe o negócio***: não exige conhecimentos aprofundados dos negócios.
+
+- 2. ***Valide rapidamente***: 
+    - o Business Model Canvas exige respostas integradas: o que é escrito em uma parte deve fazer sentido com as demais. Isso nos obriga a visualizar o negócio de forma sistêmica e integrada. 
+    - por ser mais visual, permite que outras pessoas (especialistas, mentores e investidores) comentem e forneçam feedbacks.
+
+- 3. ***Fuja dos extremismos e das polêmicas***: considerar o Business Model Canvas como mais uma opção de ferramenta, que pode ser utilizada e combinada com diversas outras ferramentas de mercado.
+
+- 4. ***Combine com os russos***: 
+    - entre as críticas ao Business Model Canvas está o fato da pouca ênfase que o modelo dá para a concorrência ou mesmo as incertezas típicas de um novo negócio. 
+    - considerar que todas as empresas têm concorrentes, se não diretos,por meio de produtos e serviços substitutos. 
+    - o Canvas Ampliado do Modelo de Negócio pode nos ajudar a refletir e a planejar o que fazer com os aspectos externos e as oportunidades de otimizações do negócio.
+
+- 5. ***Geração Startup***: a elaboração do Canvas é rápida, então o modelo se torna muito mais útil do que escrever um longo plano de negócio tradicional. 
+
+- 6. ***Usuários e clientes***: 
+    - usuário apenas utiliza a solução, enquanto os clientes pagam por ela. 
+    - dependendo do contexto e segmento, um usuário e cliente podem ser representados pelo mesmo perfil, em outros, não.
+    - o Google, por exemplo, tem usuários (todos que usam seus serviços gratuitamente), e clientes (anunciantes, por exemplo, que pagam para anunciar).
+
+- 7. ***Muito material na Internet***.
+
+## 1.7 Validando os Canvas
+
+- `hipóteses`: tudo aquilo que definimos sobre o nosso projeto, porém sob o nosso ponto de vista (empreendedor), ou seja, o mercado ainda não foi consultado para saber se são realmente fatos reais (pontos de vista do mercado).
+- agora precisamos validar tudo o que foi construído até o momento:
+
+> Precisamos transformar um modelo de negócios, baseado em hipóteses (ponto de vista do empreendedor), em um modelo de negócios, baseado em fatos (ponto de vista do mercado).
+
+- tudo que foi definido e que não se pode afirmar é um fato que necessita de validação; para isso, é preciso sair a campo para interagir com potenciais clientes, usuários, influenciadores, especialistas e parceiros.
+- devemos `definir as principais questões que deveriam ser respondidas`. exemplos:
+  - O problema mapeado é válido? Existe realmente?
+  - A solução proposta realmente resolve o problema identificado?
+  - Há demanda real para a proposta de valor como foi definida?
+  - O potencial cliente quer realmente comprar o produto ou serviço?
+  - O negócio tem grande potencial para ser lucrativo?
+- `outras questões` ajudam a responder às questões principais, como: 
+  - Os canais propostos são verdadeiramente os melhores para levar a proposta de valor ao cliente?
+  - As estratégias de relacionamento com os clientes são as mais eficientes (mais resultado com menos investimento)?
+  - Os processos-chave são hverdadeiramente aqueles que trarão vantagem competitiva para a Startup? Será que não poderiam ser terceirizados com parceiros-chave?
+  - Nesse momento, os recursos-chave são verdadeiramente imprescindíveis para contribuir com a eficácia dos processos-chave? Será que não poderiam ser terceirizados com parceiros-chave?
+  - Os parceiros-chave são parceiros mesmo? Ou são só fornecedores que estão mais interessados na comercialização dos nossos produtos e serviços?
+- o processo de validação ainda deve responder a `outras questões, que poderiam atrapalhar o sucesso da Startup`, como:
+  - Quem são os concorrentes atuais? Em outras palavras, como os potenciais clientes resolvem o problema (que a Startup irá resolver),atualmente? 
+  - O que ou quem (além dos concorrentes atuais), podem atrapalhar o sucesso do negócio? Quais são essas forças de mercado?
+  - O que está acontecendo, e o que irá acontecer com as necessidades (problemas), do cliente que a Startup pretende atender (resolver)? Ou, quais são as tendências desse mercado consumidor?
+
+---
+
+## FAST TEST
+
+### 1. Qual é a diferença entre plano de negócio e modelo de negócio?
+> O plano de negócio é utilizado por empresas mais tradicionais, que atuam em ambientes menos incertos. Já o modelo de negócio é utilizado por empresas inovadoras, como startups, que trabalham em um ambiente de muitas incertezas.
+
+### 2. Qual é o principal objetivo do Canvas Proposta de Valor?
+> O Canvas Proposta de Valor tem como objetivo entender quais são as dores que as personas possuem, além de determinar qual solução nosso produto/serviço vai propor, mostrando quais são os alívios para as dores, bem como os ganhos.
+
+### 3. Qual é o principal objetivo do Business Model Canvas?
+> Fazer um raio-X da empresa, por meio do qual é possível analisar os diversos elementos que a compõem e facilitar o entendimento destes por todas as pessoas envolvidas no projeto.
+
+### 4. O que devemos preencher nas proposições de valores no Business Model Canvas?
+> Devemos preencher quais são os benefícios que nossa solução entregará aos clientes.
+
+### 5. O que devemos colocar nas atividades-chave?
+> Devemos determinar as atividades principais da empresa, para que seja possível escalar e prover as propostas de valor do cliente.
 
 --- 
 
