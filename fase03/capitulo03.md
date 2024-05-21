@@ -265,8 +265,214 @@ Atualizar | UPDATE | HTTP/HTTPS | www.fiap.com.br:8080/api/alunos
 - para abrir o projeto gerado no Spring Initializr, executar os passos:
   - 1. Descompacte o arquivo calorias.zip. 
   - 2. Com o projeto descompactado, abra o IntelliJ e clique no botão “Open”.
+  - 3. Na janela "Open File ou Project", navegar até o local onde o projeto foi descompactado, selecionar a pasta do projeto e clicar no botão OK.
+  - 4. Se surgir uma caixa de diálogo perguntando se devemos confiar no projeto que está sendo aberto, clicar no botão "Trust Project".
+  - 5. Aguarde um momento até que o projeto seja aberto e configurado.
 
+## 3.1 Arquivo pom.xml
 
+- o arquivo “pom.xml” desempenha um papel fundamental quando utilizamos o Maven como Build Tool.
+- é ***responsável pela configuração e construção do projeto***. 
+
+	- principais funções do arquivo pom.xml:
+
+- a) `Definição do projeto`: responsável pela definição das informações básicas do projeto, como “GroupId”, “ArtifactId”, que é o nome do projeto e a versão. 
+
+```xml
+<groupId>br.com.fiap</groupId>
+<artifactId>calorias</artifactId>
+<version>0.0.1-SNAPSHOT</version>
+<name>calorias</name>
+<description>Projeto exemplo para o curso de Spring Boot -FIAP</description>
+```
+
+- b) `Dependências`: no arquivo pom.xml definimos as dependências do projeto, ou seja, informamos quais bibliotecas o projeto deverá utilizar para implementar as suas funcionalidades. De acordo com as configurações definidas no bloco &lt;dependencies&gt; que o Maven efetuará os downloads necessários.
+
+```xml
+<dependencies>
+    <dependency>
+       <groupId>org.springframework.boot</groupId>
+       <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+       <groupId>org.springframework.boot</groupId>
+       <artifactId>spring-boot-devtools</artifactId>
+       <scope>runtime</scope>
+       <optional>true</optional>
+    </dependency>
+    <dependency>
+       <groupId>org.springframework.boot</groupId>
+       <artifactId>spring-boot-starter-test</artifactId>
+       <scope>test</scope>
+    </dependency>
+</dependencies>
+```
+
+- c) `Gerenciamento de versões`:  tanto do Java quanto do próprio Spring Boot.
+
+~~~xml
+<parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>3.2.1</version>
+    <relativePath/> <!-- lookup parent from repository -->
+</parent>
+<properties>
+    <java.version>21</java.version>
+</properties>
+~~~
+
+## 3.2 SpringApplication.run()
+
+- assim como uma aplicação Java convencional, a aplicação Spring Boot será executada a partir de uma classe que possua o método main.
+- porém, a main terá com uma configuração especial: `anotação @SpringBootApplication`:
+	- responsável por disparar as configurações automáticas do Spring Boot, incluindo a varredura de componentes e configuração do Spring MVC.
+	- também informa que essa é a classe principal e que deve ser usada como ponto de entrada para iniciar a aplicação.
+- o `método main()` é responsável pela chamada ao `método estático run()` da classe SpringApplication; suas principais responsabilidades são:
+	- a) Iniciar o contexto da aplicação Spring, ativando as configurações do Spring Boot automaticamente.
+	- b) Iniciar o servidor web Tomcat que está embarcado no projeto, não sendo necessário instalação e configuração de um servidor de aplicações externo (nesse caso, o Tomcat é incorporado como um contêiner servlet embutido).
+	- c) Executar tarefas de inicialização da aplicação verificando as propriedades configuradas no arquivo application.properties.
+	- d) Tratar os argumentos fornecidos no momento de inicialização da aplicação que foram fornecidas ao parâmetro args.
+- o estado inicial do arquivo CaloriasApplication deverá se parecer com:
+
+~~~java
+package br.com.fiap.calorias;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class CaloriasApplication {
+	public static void main(String[] args) {
+	SpringApplication.run(CaloriasApplication.class, args)
+	}
+}
+~~~
+
+## 3.3 Executando uma aplicação Spring Boot
+
+- executar a aplicação clicando no botão Run.
+- se tudo estiver configurado corretamente, deverá aparecer o log de execução do aplicativo (indicando que o container web do Tomcat foi inicializado na porta 8080).
+
+## 3.4 Acessando a aplicação pela primeira vez
+
+- o log de execução da aplicação mostra que o serviço foi iniciado na porta 8080, e que o protocolo disponível é o HTTP. 
+- para acessar o serviço, abrir um navegador web qualquer e digitar o endereço: `http://localhost:8080`.
+- Apesar de recebermos uma mensagem de erro, temos a confirmação de que a aplicação está no ar e recebendo requisições.
+- a mensagem apenas informa que o recurso não foi encontrado, evidenciado pelo "status code 404".
+- para parar a execução da aplicação, clicar no botão “Stop”, ao lado direito do botão “Run”.
+
+> O link do projeto implementado até aqui pode ser obtido no GitHub através [deste link](https://github.com/FIAP/ON_TDS_JAVA_ADVANCED_SPRING_BOOT/tree/config).
+
+### 3.4.1 Criando o primeiro Controller
+
+- a aplicação está no ar, mas não há nada para ser acessado.
+- portanto, vamos criar o primeiro endpoint no Spring Boot;
+- mas antes algumas explicações importantes:
+
+### 3.4.2 O que é um Controller na arquitetura REST?
+
+- quando fizemos o primeiro teste na aplicação, recebemos como resposta o Status Code HTTP 404, informando que o recurso não foi encontrado.
+- portanto, será necessário criar um recurso na aplicação responsável por receber as requisições HTTP e que saiba como tratá-las: estamos falando dos `endpoints`!
+- endpoints são funcionalidades ou métodos implementados em classes que desempenham o papel de "Controllers" (controladores) em uma aplicação Spring Boot. 
+- os controladores são responsáveis por gerenciar o fluxo de requisições HTTP, atuando como intermediários entre as solicitações dos clientes e a lógica de negócios da aplicação (assim como os Servlets faziam).
+- quando uma requisição HTTP é feita, o controlador recebe essa requisição e a encaminha para o método específico que deverá processá-la. 
+	- a escolha do método é feita com base na URL fornecida pelo cliente durante a requisição. 
+	- exemplo: considere uma classe ClienteController, que implementa funções para cadastrar, consultar e excluir um cliente em uma aplicação executando no endereço http://localhost na porta 8080.
+		- para acessar o endpoint de consulta, utilizar a URL http://localhost:8080/api/clientes , em que:
+			- http: é o protocolo de comunicação HTTP.
+			- localhost: nome do servidor onde a aplicação está em execução (poderia ser o endereço IP do servidor).
+			- 8080: porta do container web que está hospedando a aplicação.
+			- api: caminho (path) onde o recurso está localizado.
+			- clientes: endpoint específico que desejamos executar.
+		- portanto, ao acessar a URL completa "http://localhost:8080/api/clientes", a solicitação é direcionada ao método correspondente no "ClienteController", permitindo a execução da funcionalidade de consulta de clientes na aplicação. 
+		- essa estrutura facilita a organização e a exposição controlada de funcionalidades da aplicação por meio de uma API HTTP.
+
+### 3.4.3 Criação do primeiro endpoint
+
+- para criarmos nosso primeiro endpoint, é necessário criarmos uma classe com o papel de Controller , e para manter nosso projeto organizado vamos criar um package que manterá todas as classes Controller da aplicação.
+	- src> main> java > br.com.fiap.calorias > controller.
+- criar a classe HelloWorldController no pacote controller que acabamos de criar. 
+- escrever o método que será o endpoint responsável por devolver aos clientes a mensagem "Hello World Spring Boot":
+
+~~~java
+package br.com.fiap.calorias.controller;
+
+public class HelloWorldController {
+
+    public String getHelloWorld(){
+        return "Hello World Spring Boot";
+    }
+
+}
+~~~
+
+## 3.5 Mapeando o Controller
+
+- a classe HelloWorldController, da forma como está agora não é reconhecida pelo Spring Boot como sendo um controlador.
+- será necessário efetuarmos algumas configurações para que tenhamos o primeiro controlador da nossa aplicação.
+- as configurações serão efetuadas através de anotações com as responsabilidades:
+	- indicar que a classe é um controlador. 
+	- associar a classe a uma URL.
+	- indicar os métodos que serão utilizados como endpoints do controlador e respectivas URLs de acesso.
+- com as devidas anotações, a classe HelloWorldController deverá se parecer com:
+
+~~~java
+package br.com.fiap.calorias.controller;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api")
+public class HelloWorldController {
+
+    @GetMapping
+    public String getHelloWorld(){
+        return "Hello World! Spring Boot";
+    }
+
+}
+~~~
+
+- sendo: 
+	- Linha 7: anotação @RestController marca a classe como sendo um controlador.
+	- Linha 8: informamos qual será a URL para alcançarmos o controlador. Neste caso, lembre-se que a URL base para acessar a aplicação é http://localhost:8080. Então, ao utilizarmos a anotação @RequestMapping(“/api”), estamos adicionando à URL base a parte do endereço que resta para acessarmos o controlador HelloWorldController.
+	- Linha 11: a anotação @GetMapping está mapeando o acesso ao método
+getHelloWorld() a partir de uma requisição do tipo HTTP/GET.
+- ao finalizar as configurações, reinicializar a aplicação para que as mudanças sejam efetuadas. Se tudo estiver correto, utilize um navegador web qualquer para acessar o endpoint.
+- ao informar o endereço da aplicação ao navegador, ele executa uma requisição ao servidor no endereço informado. Como estamos utilizando um navegador web, o tipo da requisição HTTP será do tipo GET , então, ao acessarmos o controlador este direcionará a solicitação ao método anotado com @GetMapping. 
+- mas e se tivermos outros métodos? Como o Spring Boot sabe para qual método ele deve direcionar a solicitação?
+	- ***acrescentar à anotação @RequestMapping a parte da URL que será utilizada para acessar o endpoint específico***. 
+	- exemplo: na API temos apenas um endpoint que retorna a mensagem em inglês, mas e se quisermos uma API que retorne a mensagem em português?
+	- 
+Neste caso, basta acrescentarmos o
+
+método responsável por criar a mensagem em português e informar para a anotação
+“
+
+@GetMapping
+
+” a parte da URL específica para o método. A implementação deverá se
+
+parecer com a listagem de código
+
+-
+
+fonte
+
+“Adicionando
+
+outro
+
+endpoint
+
+ao controlador”, logo
+
+abaixo
+
+pág 41
 
 
 
