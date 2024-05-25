@@ -839,4 +839,346 @@ public class UsuarioService {
       
 > Com isso, implementamos um CRUD completo sem necessidade de escrever instruções SQL manualmente.
 
-## 
+## 4.7 Criando o controlador – Controller
+
+- a função do controlador (Controller) é gerenciar as requisições HTTP, sendo a porta de entrada para a nossa API. 
+- para possibilitar que uma aplicação cliente possa enviar ou consultar dados de usuários, será necessário a criação dos endpoints específicos para cada uma das operações que a nossa API disponibilizará. 
+- portanto, vamos proceder com a criação da ***classe UsuarioController*** no pacote controller.
+- em seguida, configurar o controlador de usuários com os métodos para criação, consultas, exclusão e atualização de usuários no banco de dados.
+
+~~~java
+package br.com.fiap.calorias.controller;
+
+import br.com.fiap.calorias.model.Usuario;
+import br.com.fiap.calorias.service.UsuarioService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api")
+public class UsuarioController {
+
+    @Autowired
+    private UsuarioService usuarioService;
+
+    @PostMapping("/usuarios")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Usuario salvar(@RequestBody Usuario usuario){
+        return usuarioService.salvarUsuario(usuario);
+    }
+
+    @GetMapping("/usuarios")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Usuario> litarTodos(){
+        return usuarioService.listarTodos();
+    }
+    
+    @GetMapping("/usuarios/{usuarioId}")
+    public Usuario buscarPorId(@PathVariable Long usuarioId){
+        return usuarioService.buscarPorId(usuarioId);
+    }
+
+    @DeleteMapping("/usuarios/{usuarioId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+        public void excluir(@PathVariable Long usuarioId){
+        usuarioService.excluir(usuarioId);
+    }
+
+    @PutMapping("/usuarios")
+    @ResponseStatus(HttpStatus.OK)
+        public Usuario atualizar(@RequestBody Usuario usuario){
+        return usuarioService.atualizar(usuario);
+    }
+
+}
+~~~
+
+- implementações:
+  - `Linhas 11 e 12`: 
+    - a **anotação @RestController** indica ao Spring que a classe UsuarioController é uma classe controladora.
+    - a **anotação @RequestMapping** indica que as requisições deverão utilizar a URL "/api" como base para a URL completa deste recurso.
+  - `Linhas 15 e 16`: 
+    - estamos injetando o serviço UsuarioService no controlador através da **anotação @Autowired**.
+  - `Linha 18`: 
+    - aqui começamos a implementação do método que será responsável por enviar um objeto usuário para a API. 
+    - como estamos utilizando REST, as requisições HTTP para esse endpoint devem ser do tipo POST, por isso a **anotação PostMapping**. 
+    - além disso, estamos acrescentando o parâmetro "/usuarios",que é a parte da URL que deverá ser fornecida para que a requisição chegue até este endpoint.
+  - `Linha 19`: 
+    - de acordo com o REST, quando um cliente faz uma requisição para uma API, o servidor deve responder com o status code que identifique o que ocorreu. 
+    - a **anotação @ResponseStatus** é responsável por inserir no header da resposta HTTP o status code correto. 
+    - nesse exemplo, estamos fornecendo o ***enumerador HttpStatus.CREATED*** como argumento da anotação @ResponseStatus, que retornará ao cliente o código "201 – CREATED", que indica que a requisição foi processada com sucesso e um usuário foi criado no banco de dados.
+  - `Linha 20`: 
+    - a partir deste ponto estamos implementando o **método salvar()**,que atuará como endpoint responsável por processar requisições para cadastrar usuários no banco de dados. 
+    - ao chamar o método salvar(), é necessário fornecer um objeto Usuario por meio dos parâmetros do método. 
+    - para que o Spring saiba que deve extrair o objeto do corpo da requisição HTTP, utilizamos a **anotação @RequestBody** à esquerda da declaração do parâmetro.
+      - @RequestBody: anotação que infica ao Spring que o objeto em formato JSON deve ser extraído do corpo da requisição HTTP.
+      - Usuario usuario: objeto JSON extraído do corpo da requisição será convertido em um objeto do tipo Usuário.
+  - `Linha 21`: 
+    - nesta implementação, o objeto Usuario obtido pelo service no banco de dados, será inserido no corpo na resposta HTTP, em formato JSON,juntamente com o status code “201” e devolvido ao cliente da requisição.
+  - `Linhas 24 a 29`: 
+    - implementando o endpoint responsável por atender as requisições para a listagem de todos os usuários do banco de dados. 
+    - de acordo com o padrão REST, as consultas devem ser feitas através de requisições HTTP do tipo GET, pois são requisições interessadas em apenas pegar dados na API. A
+    - a **anotação @GetMapping** informa ao Spring que este endpoint deve processar requisições do tipo GET. 
+    - estamos fornecendo o ***enum HttpStatus.OK*** para a anotação @ResponseStatus, pois neste caso o status code que indica que a requisição foi processada com sucesso é "200 – OK".
+  - `Linha 30`: 
+    - este método está sendo implementado para permitir a busca de um usuário específico a partir do seu identificador único no banco de dados. 
+    - **anotação @GetMapping** está informando ao Spring que este endpoint processa requisições HTTP do tipo GET. 
+    - além disso, no argumento da anotação, estamos passando o valor "/usuarios/{usuarioId}", que indica que na URL da requisição, no lugar de "{usuarioId}", deverá ser passado o código do usuário no banco de dados. 
+  - `Linha 31`: 
+    - declarando o método buscarPorId(), que recebe como parâmetro um valor do tipo Long.
+    - **anotação @PathVariabale** para indicar ao Spring que o valor desse argumento deverá ser extraído da variável de caminho "{usuarioId}" da URL de requisição.
+  - `Linha 35`: 
+    - **anotação @DeleteMapping** indica que o método será acessado através de uma requisição HTTP do tipo DELETE. 
+    - recebe como parâmetro um valor inteiro que representa o identificador do usuário no banco de dados. 
+    - o método de exclusão também receberá o identificador na URL da requisição. 
+  - `Linha 36`:
+    - por definição do REST, os métodos de exclusão devem retornar o statuscode "204 – NO CONTENT", pois o objeto foi excluído e não há o que retornar no corpo da resposta ao cliente.
+  - `Linha 38`: evoca o método excluir() do service.
+  - `Linha 41`: 
+    - **anotação @PutMapping** indica que o método será utilizado para atualizar um registro no banco: será evocado através de uma requisição HTTP do tipo PUT.
+  - `Linha 42`: 
+    - definimos o status code que será enviado na resposta da requisição ao cliente. 
+    - por enquanto, utilizaremos o status code "200 – OK", indicando ao cliente que a atualização do registro ocorreu com sucesso.
+  - `Linha 43`: 
+    - criamos o método atualizar() do controlador. 
+    - receberá o objeto usuário no corpo da requisição, indicado através da **anotação @RequestBody**.
+  - `Linha 44`: retorna o objeto atualizado ao cliente. 
+
+> Com isso, finalizamos a implementação do controlador responsável pelos endpoints referentes aos usuários da API. Posteriormente novas implementações serão feitas.
+
+## 4.8 Configuração do banco de dados
+
+- criar a estrutura no banco de dados, como a tabela tbl_usuarios e a sequência SEQ_USUARIOS. 
+- podem ser implementados diretamente no banco de dados de forma manual, mas é mais interessante fazer isso de forma automática. 
+- além disso, é importante manter o histórico de alterações que são efetuadas no banco, de modo que possamos ter o controle da evolução do banco durante o ciclo de vida da aplicação.
+- utilizaremos uma ferramenta bastante utilizada no ecossistema Java que é o `Flyway`, uma ferramenta de controle de versão e de migração de banco de dados.
+
+### 4.8.1 Configuração do Flyway
+- esta ferramenta funciona basicamente através da execução de `scripts SQL` diretamente no banco de dados. 
+- para começar, criar o script de criação da ***tabela tbl_usuarios***, assim como a ***sequência SQ_USUARIOS***. 
+- começar criando, dentro do diretório resources, um diretório onde os arquivos de scripts SQL serão armazenados.
+  - 1. Clicar com o botão direito no diretório resources, aponte para New e clique em Directory.
+  - 2. Na caixa de diálogo New Directory, informe o nome "db/migration".
+  - 3. Pressione Enter para confirmar a criação dos diretórios.
+  - 4. Para criar o arquivo com o script da estrutura inicial do banco de dados do projeto Calorias: clique com o botão direito do mouse no diretório db.migration, aponte para New e clique em File.
+  - 5. Na caixa de diálogo New File, digite o nome "V1__create-table-tbl_usuarios-seq-usuarios.sql".
+    - o nome do arquivo de scripts do Flyway possui um padrão de nomenclatura obrigatório, sendo: V1 (versão da migração), seguido de dois underscores, e depois o nome do arquivo com extensão .sql.
+    - após execução do script, o Flyway não executará mais este script. Para efetuar alguma alteração no banco é necessário criar outro arquivo com o prefixo "V2". 
+  - 6. escreva o script SQL responsável por criar a tabela e a sequência.
+
+~~~sql
+CREATE SEQUENCE SEQ_USUARIOS
+  START WITH 1
+  INCREMENT BY 1
+  NOCACHE
+  NOCYCLE;
+
+CREATE TABLE TBL_USUARIOS (
+    USUARIO_ID INTEGER DEFAULT SEQ_USUARIOS.NEXTVAL NOT NULL,
+    NOME VARCHAR2(100) NOT NULL,
+    EMAIL VARCHAR(100) NOT NULL,
+    SENHA VARCHAR(20) NOT NULL
+);
+~~~
+
+## 4.9 Configurando o application.properties
+
+- as configurações do banco de dados serão efetuadas no arquivo application.properties, na pasta resources.
+- as configurações iniciais do banco de dados exigem a configuração da URL do banco, usuário e senha.
+
+~~~
+# CONFIGURAÇÃO BÁSICA DO SPRING
+spring.datasource.url=jdbc:oracle:thin:@oracle.fiap.com.br:1521:ORCL
+spring.datasource.username=RM0000
+spring.datasource.password=senha
+
+# CONFIGURAÇÃO PARA O ORACLE DATABASE
+# CRIAR A TABELA DE CONTROLE DE MIGRAÇÃO NO BANCO DE DADOS
+spring.flyway.baselineOnMigrate=true
+
+# MOSTRAR AS INSTRUÇÕES SQL EXECUTADAS NO BANCO DE DADOS
+spring.jpa.show-sql=true
+
+# QUEBRAR A EXIBIÇÃO DA INSTRUÇÃO SQL EM VÁRIAS LINHAS
+spring.jpa.properties.hibernate.format_sql=true
+~~~
+
+- observações:
+  - ***Linha 8***: informa ao Spring que o arquivo de configuração do Flyway deverá ser criado no banco de dados. Esta tabela é importante para controlar as versões dos scripts SQL que são executados no banco.Para desativar esta funcionalidade troque o valor para “false”.
+  - ***Linha 11***: configura a exibição das instruções SQL que são executadas no banco de dados. É uma configuração importante durante o desenvolvimento da aplicação por questões de debug. Para desativar, trocar o valor para false.
+  - ***Linha 14***: forma como as instruções SQLsão exibidas no log. Para desativar esta funcionalidade basta trocar o valor para false.
+
+> Após a configuração do banco de dados no arquivo application.properties, executar a aplicação para testar.
+
+- verificar se a tabela TBL_USUARIOS e a sequência SEQ_USUARIOS foram criados corretamente no banco de dados.
+- logo acima da tabela TBL_USUARIOS há uma tabela chamada `flyway_schema_history`, criada pelo Flyway e responsável por armazenar os dados de migração. Essa tabela não pode ser excluída, pois o Flyway não saberá como lidar com as migrações.
+
+> [Link do projeto implementado até aqui.](https://github.com/FIAP/ON_TDS_JAVA_ADVANCED_SPRING_BOOT/tree/main)
+
+## 4.10 Testando o controlador de usuários
+
+- chegou o momento mais aguardado: efetuar as requisições para a nossa API. 
+- para isso, vamos precisar de uma aplicação cliente HTTP que possa efetuar requisições com os diferentes verbos HTTP (GET, POST, DELETE e UPDATE).
+- as ferramentas mais utilizadas são o “Postman” e o “Insomnia”. Para esta tarefa utilizaremos o **Insomnia**. 
+
+### 4.10.1 Instalação do Insomnia
+- para fazer o download do Insomnia, utilizar [este link](https://insomnia.rest/download). 
+- após efetuar o download, executar o instalador efetuando um duplo clique no arquivo executável que você acabou de baixar. 
+- clique no botão Continue. Quando for solicitado se você deseja que seus projetos sejam sincronizados com a nuvem, mantenha a opção Keep storing in local Vault e em seguida clique no botão Continue.
+- na tela "Welcome to Insomnia”", escolher a forma como deseja se autenticar. Clique em uma das opções e forneça os dados necessários.
+- ao concluir a forma de autenticação, será redirecionado a tela do Insomnia.
+
+<div align="center">
+<h2> 5. CADASTRANDO UM USUÁRIO VIA API</h2>
+</div>
+
+- para cadastrar um usuário no banco de dados da aplicação, enviaremos os dados do usuário em formato JSON inserido no corpo (Body) de uma requisição HTTP do tipo POST. 
+- com o o Insomnia aberto, siga os passos:
+  - 1. Clique no botão Create New Project, situado na parte superior esquerda da tela.
+  - 2. Digite o nome do projeto, selecione a opção Local Vault e clique no botão Create.
+  - 3. Selecione o projeto que acabou de ser criado, no painel à esquerda, e em seguida clique em New Collection, no painel à direita.
+  - 4. Na janela "Create New Request Collection", informe o nome da coleção e clique no botão Continue.
+  - 5. Você será redirecionado para a coleção que acabou de ser criada.Clique no botão New Request e em seguida clique na opção HTTP Request.
+  - 6. Você será direcionado a um novo painel, onde será possível indicar a URL do recurso (endpoint) que desejamos acessar e o método HTTP que desejamos executar.
+  - 7. alterar o verbo HTTP para `POST` e a URL para `http://localhost:8080/api/usuarios`.
+  - 8. clique na opção Body, abaixo da linha de endereço da requisição e em seguida clique em JSON.
+  - 9. Insira os dados do usuário no espaço disponível logo abaixo da opção JSON.
+
+~~~json
+{
+  "nome": "ANA MARIA GOMES",
+  "email": "ana@email.com.br",
+  "senha": "123456"
+}
+~~~
+
+  - 10. Pressione o botão “Send”, à direita da linha de endereço. Se tudo estiver correto, no painel mais à direita você deverá visualizar os dados do usuário que foi inserido no banco de dados, com o identificador único, além do código de status code “201 – CREATED”.
+  - 11. Abrir o Oracle SQL Developer para confirmar se o registro do usuário foi inserido na tabela TBL_USUARIOS.
+
+- adicione mais 3 usuários trocando o corpo da requisição pelos novos dados (adicionar um de cada vez).
+
+~~~json
+{
+  "nome":"PEDRO DE OLIVEIRA",
+  "email":"pedro.oliveira@email.com.br",
+  "senha":"abc123"
+}
+
+{
+  "nome":"LUCIANA ALMEIDA",
+  "email":"lu@email.com.br",
+  "senha":"abc456"
+} 
+
+{
+  "nome":"LUIZ PEREIRA DA SILVA",
+  "email":"luiz.silva@email.com.br",
+  "senha":"xpto55"
+}
+~~~
+
+## 5.1 Efetuando consultas via API
+
+- após efetivarmos o cadastro de usuários no banco de dados, é necessário a consulta. 
+- em nossa API, implementamos os endpoints responsáveis por listar todos os usuários cadastrados e consultar um usuário pelo identificador.
+- testar as requisições de cada um desses endpoints.
+
+### 5.1.1 Listando todos os usuários
+- utilizar o endpoint `http://localhost:8080/api/usuarios` através de uma requisição HTTP do tipo `GET`.
+- siga os passos abaixo:
+  - 1. Abra o Insomnia, crie uma requisição do tipo GET e a URL do recurso.
+  - 2. Pressione o botão Send. O resultado esperado deverá ser um array em formato JSON com os 4 usuários cadastrados.
+
+> `DICA`: é possível nomear cada uma das requisições HTTP efetuadas pelo Insomnia, tornando a lista mais organizada e mais fácil localizar a requisição que queremos executar. 
+
+- para alterar o nome de uma requisição siga os passos:
+  - 1. Clique no botão em forma de seta para baixo ao lado direito do nome da requisição que vamos alterar o nome, em seguida clique na opção Rename.
+  - 2. Na caixa de diálogo Rename Request, escreva o nome da requisição e clique em Rename.
+
+### 5.2 Buscando um usuário pelo Identificador
+
+- criamos um endpoint responsável por consultar um usuário no banco de dados pelo seu identificador único.
+- a URL para acessar esse recurso é `http://localhost:8080/api/usuarios/1`, onde o /1 no final da URL, é o identificador do registro de um usuário no banco de dados.
+- criar uma requisição HTTP do tipo GET no Insomnia com o nome "Buscar usuário pelo ID".
+
+### 5.2.1 Personalizando Exceções na resposta HTTP
+- o que acontece se você buscar por um identificador que não existe? 
+- ao tentarmos buscar um usuário de código 200, receberemos uma resposta com erro. Isso está correto, já que essa foi a implementação do endpoint de consulta de usuário por ID. 
+- nesse exemplo, o status code da resposta HTTP é `500`, indicando que ocorreu um erro no servidor, mas na verdade o erro partiu do cliente, já que fizemos uma requisição inválida. 
+- o correto seria termos recebido um status codeda família `400`, que indica erro de requisição do lado do cliente. 
+- na requisição acima buscamos por um usuário cujo ID é 200, mas esse ID não existe no banco de dados, então, o correto seria termos recebido o status code "404 – Not Found". Deste modo a resposta passa a fazer sentido para o cliente, ou seja, o status code indica que o recurso solicitado no servidor não existe. 
+- ***altere o código do método (endpoint) buscarPorId() da classe UsuarioController***:
+
+~~~java
+. . . TRECHO DE CÓDIGO OMITIDO
+    
+@GetMapping("/usuarios/{usuarioId}")
+public ResponseEntity<Usuario> buscarPorId(@PathVariable Long usuarioId){
+    try {
+        return ResponseEntity.ok(usuarioService.listarPorId(usuarioId));
+    } catch (Exception e){
+        return ResponseEntity.notFound().build();
+    }
+}
+
+. . . TRECHO DE CÓDIGO OMITIDO
+~~~
+
+- alterações:
+  - `Linha 4`: 
+    - modificamos o retorno do método para `ResponseEntity<>`, que pertence ao Spring, e representa toda a requisição HTTP, ou seja, cabeçalhos, corpoe status. 
+    - utilizamos essa classe para personalizar as respostas HTTP ao cliente, já que temos acesso a todas as informações da requisição. 
+    - essa classe é uma generic, que pode lidar com qualquer tipo de objeto. 
+    - em nosso exemplo indicamos que ela é do tipo “Usuario”, através dos colchetes angulares.
+  - `Linha 6`:
+    - modificamos o retornodo método, para que fique de acordo com o retorno especificado pela sua assinatura. 
+    - no exemplo, estamos utilizando um bloco “try/catch” para capturar a exceção caso seja lançada pelo service. Se não houver o lançamento da exceção pelo service, retornaremos uma resposta do tipo “200 – OK”, através do método “ok()” do “ResponseEntity”. 
+    - o método “ok()” recebe como parâmetro o objeto “Usuario” que está sendo retornado pelo service e será incluído no corpo da resposta ao cliente.
+  - `Linha 8`: 
+    - caso o service lance a exceção, o bloco “catch” do tratamento de exceção será executado, retornando uma resposta do tipo “404 – Not Found”.
+    - o método “notFound()” não adiciona nada ao corpo da resposta.
+
+- reinicie a aplicação para que as alterações sejam aplicadas.
+- ao tentarmos executar uma busca por um ID que não existe, receberemos uma resposta mais semântica para o cliente HTTP. 
+
+## 5.3 Excluindo um usuário do banco de dados via API
+
+- criar mais uma requisição HTTP do tipo DELETE no Insomnia. 
+- método `DELETE`, url `http://localhost:8080/api/usuarios/5`.
+- a requisição HTTP retorna o status code "204 – NO CONTENT", indicando que o objeto foi excluído.
+- abrir o OracleSQL Developer para confirmar se o registro foi excluído do banco de dados.
+
+## 5.4 Atualizando um registro de usuário no banco de dados
+
+- consiste na alteração do valor de um ou mais campos na tabela, exceto o campo identificador.
+- criar uma requisição HTTP do tipo `PUT` no Insomnia, URL `http://localhost:8080/api/usuarios`. 
+- no corpo da requisição, enviar um objeto JSON com todos os campos que desejamos alterar, inclusive o identificador do registro, que será utilizado para identificar o registro no banco.
+
+~~~json
+{
+	"usuarioId": "3",
+	"nome": "MONICA",
+	"email": "monica@email.com",
+	"senha": "oioi"
+}
+~~~
+
+---
+
+## FAST TEST
+
+### 1. De acordo com o modelo de maturidade de Richardson, quais regras devemos seguir para alcanças o nível 2 de maturidade?
+> Utilização de endpoints para cada funcionalidade, uso dos verbos HTTP para cada tipo de requisição e considera o retorno correto de status code para cada requisição.
+
+### 2. O que é um Webservice?
+> É um serviço web que utiliza um conjunto de protocolos e padrões para a comunicação entre sistemas distribuídos.
+
+### 3. De acordo com a arquitetura REST, quando fazemos uma requisição HTTP enviando um objeto para ser persistido no banco de dados, devemos utilizar qual verbo HTTP?
+> POST.
+
+--- 
+
+[Voltar ao início!](https://github.com/monicaquintal/smart_cities)
