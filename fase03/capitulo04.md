@@ -1116,11 +1116,279 @@ public List<AlimentoExibicaoDTO> litarAlimentosPorFaixaDeCalorias(
 
 ## 4.2 Consultas derivadas de método
 
+- quando utilizamos o Spring Data JPA, é possível construir consultas personalizadas utilizando `Derived Query Methods` (Consultas Derivadas de Métodos).
+- utilizando esse recurso, as consultas serão criadas automaticamente pelo Spring Data JPA com base no nome do método que definimos na interface do repositório. 
+- o nome do método é uma combinação de expressões pré-definidas pelo Spring Data JPA, e o nome do atributo da entidade Java que desejamos utilizar na consulta.
+- ***exemplo***: 
+  - criando uma consulta que retornará o usuário cujo email seja igual ao valor fornecido no argumento da função.
 
+~~~java
+UsuarioExibicaoDTO findByEmail(String email);
 
+/* Sendo:
+ * UsuarioExibicaoDTO: tipo de retorno da função.
+ * findBy: prefixo pré-definido pelo Spring Data JPA.
+ * Email: nome do atributo da entidade Java.
+ */
+~~~
 
+- se quisermos criar um método que busque pelos alimentos cuja quantidade de proteínas seja igual a “3.8” a assinatura da função seria:
 
+~~~java
+AlimentoExibicaoDTO findByQuantidadeProteina(Double proteina);
+~~~
 
+- ***implementar algumas consultas utilizando Derived Query Methods para entender melhor como este recurso funciona***.
+
+- a primeira função de busca será responsável por **buscar um usuário a partir do e-mail**.
+  - abrir a `interface UsuarioRepository` e acrescentar o **método findByEmail()**.
+
+~~~java
+package br.com.fiap.calorias.repository;
+
+import br.com.fiap.calorias.model.Usuario;
+import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.Optional;
+
+public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
+
+    Optional<Usuario> findByEmail(String email);
+
+}
+~~~
+
+- nesse exemplo, adicionamos um método com a `assinatura findByEmail(String email)`, que obedece às regras de criação de consulta derivada de método utilizando o **prefixo findBy** seguido do nome do atributo da entidade Java. Além disso o método recebe um argumento do tipo String, que o Spring Data JPA utilizará para construir o método de consulta automaticamente.
+
+- em seguida, adicionar à `classe UsuarioService` o **método buscarPorEmail()**.
+
+~~~java
+. . . TRECHO DE CÓDIGO OMITIDO
+public UsuarioExibicaoDTO buscarPorEmail(String email){
+    Optional<Usuario> usuarioOptional =
+            usuarioRepository.findByEmail(email);
+
+    if (usuarioOptional.isPresent()){
+        return new UsuarioExibicaoDTO(usuarioOptional.get());
+    } else {
+        throw new UsuarioNaoEncontradoException("Usuário não existe no banco de dados!");
+    }
+}
+. . . TRECHO DE CÓDIGO OMITIDO
+~~~
+
+- o método exibido na listagem Método buscarPorEmail() faz uma chamada para o método buscarPorEmail da interface repositório, que retorna um objeto do tipo Optional. Caso um objeto Usuario esteja presente na resposta, será retornado um objeto UsuarioExibicaoDTO, caso contrário será lançada uma exceção com a mensagem de erro.
+- com o método de serviço concluído, vamos ***criar o endpoint no controlador de usuários***. 
+
+- abra a `classe UsuarioController` e adicione o **método buscarPorEmail()**.
+
+~~~java
+. . . TRECHO DE CÓDIGO OMITIDO
+@RequestMapping(value = "/usuarios", params = "email")
+@ResponseStatus(HttpStatus.OK)
+public UsuarioExibicaoDTO buscarPorEmail(@RequestParam String email){
+    return usuarioService.buscarPorEmail(email);
+}
+. . . TRECHO DE CÓDIGO OMITIDO
+~~~
+
+- com o método concluído, criar uma requisição HTTP no Insomnia para testar o endpoint.
+  - método `GET`, URL `http://localhost:8080/api/usuarios?email=lu@email.com.br`.
+
+- para consolidar o que aprendemos, implementar mais uma consulta utilizando Consulta Derivada de Método. 
+- ***listar todos os alimentos cuja quantidade de calorias seja menor do que um valor definido pelo consumidor da API***.
+  - abrir a `interface AlimentoRepository` e adicionar o método **findByTotalCaloriasLessThan()**.
+
+~~~java
+package br.com.fiap.calorias.repository;
+
+import br.com.fiap.calorias.dto.AlimentoExibicaoDTO;
+import br.com.fiap.calorias.model.Alimento;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.util.List;
+import java.util.Optional;
+
+public interface AlimentoRepository extends JpaRepository<Alimento, Long> {
+
+    @Query("SELECT a FROM Alimento a WHERE a.nome = :nome")
+    Optional<Alimento> buscarPorNome(@Param("nome") String nome);
+
+    @Query("SELECT a FROM Alimento a WHERE a.totalCalorias BETWEEN :minimo AND :maximo ORDER BY a.totalCalorias DESC")
+    List<Alimento> listarAlimentosPorFaixaDeCalorias(
+            @Param("minimo") Double minino,
+            @Param("maximo") Double maximo
+    );
+    
+    List<AlimentoExibicaoDTO> findByTotalCaloriasLessThan(Double caloria);
+
+}
+~~~
+
+- na linha 24 temos a assinatura do método, onde:
+  - `findBy`: é o sufixo pré-definido pelo Spring Data JPA.
+  - `TotalCalorias`: é o nome do atributo da entidade Aliment.
+  - `LessThan`: é o sufixo pré-definido pelo Spring Data JPA para "Menor do que". 
+
+- criar o **método listarTotalCaloriasMenorQue()** na `interface AlimentoService`.
+
+~~~java
+public List<AlimentoExibicaoDTO> listarTotalCaloriasMenorQue(Double totalCalorias){
+        return alimentoRepository.findByTotalCaloriasLessThan(totalCalorias);
+    }
+~~~
+
+- na `classe AlimentoController`:
+
+~~~java
+. . . TRECHO DE CÓDIGO OMITIDO
+@RequestMapping(value = "/alimentos", params = "caloriasMenorQue")
+@ResponseStatus(HttpStatus.OK)
+public List<AlimentoExibicaoDTO> litarTotalCaloriasMenorQue(
+        @RequestParam Double caloriasMenorQue
+){
+    return alimentoService.listarTotalCaloriasMenorQue(caloriasMenorQue);
+}
+. . . TRECHO DE CÓDIGO OMITIDO
+~~~
+
+- criar uma requisição HTTP: método `GET`, URL `http://localhost:8080/api/alimentos?caloriasMenorQue50`
+
+## 4.3 Mais informações:
+
+- se quiser saber mais sobre todas as possibilidades de consulta utilizando consulta derivada por método, acesse:
+- [link 1](https://docs.spring.io/spring-data/jpa/reference/repositories/query-methods-details.html).
+- [link 2](https://docs.spring.io/spring-data/jpa/reference/repositories/query-keywords-reference.html).
+- [projeto desenvolvido até aqui](https://github.com/FIAP/ON_TDS_JAVA_ADVANCED_SPRING_BOOT/tree/jpql).
+
+<div align="center">
+<h2>5. PAGINAÇÃO E ORDENAÇÃO DE RESULTADOS</h2>
+</div>
+
+- quando enviamos uma resposta HTTP para uma consulta em nossa API, é importante limitar a quantidade de registros retornados, para evitar problemas de desempenho tanto no envio quanto na manipulação dos dados pelo consumidor da API. 
+- um dos recursos mais importantes que devemos implementar é o de ***paginação***: ao responder uma requisição de consulta, devemos enviar uma quantidade limitada de registros e, em seguida, complementamos o envio em requisições subsequentes, garantindo uma distribuição controlada e mais eficiente.
+
+## 5.1 Paginando os resultados de uma consulta
+
+- a paginação é feita de forma automática pelo Spring, pois faz parte do Spring Framework. 
+- não há a necessidade de implementarmos nada. 
+- a única coisa a fazer é ajustar alguns detalhes em nossas classes de serviço e controladores.
+
+### 5.1.1 Configurando a paginação
+- alterar a consulta que retorna uma lista de alimentos. 
+- começar pela classe de serviço: abrir `AlimentoService` e efetuar as alterações no **método listarTodos()**:
+
+~~~java
+. . . TRECHO DE CÓDIGO OMITIDO
+public Page<AlimentoExibicaoDTO> listarTodos(Pageable paginacao){
+    return alimentoRepository
+            .findAll(paginacao)
+            .map(AlimentoExibicaoDTO::new);
+}
+. . . TRECHO DE CÓDIGO OMITIDO
+~~~
+
+- ao compararmos com a implementação anterior, notamos as alterações: 
+  - `Linha 2`:
+    - o retorno do método foi alterado para ***Page***. 
+    - a classe Page representa uma página de resultados paginados retornados pela consulta no banco de dados. 
+    - além dos dados, também incluirá no JSON da resposta alguns elementos adicionais, como número da página atual, total de páginas etc.
+    - na assinatura do método, inserimos um argumento do tipo ***Pageable***, que será responsável por passar as informações de paginação informadas pelo consumidor da API.
+    - esta classe pertence ao ***pacote “org.springframework.data.domain”***, então atenção ao importar o pacote. 
+  - `Linhas 3 a 5`: 
+    - na chamada ao método findAll do repositório, passamos o parâmetroPageable enviado pelo consumidor do método. 
+    - não é necessário utilizarmos o método stream(), já que a implementação do método findAll com paginação já possui este recurso. 
+    - o método toList() também não é mais necessário, já que o retorno do método será uma lista do tipo Page, que já é o padrão desta implementação de findAll().
+
+- ajustar a classe controladora: arquivo da `classe AlimentoController`: 
+
+~~~java
+@GetMapping("/alimentos")
+@ResponseStatus(HttpStatus.OK)
+public Page<AlimentoExibicaoDTO> litarTodos(Pageable paginacao){
+  return alimentoService.listarTodos(paginacao);
+}
+~~~
+
+- ajustes:
+  - `Linha 4`: modificamos o tipo do retorno do método para Page, e adicionamos na assinatura do método o argumento paginacao, do tipo Pageable. 
+  - `Linha 5`: passamos o argumento paginacao para o método listarTodos() da classe de serviço.
+
+- com os ajustes concluídos, reinicie a aplicação, abra o Insomnia e duplique a requisição para o endpoint responsável pela listagem de todos os alimentos.
+- agora temos como resposta um JSON diferente, sendo:
+  - `content`: array de alimentos.
+  - `pageable`: atributo com os dados de paginação.
+  - `pageNumber`, `pageSize` e `sort`: atributos indicando o número da página atual e quantidade de elementos por página.
+  - `last`, `totalElements`, `totalPages`, `size`, `number`: atributos indicando se esta é a última página, total de elementos sendo exibidos na página, total de páginas e total de elementos por página. 
+
+> Com esses dados, o consumidor da API poderá elaborar as estratégias de exibição de dados aos usuários de forma mais eficiente.
+
+### 5.1.2 Efetuando as consultas com parâmetros de paginação
+- a consulta, apesar de exibir os dados de paginação, não está paginando de fato. 
+- para que a paginação ocorra de forma adequada, é necessário adicionarmos alguns parâmetros na URL da requisição.
+- para efetuar uma consulta que exiba 2 registros de alimentos por página é necessário adicionarmos na URL da requisição o `parâmetro size=2` (http://localhost:8080/api/alimentos?size=2).
+- se quisermos ver a página 3, é necessário acrescentar o `parâmetro page=3` (http://localhost:8080/api/alimentos?size=2&page=3).
+
+### 5.1.3 Customização dos parâmetros default de paginação
+- quando ativamos a paginação em nossas consultas, o Pageable configura as propriedades padrão para a resposta da API: atributo “size”, por exemplo, é 20 (mesmo sem informar o parâmetro “size” a resposta terá 20 registros).
+- podemos modificar esse padrão acrescentando a `anotação @PageableDefault` na assinatura do método responsável pela paginação. 
+- customizar as propriedades padrão do endpoint responsável por listar todos os alimentos da nossa aplicação. 
+
+~~~java
+. . . TRECHO DE CÓDIGO OMITIDO
+@GetMapping("/alimentos")
+@ResponseStatus(HttpStatus.OK)
+public Page<AlimentoExibicaoDTO> litarTodos(
+        @PageableDefault(size = 2, page = 0) Pageable paginacao
+){
+    return alimentoService.listarTodos(paginacao);
+}
+. . . TRECHO DE CÓDIGO OMITIDO
+~~~
+
+- na anotação @PageableDefault, fornecemos o parâmetro “size = 2”, indicando que se o parâmetro “size” não for fornecido na URL da requisição este será o valor padrão. 
+- também adicionamos o parâmetro “page = 0”, indicando que a consulta sempre começará pela primeira página, que é zero.
+- esses serãoos valores utilizados quando o consumidor da API não os fornecer na URL da API.
+- testar a requisição ao endpoint para listar todos os alimentos sem informar os parâmetros de paginação.
+
+> [Projeto desenvolvido até aqui](https://github.com/FIAP/ON_TDS_JAVA_ADVANCED_SPRING_BOOT/tree/paginacao).
+
+## 5.2 Ordenando o resultado de uma consulta
+
+- a forma como os dados são ordenados é importante para garantir maior flexibilidade ao desenvolvedor do Frontend, já que ele poderá decidir a ordem da exibição dos dados a partir de um campo específico.
+- a interface Pageable do Spring Data JPA também é responsável pela ordenação. 
+- para efetuar uma consulta com ordenação basta inserir os parâmetros de ordenação na URL da requisição da consulta à API.
+
+### 5.2.1 Configurando a ordenação por um campo específico
+- informar na URL da requisição o `parâmetro sort` seguido pelo nome do campo que de deseja ordenar. 
+- importante lembrar que o nome do campo deve ser o nome do atributo da entidade Java e não o nome do campo do banco de dados.
+- URL utilizada para listar todos os alimentos ordenados pelo atributo “totalCalorias”: `http://localhost:8080/api/alimentos?sort=totalCalorias`. - emtrega os valores de forma *ascendente*.
+- como a ordenação é um recurso do Pageable, também é possível inserirmos os parâmetros de paginação juntamente com os de ordenação, como em `http://localhost:8080/api/alimentos?sort=totalCalorias&size=3&page=2`.
+
+### 5.2.2 Definindo a ordem da ordenação
+- padrão da ordenação: do menor para o maior, mas podemos alterar isso. 
+- a ordenação pode ser exibida em ordem ascendente, ou de forma descendente. 
+- utilizamos as palavras `ASC` e `DESC`, ***separado por uma vírgula no parâmetro sort***.
+- URL exemplo: `http://localhost:8080/api/alimentos?sort=totalCalorias,DESC`.
+
+> [Projeto completo, desenvolvido até aqui](https://github.com/FIAP/ON_TDS_JAVA_ADVANCED_SPRING_BOOT/tree/ordenacao).
+
+---
+
+## FAST TEST
+
+### 1. Quando não desejamos expor todas as propriedades de um objeto durante a transferência entre cliente e servidor utilizamos qual padrão de design?
+> DTO.
+
+### 2. Ao utilizar o Bean Validation, qual anotação devemos utilizar para limitar a quantidade de caracteres de um atributo?
+> @Size.
+
+### 3. Considerando que temos uma classe chamada Cliente que representa os clientes de uma aplicação. Qual será a anotação e instrução JPQL corretas na interface repositório para se buscar um cliente pelo email?
+> @Query("SELECT c FROM Cliente c WHERE c.email = :email")
+
+### 4. Ao criarmos uma classe de tratamento de exceções global, os métodos que tratam cada uma das exceções deverão utilizar qual das anotações seguintes?
+> @ExceptionHandler.
 
 --- 
 
