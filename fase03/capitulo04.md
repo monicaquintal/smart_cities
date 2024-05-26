@@ -933,6 +933,189 @@ public class ApplicationExceptionHandler {
   - `Linha 14`: adicionamos a **anotação @RestControllerAdvice**, que tem como função informar ao Spring Boot que esta classe será responsável pela manipulação global do tratamento de exceções da aplicação.
   - `Linha 17`: **anotação @ResponseStatus** está determinando que a resposta HTTP para o consumidor da API será do tipo “400 – Bad Request”, caso a validação esteja incorreta e a exceção seja interceptada por esse método.
   - `Linha 18`: **anotação @ExceptionHandler** configura o método para controlar um tipo de exceção específica. Em nosso exemplo, o método “handleInvalidArgument()” será responsável por tratar as exceções do tipo “MethodArgumentNotValidException”.
+    - ***a prática de centralizar o tratamento de exceções usando a anotação @RestControllerAdvice permite a manipulação eficaz de qualquer tipo de exceção no aplicativo. O procedimento envolve a criação de métodos específicos para cada tipo de exceção desejado, anotados com @ExceptionHandler, onde é informada a classe de exceção a ser tratada.***
+  - `Linha 19`: **método handleInvalidArgument()** retorna um mapa onde as chaves são Strings com os nomes dos campos que não passaram na validação, enquanto os valoressão também Strings, com as mensagens personalizadas configuradas nas anotações de validação para cada campo. Esse método recebe como argumento um objeto do tipo MethodArgumentNotValidException, que contém em seus atributos a lista de campos que não foram validados pelo Bean Validation. 
+  - `Linha 21`: **objeto do tipo Map**, referenciado pela variável errorMap, onde as chaves e os valores correspondentes são do tipo String.
+  - `Linha 22`: criamos uma lista de objetos do tipo FieldError referenciado pela variável campos. Esse objeto será carregado com a lista de erros obtidos pelo método “getFieldErrors()” do objeto “MethodArgumentNotValidException” passado como argumento do método “handleInvalidArgument()”.
+  - `Linha 24`: implementamos um laço “for” para iterar na lista “campos”. A cada iteração será extraído um objeto da lista que será adicionado ao objeto Map.
+  - `Linha 25`: adicionamos ao objeto Map, os valores correspondentes a chave e valor, onde a chave será o nome do campo que causou a exceção de validação obtida através da instrução “campo.getField()” e o seu valor será a mensagem obtida através da instrução “campo.getDefaultMessage()”.
+
+- com a implementação da classe ApplicationExceptionHandler concluída, enviar uma equisição HTTP para o endpoint responsável por cadastrar usuários. 
+- nesta requisição enviaremos alguns atributos que violam as regras de validação:
+
+~~~json
+{
+  "nome": "",
+  "email": "pedro.silva@",
+  "senha": "nova123"
+}
+~~~
+
+> [Link do projeto desenvolvido até aqui.](https://github.com/FIAP/ON_TDS_JAVA_ADVANCED_SPRING_BOOT/tree/validacao)
+
+<div align="center">
+<h2>4. IMPLEMENTANDO CONSULTAS CUSTOMIZADAS</h2>
+</div>
+
+- o Spring Boot, em conjunto com o Spring Data JPA, entrega à aplicação um conjunto de consultas através da interface JpaRepository. 
+- consultas tradicionais como buscar por id, ou listar todos os registros de um banco, já estão disponíveis e prontas para serem usadas. 
+- porém, se precisarmos de consultas mais específicas, podemos criar consultas personalizadas utilizando a `JPQL (Java Persistence Query Language)`.
+- também podemos utilizar o Spring Data JPA para criar consultas baseadas nos nomes dos atributos das entidades Java, sem que nenhuma instrução SQL ou JPQL precise ser escrita, bastando apenas utilizarmos padrões de nomes.
+
+## 4.1 Utilizando JPQL
+
+- é uma linguagem similar ao SQL, mas que opera em objetos persistidos em um banco de dados relacional através da JPA. 
+- com a JPQL, podemos construir consultas personalizadas usando os nomes das entidades Java e seus atributos ao invés das tabelas e colunas SQL.
+
+### 4.1.1 Utilizando a JPQL com um parâmetro
+- criar a primeira consulta personalizada utilizando JPQL. 
+- no exemplo, criaremos uma consulta que efetue a busca de um alimento pelo seu nome.
+
+- abra a `interface AlimentoRepository` e acrescente o ***método buscarPorNome()***:
+
+~~~java
+package br.com.fiap.calorias.repository;
+
+import br.com.fiap.calorias.model.Alimento;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.util.Optional;
+
+public interface AlimentoRepository extends JpaRepository<Alimento, Long> {
+
+    @Query("SELECT a FROM Alimento a WHERE a.nome = :nome")
+    Optional<Alimento> buscarPorNome(@Param("nome") String nome);
+
+}
+~~~
+
+- implementações:
+  - `Linha 12`: 
+    - adicionamos a anotação “@Query”, que permite inserir uma instrução JPQL. 
+    - a JPQL se parece muito com a SQL, com a diferença que estamos utilizando o nome da entidade Java, que no exemplo é “Alimento”, e o nome do atributo que utilizaremos no filtro, que neste caso é o “nome”. 
+    - na instrução JPQL estamos utilizando a cláusula “WHERE”, para filtrar os registros pelo campo “nome”. O valor que será atribuído ao filtro será substituído pelo parâmetro “:nome”
+  - `Linha 13`: 
+    - criamos a assinatura do método buscarPorNome(). 
+    - este método recebe um atributo do tipo String, referenciado pelo argumento “nome” e retorna um objeto do tipo Optional&lt;Alimento&gt;. 
+    - é necessário indicar que esse argumento deverá substituir o parâmetro “:nome” na JPQL, o que é feito através da anotação “@Param”, que recebe um argumento String com o nome do parâmetro. 
+    - importante lembrar que o valor do argumento fornecido para a anotação “@Param” deve ser exatamente igual ao nome do parâmetro utilizado na instrução JPQL.
+
+- em seguida, com o método de consulta concluído no repositório, precisamos criar um método na classe de serviço que será consumido pelo nosso controlador.
+- então, abra o `arquivo AlimentoService` no ***pacote service***.
+
+~~~java
+. . . TRECHO DE CÓDIGO OMITIDO
+
+public AlimentoExibicaoDTO buscarPorNome(String nome){
+    Optional<Alimento> alimentoOptional =
+            alimentoRepository.buscarPorNome(nome);
+
+    if (alimentoOptional.isPresent()){
+        return new AlimentoExibicaoDTO(alimentoOptional.get());
+    } else {
+        throw new RuntimeException("Alimento não existe!");
+    }
+}
+. . . TRECHO DE CÓDIGO OMITIDO
+~~~
+
+- o método buscarPorNome() é muito parecido com o método buscarPorId().
+- a única diferença é que utilizamos o método “buscarPorNome()”, do repositório, fornecendo um argumento do tipo String.
+
+- para concluirmos essa consulta, ***criar o endpoint que receberá as requisições HTTP para consulta de alimentos pelo nome***. 
+- no `arquivo AlimentoController`:
+
+~~~java
+. . . TRECHO OMITIDO
+@RequestMapping(value = "/alimentos", params = "nome")
+public ResponseEntity<AlimentoExibicaoDTO> buscarPorNome(
+        @RequestParam String nome){
+    try {
+        return ResponseEntity
+                .ok(alimentoService.buscarPorNome(nome));
+    } catch (Exception e){
+        return ResponseEntity.notFound().build();
+    }
+}
+. . . TRECHO OMITIDO
+~~~
+
+- neste método, **mudamos a forma de mapear o endpoint**. 
+- isso foi necessário já que vamos ter outros endpoints que usam a mesma URL base, e precisamos criar uma forma de tornar cada requisição única.
+- na anotação @RequestMapping, nos permite indicara URL utilizada para acessar este endpointque será “/alimentos”, além disso, indicamos que essa URL terá um parâmetro com o nome “nome”.
+- no método buscarPorNome(), estamos utilizando a anotação @RequestParam. Essa anotação indica que o argumento da função será o valor atribuído ao parâmetro “nome” da URL. 
+- esse recurso é chamado de `Query String`, utilizado para acrescentar dados na URL que serão enviados ao servidor. 
+  - uma “query string” começa com o caractere “?”. 
+  - essa estrutura de URL consiste em pares chave-valor, onde o nome do parâmetro é seguido pelo símbolo “=” seguido pelo valor correspondente. 
+  - caso existam mais do que um parâmetro, será necessário utilizar o caractere “&” para separar os parâmetros. 
+  - assim, esse endpoint receberá requisições com a URL `http://localhost:8080/api/alimentos?nome=ABACATE`, onde “?nome=abacate” representao nome do parâmetro seguido pelo seu valor, que é o nome do alimento buscado.
+  - o nome do parâmetro deve ser o mesmo utilizado no parâmetro “param”da anotação “@RequestMapping”.
+- com todas as classes concluídas, testar o endpoint de consulta de alimentos por nome.
+- crie uma requisição no Insomnia com o nome “Buscar alimento pelo nome”. 
+  - método GET, URL acima.
+
+### 4.1.2 Utilizando a JPQL com mais parâmetros
+- neste exemplo, aprenderemos como implementar uma consulta para exibir todos os alimentos cujo total de calorias estejam dentro de um intervalo definido. 
+- por exemplo, queremos uma lista de todos os alimentos onde as calorias estejam entre 100 e 200.
+
+- abrir o `arquivo AlimentoRepository` e acrescentar o método abaixo:
+
+~~~java
+@Query("SELECT a FROM Alimento a WHERE a.totalCalorias BETWEEN :minimo AND :maximo ORDER BY a.totalCalorias DESC")
+List<Alimento> listarAlimentosPorFaixaDeCalorias(
+        @Param("minimo") Double minino,
+        @Param("maximo") Double maximo
+);
+~~~
+
+- sendo:
+  - `Linha 1`: instrução JPQL que busca todos os alimentos da entidade “Alimento” onde o total de calorias esteja entre uma faixa de valores, representados pelos parâmetros “:minimo” e “:maximo”.
+  - `Linha 3`: método listarAlimentosPorFaixaDeCalorias(), que recebe os argumentos “maximo” e “minimo” do tipo “Double”. Esses argumentos serão atribuídos aos parâmetros “:maximo” e “:minimo” da instrução JPQL.
+
+- implementar, na classe de serviço AlimentoService, o método que será consumido pelo controlador.
+- abrir o `arquivo AlimentoService` e acrescentar o **método listarAlimentosPorFaixaDeCalorias()**.
+
+~~~java
+. . . TRECHO DE CÓDIGO OMITIDO
+public List<AlimentoExibicaoDTO> listarAlimentosPorFaixaDeCalorias(Double caloriaMinima, Double caloriaMaxima){
+    return alimentoRepository
+            .listarAlimentosPorFaixaDeCalorias(caloriaMinima, caloriaMaxima)
+            .stream()
+            .map(AlimentoExibicaoDTO::new)
+            .toList();
+}
+. . . TRECHO DE CÓDIGO OMITIDO
+~~~
+
+- a implementação desse método retorna ao controlador uma lista de elementos do tipo AlimentoExibicaoDTO. 
+
+- implementar o **método listarAlimentosPorFaixaDeCalorias()** na `classe AlimentoController`, que será responsável por atender as requisições de consulta de alimentos por faixa de calorias:
+
+~~~java
+. . . TRECHO DE CÓDIGO OMITIDO
+@RequestMapping(value = "/alimentos", params = {"caloriasMinima", "caloriasMaxima"})
+@ResponseStatus(HttpStatus.OK)
+public List<AlimentoExibicaoDTO> litarAlimentosPorFaixaDeCalorias(
+        @RequestParam Double caloriasMinima,
+        @RequestParam Double caloriasMaxima
+){
+    return alimentoService.listarAlimentosPorFaixaDeCalorias(caloriaMinima, caloriaMaxima);
+}
+. . . TRECHO DE CÓDIGO OMITIDO
+~~~
+
+- implementações:
+  - `Linha 2`: **anotação @RequestMapping** indica que a requisição para este endpoint deverá ser feito através da URL “/alimentos”, e que os parâmetros “caloriasMinima” e “caloriasMaxima”, deverão ser adicionados a URL.
+  - `Linha 4`: **anotação @ResponseStatus** indica que o status code da resposta deverá ser do tipo “200 – OK”.
+  - `Linha 6 e 7`: **anotação @RequestParam** indica ao Spring que os valores caloriasMinima e caloriasMaxima deverão ser obtidos através de parâmetros adicionados à URL da requisição. 
+    - como temos 2 parâmetros, eles deverão ser separados pelo caractere “&”.
+  
+- para testar o novo endpoint, criar umarequisição HTTP, do tipo GET, no Insomnia, URL `http://localhost:8080/api/alimentos?caloriasMinima=100&caloriasMaxima=252`.
+
+## 4.2 Consultas derivadas de método
+
 
 
 
