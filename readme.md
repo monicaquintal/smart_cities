@@ -93,7 +93,7 @@
 - [Cap 1 - Mergulhando no Java](./fase03/capitulo01.md)
 - [Cap 2 - A Persistência de Dados](./fase03/capitulo02.md)
 - [Cap 3 - O REST com Spring Boot](./fase03/capitulo03.md)
-- [Cap 4]()
+- [Cap 4 - O Spring Data JPA](./fase03/capitulo04.md)
 - [Cap 5]()
 - [Cap 6]()
 - [Cap 7]()
