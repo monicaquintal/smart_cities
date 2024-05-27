@@ -94,7 +94,7 @@
 - [Cap 2 - A Persistência de Dados](./fase03/capitulo02.md)
 - [Cap 3 - O REST com Spring Boot](./fase03/capitulo03.md)
 - [Cap 4 - O Spring Data JPA](./fase03/capitulo04.md)
-- [Cap 5]()
+- [Cap 5 - O Spring Security](./fase03/capitulo05.md)
 - [Cap 6]()
 - [Cap 7]()
 - [Cap 8]()
