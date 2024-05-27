@@ -95,7 +95,7 @@
 - [Cap 3 - O REST com Spring Boot](./fase03/capitulo03.md)
 - [Cap 4 - O Spring Data JPA](./fase03/capitulo04.md)
 - [Cap 5 - O Spring Security](./fase03/capitulo05.md)
-- [Cap 6]()
+- [Cap 6 - Nossa aplicação no contêiner](./fase03/capitulo06.md)
 - [Cap 7]()
 - [Cap 8]()
 
