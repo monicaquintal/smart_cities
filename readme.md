@@ -96,7 +96,7 @@
 - [Cap 4 - O Spring Data JPA](./fase03/capitulo04.md)
 - [Cap 5 - O Spring Security](./fase03/capitulo05.md)
 - [Cap 6 - Nossa aplicação no contêiner](./fase03/capitulo06.md)
-- [Cap 7]()
+- [Cap 7 - Deploy da aplicação em cloud.](./fase03/capitulo07.md)
 - [Cap 8]()
 
 </details>
