@@ -93,14 +93,89 @@
 <h2>2. PREPARANDO O AMBIENTE</h2>
 </div>
 
+## 2.1 Requisitos de Sistema para .NET
+
+- o sistema deve atender a alguns requisitos básicos:
+  - Sistema Operacional: compatível com Windows, macOS e distribuições Linux.
+  - Memória e Processamento: recomenda-se ter pelo menos 4GB de RAM e um processador moderno.
+  - Espaço em Disco: a instalação do .NET e dos ambientes de desenvolvimento associados, como o Visual Studio, requer um espaço considerável em disco (mínimo 20GB de espaço livre).
+  - Ferramentas de Desenvolvimento: instalar um IDE ou editor de código que suporte .NET, como Visual Studio, Visual Studio Code ou JetBrains Rider.
+
+## 2.2 Versões do .NET
+
+- no universo dos produtos Microsoft, os clientes têm a flexibilidade de escolher entre duas categorias principais de suporte, sendo que ambas mantêm padrão de qualidade, garantindo confiabilidade e estabilidade (***a diferença chave entre elas está na duração do suporte oferecido***):
+  - `Suporte de Longo Prazo (LTS)`: projetadas pensando na estabilidade e na previsibilidade, são ideais para organizações que precisam de um ambiente mais constante, com mudanças minimizadas. Essas versões recebem suporte completo e patches de segurança gratuitos por um período de três anos. Ideal para sistemas críticos ou para ambientes onde mudanças frequentes podem levar a perturbações operacionais.
+  - `Suporte a Termos Standard (STS)`: voltadas para usuários e organizações que desejam acessar as funcionalidades mais recentes mais rapidamente. Estas versões recebem suporte e patches gratuitos por um período mais curto de 18 meses. A escolha por STS é frequentemente feita por aqueles que estão dispostos a adaptar-se rapidamente às novas tecnologias e que podem beneficiar-se de inovações e melhorias em um ritmo mais acelerado.
+- manter os sistemas atualizados não apenas fortalece a segurança, mas também otimiza o desempenho e a estabilidade do software.
+
+### 2.2.1 Versões Atuais
+
+<div align="center">
+
+Versão | Data Lançamento | Versão Atual | Tipo Versão | Fim Suporte
+-------|------------------|------------|-------------|--------------
+.NET 8 | 14/11/2023 | 8.0.0 | LTS | 10/11/2026
+.NET 7 | 08/11/2022 | 7.0.14 | STS | 14/05/2024
+.NET 6 | 08/11/2021 | 6.0.25 | LTS | 12/11/2024
+
+</div>
+
+### 2.2.2 Tipos de versão
+- ***Suporte de longo prazo (LTS)***: suporte por três anos após a versão inicial.
+- ***Suporte a Termos Standard (STS)***: suportadas por seis meses após uma versão subsequente de STS ou LTS. Os lançamentos acontecem a cada 12 meses, então o período de suporte para STS é de 18 meses.
+
+### 2.2.3 Cadência de versões do .NET
+- uma nova versão principal do .NET é publicada todos os anos em novembro. 
+- versões pares numeradas são versões LTS que obtêm suporte gratuito e patches por três anos.
+- versões ímpares numeradas são versões STS que recebem suporte e patches gratuitos por 18 meses.
+
+## 2.3 Escolhendo a Versão Correta do .NET
+
+- ***Estabilidade vs. Recursos Mais Recentes***: se você precisa de estabilidade e suporte a longo prazo, opte pelas versões LTS (Long-Term Support) do .NET. Para acessar os recursos mais recentes, escolha as versões atuais.
+- ***Compatibilidade com Projetos Existentes***: se estiver trabalhando em um projeto existente, verifique a versão do .NET que ele utiliza e continue com ela, a menos que haja uma necessidade de atualização.
+- ***Requisitos do Projeto***: considere os recursos específicos de cada versão do .NET e como eles se alinham com os requisitos do seu projeto.
+- ***Documentação e Comunidade***: verifique a documentação disponível para a versão escolhida e a atividade da comunidade, pois isso pode facilitar o desenvolvimento e a solução de problemas.
+
+<div align="center">
+<h2>3. PROCESSO DE INSTALAÇÃO DO .NET</h2>
+</div>
+
+## 3.1 Passo a Passo para Instalar o .NET
+
+### 3.1.1 Windows
+- Visite o [Site Oficial do .NET](https://dotnet.microsoft.com/pt-br/downloads) e escolha a Versão (é recomendável a versão mais recente).
+- Baixe o Instalador: geralmente vem no formato de um executável (.exe).
+- Execute o Instalador: siga as instruções na tela para completar a instalação.
+- Verifique a Instalação: abra o prompt de comando e digite `dotnet --version` para verificar se o .NET foi instalado corretamente.
+
+<div align="center">
+<h2>4. INSTALAÇÃO DO VISUAL STUDIO WINDOWS</h2>
+</div>
+
+- instalar o `Visual Studio Community`, uma versão gratuita, rica em recursos e extensível do Visual Studio, uma suíte de desenvolvimento integrada (IDE) criada pela Microsoft. 
+- destinado a desenvolvedores individuais, pequenas equipes, estudantes e entusiastas de programação, oferecendo uma plataforma robusta para desenvolvimento de software em diversas linguagens de programação.
+
+## 4.1 Passo a Passo para instalação da IDE Visual Studio Community
+
+### 4.1.1 Download do Instalador
+- acessar o [site oficial da Microsoft](https://visualstudio.microsoft.com/pt-br/vs/community/). 
+- baixar o instalador, que vem no formato de um executável (.exe).
+
+## 4.1.2 Instalação 
+
+---
+
+## FAST TEST
+
+### 1. Qual das seguintes afirmações sobre o Common Language Runtime (CLR) no .NET é correta?
+> O CLR garante segurança e precisão no código através de verificação de tipos e validações de código.
+
+### 2. O que significa uma versão LTS (Long Term Support) do .NET?
+> Uma versão que recebe suporte e atualizações por um período estendido, geralmente três anos.
 
 
-
-
-
-
-
-
+### 3. Qual é a principal diferença entre o .NET Framework e o .NET (unificado)?
+> O .NET Framework é exclusivo para Windows, enquanto o .NET (unificado) é cross-platform.
 
 --- 
 
