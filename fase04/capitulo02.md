@@ -1,7 +1,7 @@
 <div align="center">
 <a href="https://github.com/monicaquintal" target="_blank"><img align="right" height="120px" src="../assets/logo.png" /></a>
 <h1>FASE 4 - FRAMEWORKS .NET</h1>
-<h2>Capítulo 02:  Preparando o Ambiente .NET.</h2>
+<h2>Capítulo 02: Preparando o Ambiente .NET.</h2>
 </div>
 
 <div align="center">
@@ -49,6 +49,49 @@
 
 - cada uma dessas versões do .NET atende a diferentes necessidades e cenários de desenvolvimento.
 
+### 1.3.1 .NET Framework
+- lançado em 2002 pela Microsoft.
+- representou um avanço no desenvolvimento de software, especialmente aplicações Windows e web. 
+- projetado para simplificar o processo de desenvolvimento, oferecia aos programadores uma plataforma consistente repleta de bibliotecas e funcionalidades. 
+- sua estrutura monolítica significava que todas os seus componentes, desde a interface gráfica até o acesso a dados, estavam fortemente integrados, proporcionando uma experiência de desenvolvimento coesa.
+- dentro do .NET Framework, diversas tecnologias se destacam, como:
+  - para o desenvolvimento de aplicações de desktop, Windows Forms era essencial. 
+  - no contexto web, ASP.NET se tornou a base para construir páginas e aplicações web, integrando-se com o Internet Information Services (IIS) para otimizar desempenho e segurança. 
+  - para acesso e manipulação de dados, ADO.NET se mostrou crucial, permitindo interações eficientes com bases de dados e suportando tanto operações simples quanto transações mais complexas, graças à sua arquitetura desconectada.
+- apesar das vantagens, o .NET Framework tinha limitações notáveis:
+  - a mais proeminente era sua incompatibilidade com o desenvolvimento de aplicações cross-platform. 
+  - inicialmente, foi projetado exclusivamente para sistemas baseados em Windows, restringindo seu uso em ambientes de TI mais diversificados. 
+  - a natureza monolítica do .NET Framework, embora benéfica para a integração de seus componentes, podia tornar as atualizações e a manutenção de sistemas mais complexos uma tarefa desafiadora. 
+- com o tempo, essas limitações abriram caminho para novas implementações do .NET, como o .NET Core e o .NET 5+.
+
+### 1.3.2 .NET Core
+- introduzido pela Microsoft como uma resposta às crescentes demandas por aplicações mais versáteis e adaptáveis. 
+- se destacou por sua capacidade de suportar o desenvolvimento de aplicações cross-platform.
+- projetado com um foco especial na modularidade: os desenvolvedores tinham a liberdade de incluir apenas as bibliotecas e componentes necessários para suas aplicações, ao invés de depender de uma estrutura monolítica. 
+- essa abordagem modular não apenas tornava as aplicações mais leves e eficientes, mas também facilitava a manutenção e atualização.
+- outra característica fundamental é sua portabilidade: permitia alcançar uma base de usuários mais ampla sem a necessidade de reescrever o código para cada plataforma.
+- também trouxe melhorias significativas no desempenho: otimizações no coletor de lixo (Garbage Collector), JIT (Just-In-Time) compilation e outras áreas garantiram que as aplicações construídas no .NET Core fossem mais rápidas e eficientes, o que era particularmente benéfico para aplicações de alto desempenho e serviços de nuvem.
+- também refletiu uma mudança na filosofia de desenvolvimento da Microsoft, com um forte compromisso com o código aberto. 
+- representou uma modernização significativa da plataforma .NET, abordando muitas das limitações do .NET Framework e introduzindo novos recursos e capacidades. 
+- sua modularidade, portabilidade e desempenho aprimorado, juntamente com seu suporte ao código aberto, o tornaram uma escolha popular para desenvolvedores em todo o mundo.
+
+### 1.3.3 .NET
+- com o lançamento do .NET 5 e suas versões subsequentes (incluindo .NET 7/8), a Microsoft consolidou o .NET Framework e o .NET Core em uma única plataforma chamada .NET. 
+- evolução contínua na busca por maior eficiência, flexibilidade e capacidade de atender às demandas crescentes do desenvolvimento moderno de software. 
+- oferecem suporte aprimorado para desenvolvimento de aplicações cloud-native, microserviços, e containerização. 
+- com a adoção crescente de práticas de DevOps, essas versões proporcionam integrações mais robustas com ferramentas de CI/CD (Continuous Integration/Continuous Delivery), facilitando a automatização do ciclo de vida de desenvolvimento de software.
+- outra característica chave do .NET 7 e 8 é a ênfase na interoperabilidade e no desenvolvimento multiplataforma: com a inclusão do `MAUI (Multi-platform App UI)`, evolução do Xamarin.Forms, desenvolvedores têm à disposição um framework para criar interfaces de usuário que funcionam de forma consistente em diferentes plataformas: é possível desenvolver uma aplicação que tem uma ótima aparência e funcionamento tanto em iOS quanto em Android, além de desktops Windows e Mac, com uma base de código única.
+- além disso, as atualizações de desempenho e as otimizações de memória continuam a ser um foco, o que é particularmente relevante para aplicações que processam grandes volumes de dados ou que exigem alta capacidade de resposta, como aplicações financeiras ou jogos.
+
+### 1.3.4 Trajetória do .NET
+- o .NET Framework, com sua abordagem monolítica e foco no desenvolvimento Windows e web, estabeleceu um forte alicerce, mas limitava-se ao ambiente Windows e enfrentava desafios na manutenção e atualizações. 
+- o advento do .NET Core marcou uma virada significativa, introduzindo modularidade, suporte a desenvolvimento cross-platform, desempenho aprimorado e um compromisso com o código aberto, atendendo às necessidades de aplicações mais versáteis e adaptáveis.
+- com o .NET 7/8, a Microsoft unificou as melhores características do .NET Framework e .NET Core, criando uma plataforma única que abrange aplicações Windows, Linux, macOS e desenvolvimento móvel; as versões mais recentes enfatizam eficiência, flexibilidade, suporte a práticas de DevOps, e desenvolvimento multiplataforma com ferramentas como MAUI, destacando-se na era atual de computação distribuída e cloud-native. Além disso, continuam a tradição de melhorias no desempenho e na otimização de memória, essenciais para aplicações de alto desempenho.
+- ou seja, a evolução do .NET reflete esforço contínuo para atender às demandas crescentes e diversificadas do desenvolvimento de software moderno, oferecendo aos desenvolvedores uma plataforma robusta, versátil e eficiente para criar soluções inovadoras em uma variedade de plataformas e ambientes.
+
+<div align="center">
+<h2>2. PREPARANDO O AMBIENTE</h2>
+</div>
 
 
 
