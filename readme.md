@@ -117,7 +117,7 @@
 
 - [Cap 1 - O Mundo .NET](./fase04/capitulo01.md)
 - [Cap 2 - Preparando o Ambiente .NET](./fase04/capitulo02.md)
-- [Cap 3]()
+- [Cap 3 - Programando em C#](./fase04/capitulo03.md)
 - [Cap 4]()
 - [Cap 5]()
 - [Cap 6]()
