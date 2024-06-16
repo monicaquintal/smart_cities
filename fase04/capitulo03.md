@@ -542,6 +542,69 @@ Console.WriteLine(b);
 // True
 ~~~
 
+c) ***OR lógico |***: o resultado de x | y será true se x ou y for avaliado como true. Caso contrário, o resultado será false.
+
+~~~csharp
+bool SecondOperand()
+{
+    Console.WriteLine("Second operand is evaluated.");
+    return true;
+}
+bool a = true | SecondOperand();
+Console.WriteLine(a);
+// Output:
+// Second operand is evaluated.
+// True
+bool b = false | SecondOperand();
+Console.WriteLine(b);
+// Output:
+// Second operand is evaluated.
+// True
+~~~
+
+d) ***AND lógico condicional &&***: também conhecido como operador AND lógico de "curto-circuito", computa o AND lógico de seus operandos.
+
+~~~csharp
+bool SecondOperand()
+{
+    Console.WriteLine("Second operand is evaluated.");
+    return true;
+}
+bool a = false && SecondOperand();
+Console.WriteLine(a);
+// Output:
+// False
+bool b = true && SecondOperand();
+Console.WriteLine(b);
+// Output:
+// Second operand is evaluated.
+// True
+~~~
+
+e) ***OR lógico condicional ||***: também conhecido como operador OR lógico de "curto-circuito", computa o OR lógico de seus operandos:
+
+~~~csharp
+bool SecondOperand()
+{
+    Console.WriteLine("Second operand is evaluated.");
+    return true;
+}
+bool a = true || SecondOperand();
+Console.WriteLine(a);
+// Output:
+// True
+bool b = false || SecondOperand();
+Console.WriteLine(b);
+// Output:
+// Second operand is evaluated.
+// True
+~~~
+
+## 3.6 Estrutura de Controle: Decisões e Loops
+
+### 3.6.1 Decisões
+
+pág 45
 
 
 
