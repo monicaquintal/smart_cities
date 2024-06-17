@@ -118,7 +118,7 @@
 - [Cap 1 - O Mundo .NET](./fase04/capitulo01.md)
 - [Cap 2 - Preparando o Ambiente .NET](./fase04/capitulo02.md)
 - [Cap 3 - Programando em C#](./fase04/capitulo03.md)
-- [Cap 4]()
+- [Cap 4 - Desenvolvimento Web com ASP.NET](./fase04/capitulo04.md)
 - [Cap 5]()
 - [Cap 6]()
 - [Cap 7]()
@@ -128,7 +128,7 @@
 <details>
 <summary>ENTREPRENEURSHIP PROGRAM</summary>
 
-- [Cap 8]()
+- [Cap 8 - Prototipação](./fase04/capitulo08.md)
 
 </details>
 <br>

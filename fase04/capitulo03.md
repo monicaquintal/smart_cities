@@ -604,26 +604,170 @@ Console.WriteLine(b);
 
 ### 3.6.1 Decisões
 
-pág 45
+- `If-Else`: 
+	- estrutura básica de tomada de decisão em C#. 
+	- o if avalia uma condição: se a condição for verdadeira, executa um bloco de código; caso contrário, o fluxo de execução segue adiante, podendo entrar em um bloco else, se presente.
 
+~~~csharp
+int numero = 10;
+if (numero > 5)
+{
+    Console.WriteLine("O número é maior que 5.");
+}
+else
+{
+    Console.WriteLine("O número é menor ou igual a 5.");
+}
+~~~
 
+- `Switch-Case`: 
+	- usado para escolher entre múltiplas opções de execução baseadas no valor de uma variável ou expressão. 
+	- cada case corresponde a um valor possível e tem um bloco de código associado. 
+	- é eficaz para substituir múltiplos if-elses quando se lida com várias condições distintas.
 
+~~~csharp
+int diaDaSemana = 3;
+switch (diaDaSemana)
+{
+    case 1:
+        Console.WriteLine("Segunda-feira");
+        break;
+    case 2:
+        Console.WriteLine("Terça-feira");
+        break;
+    case 3:
+        Console.WriteLine("Quarta-feira");
+        break;
+    // Adicione mais casos conforme necessário
+    default:
+        Console.WriteLine("Dia inválido");
+        break;
+}
+~~~
 
+### 3.6.2 Loops
 
+- `For`: 
+    - permite executar um bloco de código várias vezes, com um contador que é incrementado ou decrementado em cada iteração. 
+    - ideal para situações em que se sabe quantas vezes o loop deve ser executado.
 
+~~~csharp
+for (int i = 0; i < 5; i++)
+{
+    Console.WriteLine($"Valor de i: {i}");
+}
+~~~
 
+- `While`: 
+    - executa um bloco de código enquanto uma condição especificada for verdadeira. 
+    - o teste da condição ocorre antes de cada iteração, tornando possível que o loop não execute nenhuma vez se a condição inicial for falsa.
 
+~~~csharp
+int contador = 0;
+while (contador < 5)
+{
+    Console.WriteLine($"Contador: {contador}");
+    contador++;
+}
+~~~
 
+- `Do-While`: 
+    - semelhante ao while, mas a condição é testada no final de cada iteração. 
+    - garante que o bloco de código seja executado pelo menos uma vez.
 
+~~~csharp
+int valor = 0;
+do
+{
+    Console.WriteLine($"Valor: {valor}");
+    valor++;
+}
+while (valor < 5);
+~~~
 
+- `Foreach`: 
+    - usado para iterar sobre os elementos de uma coleção ou array. 
+    - simplifica loops que percorrem estruturas de dados, tornando o código mais legível e menos propenso a erros.
 
+~~~csharp
+string[] nomes = { "Thiago", "João", "Rita" };
+foreach (string nome in nomes)
+{
+    Console.WriteLine(nome);
+}
+~~~
 
+## 3.7 Tratamentos de Exceções
 
+- componente fundamental para a criação de um código robusto e confiável, permitindo que os programas lidem com situações de erro de forma eficaz e refinada. 
+- através do uso dos blocos try, catch e finally, é possível identificar e capturar erros que ocorrem durante a execução do programa, como uma tentativa de leitura de um arquivo inexistente ou uma divisão por zero. 
+- no `bloco try`:
+    - o código potencialmente problemático é executado. 
+    - se uma exceção ocorrer, o fluxo de execução é imediatamente transferido para o `bloco catch` correspondente, onde a exceção é tratada (evita o encerramento abrupto do programa e fornece uma oportunidade para registrar erros, notificar usuários ou até mesmo tentar uma estratégia alternativa de execução).
+- o `bloco finally` (opcional) executa código independente de uma exceção ter ocorrido ou não, sendo ideal para a liberação de recursos e para realizar a limpeza final, garantindo que o estado do programa permaneça consistente e que os recursos, como arquivos e conexões de rede, sejam adequadamente fechados.
+- o C# permite a criação de exceções personalizadas, possibilitando que desenvolvedores expressem condições de erro específicas do domínio do seu aplicativo.
 
+> O tratamento de exceções não é apenas uma estratégia de prevenção de erros, mas uma prática que aumenta a integridade, a estabilidade e a usabilidade dos programas em C#.
 
+### 3.7.1 Captura simples de exceção
 
+~~~csharp
+try
+{
+    int divisor = 0;
+    int resultado = 10 / divisor;
+}
+catch (Exception ex)
+{
+    Console.WriteLine("Ocorreu um erro: " + ex.Message);
+}
+~~~
 
+### 3.7.2Tratamento de Exceção Específica
 
+~~~csharp
+try
+{
+    int[] numeros = new int[3];
+    Console.WriteLine(numeros[5]); // Isso irá gerar uma exceção
+}
+catch (IndexOutOfRangeException)
+{
+    Console.WriteLine("Índice acessado não existe no array.");
+}
+~~~
+
+### 3.7.3 Bloco finally
+
+~~~csharp
+try
+{
+    int a = 10;
+    int b = 0;
+    Console.WriteLine(a / b);
+}
+catch (DivideByZeroException)
+{
+    Console.WriteLine("Tentativa de divisão por zero.");
+}
+finally
+{
+    Console.WriteLine("Bloco finally executado.");
+}
+~~~
+
+---
+
+## FAST TEST
+
+### 1. Qual das afirmações a seguir sobre classes em .NET com C# é correta?
+> Classes em C# podem conter métodos, propriedades e eventos.
+
+### 2. Qual das seguintes afirmações sobre o uso de `try`, `catch` e `finally` em .NET com C# é correta?
+> O bloco `finally` é opcional, mas é sempre executado se estiver presente, independentemente de uma exceção ter sido lançada ou não. 
+
+### 3. Qual é a principal finalidade do uso de `async` e `await` no .NET?
+> Simplificar a escrita de código assíncrono, permitindo operações não bloqueantes.
 
 --- 
 
