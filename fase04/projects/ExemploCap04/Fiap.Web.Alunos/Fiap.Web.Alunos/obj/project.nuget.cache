@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "t25CXkQXE6M=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\monic\\source\\repos\\ExemploCap04\\Fiap.Web.Alunos\\Fiap.Web.Alunos\\Fiap.Web.Alunos.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\monic\\.nuget\\packages\\microsoft.visualstudio.azure.containers.tools.targets\\1.20.1\\microsoft.visualstudio.azure.containers.tools.targets.1.20.1.nupkg.sha512"
+  ],
+  "logs": []
+}

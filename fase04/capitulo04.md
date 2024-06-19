@@ -181,6 +181,132 @@
 <h2>4. CONTROLLERS</h2>
 </div>
 
+- atuam como os intermediários entre as solicitações do usuário e a lógica de negócios da aplicação. 
+- são responsáveis por receber as requisições do cliente, tomar decisões com base nessas solicitações e coordenar a interação entre o modelo de dados e a camada de visualização. 
+- são essenciais para estruturação e organização do código em uma aplicação MVC, garantindo uma separação clara entre a lógica de apresentação e a lógica de negócios. 
+- controlam todo o fluxo de navegação e ações do usuário.
+
+## 4.1 Explicando o código Controller 
+
+- `HomeController`: responsável por gerenciar as respostas a algumas ações comuns em uma aplicação web, como visitar a página inicial, acessar uma página de privacidade e tratar erros.
+
+~~~csharp
+using Fiap.Web.Alunos.Models;
+using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
+namespace Fiap.Web.Alunos.Controllers
+{
+    public class HomeController : Controller
+    {
+        private readonly ILogger<HomeController> _logger;
+        public HomeController(ILogger<HomeController> logger)
+        {
+            _logger = logger;
+        }
+        public IActionResult Index()
+        {
+            return View();
+        }
+        public IActionResult Privacy()
+        {
+            return View();
+        }
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+    }
+}
+~~~
+
+## 4.2 Declaração de Controlador
+
+~~~csharp
+public class HomeController : Controller
+~~~
+
+- `Classe HomeController`: 
+  - a ***classe Microsoft.AspNetCore.Mvc.Controller*** é uma classe que lida com as requisições HTTP. 
+  - a herança em HomeController atribui funcionalidades para tratar requisições e retornar respostas, como views, a nossa classe HomeController.
+
+## 4.3 Logging com ILogge
+
+~~~csharp
+private readonly ILogger<HomeController> _logger;
+~~~
+
+- `ILogger<HomeController>`: 
+  - o logging é essencial para monitorar e diagnosticar comportamentos da aplicação. 
+  - ILogger permite registrar logs de diferentes níveis de severidade (informação, erro, etc.). 
+  - a forma de uso do ILogger no em nosso controller inicial é feito pela prática ou padrão da injeção de dependência (abordada mais adiante).
+
+## 4.4 Ações do Controlador 
+
+~~~csharp
+public IActionResult Index()
+        {
+            return View();
+        }
+        public IActionResult Privacy()
+        {
+            return View();
+        }
+~~~
+
+- os métodos `Index` e `Privacy` representam ações que podem ser executadas pelo controlador.
+- cada método corresponde a uma rota ou caminho no navegador acessível por uma URL. 
+- nesse caso, os métodos têm como retorno uma `interface IActionResult`, comumente utilizada para apresentar um componente do tipo View, o qual é renderizado ao usuário final em HTML.
+  - `Index()`: geralmente serve como a página inicial da aplicação.
+  - `Privacy()`: exemplo montado pelo scaffold para exibir uma página de política de privacidade. 
+- as ações dos controladores do ASP.NET Core MVC (Microsoft.AspNetCore.Mvc.Controller) possuem outros tipos de retorno além da interface IActionResult; lista com suas respectivas funcionalidades:
+  - `IActionResult`: retorna uma resposta HTTP para o cliente. Pode ser usado para retornar uma View, um JSON, um arquivo, entre outros tipos de respostas.
+  - `ViewResult`: retorna uma View ao cliente, representando uma página HTML a ser exibida no navegador.
+  - `JsonResult`: retorna um objeto serializado em formato JSON ao cliente, comumente utilizado para requisições AJAX.
+  - `RedirectResult`: redireciona o cliente para outra URL especificada.
+  - `FileResult`: retorna um arquivo ao cliente para download.
+  - `ContentResult`: retorna um conteúdo específico ao cliente, geralmente usado para retornar texto ou XML.
+  - `PartialViewResult`: retorna uma parte de uma View ao cliente, útil para carregamento assíncrono de componentes.
+  - `StatusCodeResult`: retorna um código de status HTTP específico ao cliente, sem corpo de resposta.
+  - `EmptyResult`: retorna uma resposta vazia ao cliente, geralmente usado para ações que não têm conteúdo para retornar.
+
+## 4.5 Atributos de Ação (ou anotações)
+
+- presentes nas linguagens C#, Java, Dart e muitas outras. 
+- no caso do nosso HomeController, o scaffold implementou uma ação de cache para ações de erro.
+
+~~~csharp
+[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+~~~
+
+- `Atributo [ResponseCache]`: usado para controlar como as respostas das ações são armazenadas em cache. No método Error, ele é configurado para não armazenar cache, garantindo que as mensagens de erro sejam sempre atualizadas.
+- exemplos de atributos de ação de uso mais comuns nos controllers: 
+  - 1. `[HttpGet]`: especifica que a ação responde apenas a requisições HTTP GET.
+  - 2. `[HttpPost]`: indica que a ação responde apenas a requisições HTTP POST.
+  - 3. `[Route]`: define a rota específica para a ação, substituindo a rota padrão gerada pelo roteamento.
+  - 4. `[Authorize]`: restringe o acesso à ação apenas a usuários autenticados.
+  - 5. `[ValidateAntiForgeryToken]`: protege ataques CSRF (Cross-Site Request Forgery) verificando se o token anti-falsificação foi fornecido.
+  - 6. `[AllowAnonymous]`: permite acesso anônimo à ação, mesmo em uma aplicação que requer autenticação global.
+- esses atributos oferecem controle granular sobre o comportamento das ações nos controllers, permitindo a personalização do roteamento, restrição de acesso, proteção de ataques, entre outros recursos.
+
+## 4.6 Tratamento de Erros 
+
+~~~csharp
+public IActionResult Error()
+{
+  return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+}
+~~~
+
+- trecho do código-fonte Action Error, que apresenta o método Error comoum padrão comum gerado pelo Visual Studio para lidar com erros em um Controller ASP.NET MVC. 
+- sua função é retornar uma View específica para exibir mensagens de erro ao usuário quando ocorre uma exceção não tratada na aplicação. 
+- quando uma exceção é lançada, o método Error é chamado automaticamente e uma instância da classe ErrorViewModel é passada para a View, contendo informações sobre o erro (ID da requisição e o identificador de rastreamento).
+- permite que a View de erro exiba informações úteis para o usuário, como mensagens de erro personalizadas, informações de rastreamento para diagnóstico e possíveis soluções para resolver o problema. 
+- o método Error desempenha um papel importante na experiência do usuário ao lidar com erros inesperados durante a execução da aplicação.
+
+<div align="center">
+<h2>5. VIEWS</h2>
+</div>
 
 
 
