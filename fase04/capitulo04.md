@@ -1070,18 +1070,353 @@ namespace Fiap.Web.Alunos.Controllers
 
 > [Link da solução implementada até o momento para download no GitHub](https://github.com/FIAP/ON_TDS_DOTNET_MVC/tree/cliente-cadastro-ajustes).
 
+## 7.6 Criando a funcionalidade de edição (View e Controller)
 
+- assim como na funcionalidade de cadastro, será necessário criar duas novas actions com os nomes "Edit": uma funcionará para abrir a tela de edição (GET), enquanto a outra receberá os dados editados para gravação no banco (POST). 
+- o método com o verbo POST é praticamente uma cópia do fluxo de cadastro. 
+- portanto, nossa atenção estará focada no método Edit (GET), que receberá um parâmetro via URL e será responsável por consultar o cliente para carregar na tela os dados anteriormente cadastrados. 
+- tabela com detalhes dos métodos de edição que vamos construir:
 
+<div align="center">
 
+Nome | Verbo Http | Parâmetro | Funcionalidade
+-----|------------|---------|---------------
+Edit | GET | Int Id | Ao abrir a tela de formulário de dados do cliente, os campos serão preenchidos automaticamente com as informações do cliente selecionado na tela anterior. A seleção na tela anterior enviará o identificador do cliente pela URL. Em resposta, o controller consultará o cliente no banco de dados usando a chave primária da tabela. As informações serão recuperadas por meio da classe ClienteModel e passadas para a View utilizando o método return View(obj).
+Edit | POST | Classe Cliente Model | Receber os dados digitados no formulário, simular a gravação no banco de dados e redirecionar o usuário para tela de lista de cliente. Na tela de lista de clientes vamos exibir uma mensagem de sucesso ou falha na operação.
 
+</div>
 
+- implementação de Actions de edição do Cliente:
 
+~~~csharp
+// Anotação de uso do Verb HTTP Get
+[HttpGet]
+public IActionResult Edit(int id)
+{
+    var selectListRepresentantes =
+        new SelectList(representantes,
+                        nameof(RepresentanteModel.RepresentanteId),
+                        nameof(RepresentanteModel.NomeRepresentante));
+    ViewBag.Representantes = selectListRepresentantes;
+    // Simulando a busca no banco de dados 
+    var clienteConsultado =
+        clientes.Where(c => c.ClienteId == id).FirstOrDefault();
+    // Retornando o cliente consultado para a View
+    return View(clienteConsultado);
+}
+[HttpPost]
+public IActionResult Edit(ClienteModel clienteModel)
+{
+    TempData["mensagemSucesso"] = $"Os dados do cliente {clienteModel.Nome} foram alterados com suceso";
+    return RedirectToAction(nameof(Index));
+}
+~~~
 
+- para a View Edit, podemos reaproveitar o código-fonte criado na View Create:
+  - revisar os caminhos usados para o post do formulário. 
+  - alterar o título da página e adicionar um componente do tipo hidden,que vai armazenar a propriedade ClienteId (pois, na execução do comando de Update, devemos informar a chave primária). 
 
+~~~csharp
+@model Fiap.Web.Alunos.Models.ClienteModel
+<h1>Cliente</h1>
+<h4>Editar</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <!-- IMPORTANTE elemento form -->
+        <form asp-action="Edit" asp-controller="Cliente">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <!-- IMPORTANTE propriedade ClienteId oculto -->
+            <input type="hidden" asp-for="ClienteId" />
+            <div class="form-group">
+                <label asp-for="Nome" class="control-label"></label>
+                <input asp-for="Nome" class="form-control" />
+                <span asp-validation-for="Nome" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Sobrenome" class="control-label"></label>
+                <input asp-for="Sobrenome" class="form-control" />
+                <span asp-validation-for="Sobrenome" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DataNascimento" class="control-label"></label>
+                <input asp-for="DataNascimento" class="form-control" />
+                <span asp-validation-for="DataNascimento" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Observacao" class="control-label"></label>
+                <input asp-for="Observacao" class="form-control" />
+                <span asp-validation-for="Observacao" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RepresentanteId" class="control-label"></label>
+                <select asp-for="RepresentanteId" asp-items="@ViewBag.Representantes" class="form-select">
+                    <option value="0">Selecione</option>
+                </select>
+                <span asp-validation-for="RepresentanteId" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Gravar" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<div>
+    <a asp-action="Index">Voltar</a>
+</div>
+~~~
 
+- simule uma edição, utilizando breakpoints ou a janela Console para acompanhar os dados digitados. 
 
+> [Link da solução implementada até o momento para download no GitHub](https://github.com/FIAP/ON_TDS_DOTNET_MVC/tree/cliente-alterar).
 
+## 7.7 Criando a funcionalidade de detalhes (View e Controller)
 
+- no Controller, adicionar um método que utilize apenas o verbo HTTP GET para recuperar os dados do cliente a ser consultado. 
+- na View, não será necessário criar um formulário: substituiremos os elementos de edição (input) por labels para exibir os dados do cliente.
+
+~~~csharp
+// Anotação de uso do Verb HTTP Get
+[HttpGet]
+public IActionResult Detail(int id)
+{
+    var selectListRepresentantes =
+        new SelectList(representantes,
+                        nameof(RepresentanteModel.RepresentanteId),
+                        nameof(RepresentanteModel.NomeRepresentante));
+    ViewBag.Representantes = selectListRepresentantes;
+    // Simulando a busca no banco de dados 
+    var clienteConsultado =
+        clientes.Where(c => c.ClienteId == id).FirstOrDefault();
+    // Retornando o cliente consultado para a View
+    return View(clienteConsultado);
+}
+~~~
+
+- ao criar a View Detail, reutilizar o código da View Edit para adicionar a funcionalidade de exibir os dados.
+- remover o bloco do formulário e substituir os elementos de entrada por elementos de visualização.
+
+~~~csharp
+@model Fiap.Web.Alunos.Models.ClienteModel
+<h1>Cliente</h1>
+<h4>Detalhe</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <div class="form-group">
+            <label asp-for="Nome" class="control-label fw-bold"></label>
+            <div class="col-md-10">
+                <span>@Model.Nome</span>
+            </div>
+        </div>
+        <br />
+        <div class="form-group">
+            <label asp-for="Sobrenome" class="control-label fw-bold"></label>
+            <div class="col-md-10">
+                <span>@Model.Sobrenome</span>
+            </div>
+        </div>
+        <br />
+        <div class="form-group">
+            <label asp-for="Email" class="control-label fw-bold"></label>
+            <div class="col-md-10">
+                <span>@Model.Email</span>
+            </div>
+        </div>
+        <br />
+        <div class="form-group">
+            <label asp-for="DataNascimento" class="control-label fw-bold"></label>
+            <div class="col-md-10">
+                <span>@Model.DataNascimento</span>
+            </div>
+        </div>
+        <br />
+        <div class="form-group">
+            <label asp-for="Observacao" class="control-label fw-bold"></label>
+            <div class="col-md-10">
+                <span>@Model.Observacao</span>
+            </div>
+        </div>
+        <br />
+        <div class="form-group">
+            <label asp-for="RepresentanteId" class="control-label  fw-bold"></label>
+            <div class="col-md-10">
+                <span>@Model.Representante.NomeRepresentante</span>
+            </div>
+        </div>
+        <br />
+    </div>
+</div>
+<div>
+    <a asp-action="Index">Voltar</a>
+</div>
+~~~
+
+> [Link da solução implementada até o momento para download no GitHub](https://github.com/FIAP/ON_TDS_DOTNET_MVC/tree/cliente-detalhe).
+
+## 7.8 Removendo dados (View e Controller)
+
+- a remoção será feita apenas por uma Action, não vamos utilizar View.
+- método para a consulta dos dados:
+
+<div align="center">
+
+Nome | Verbo Http | Parâmetro | Funcionalidade
+------|-----------|-----------|--------------
+Delete | GET | Int Id | Receber o valor do identificador do cliente (ClienteId) e simular o comando de remoção dos dados, além de criar uma mensagem de sucesso e direcionar o cliente para tela de listagem de clientes.
+
+</div>
+
+- implementação da Action de exclusão do cliente:
+
+~~~csharp
+// Anotação de uso do Verb HTTP Get
+[HttpGet]
+public IActionResult Delete(int id)
+{
+    // Simulando a busca no banco de dados 
+    var clienteConsultado =
+        clientes.Where(c => c.ClienteId == id).FirstOrDefault();
+    if (clienteConsultado != null)
+    {
+        TempData["mensagemSucesso"] = $"Os dados do cliente {clienteConsultado.Nome} foram removidos com sucesso";
+    } else
+    {
+        TempData["mensagemSucesso"] = $"OPS !!! Cliente inexistente.";
+    }
+    return RedirectToAction(nameof(Index));
+}
+~~~
+
+> [Link da solução implementada até o momento para download no GitHub](https://github.com/FIAP/ON_TDS_DOTNET_MVC/tree/cliente-delete).
+
+<div align="center">
+<h2>8. LAYOUTS</h2>
+</div>
+
+- o Bootstrap se destaca como uma biblioteca amplamente utilizada, que oferece uma variedade de componentes e estilos pré-projetados para construir interfaces responsivas e visualmente atraentes. 
+- uma vantagem adicional é que o Bootstrap já vem instalado por padrão na estrutura do ASP.NET Core MVC.
+  - é possível encontrar as pastas e os arquivos da biblioteca na `pasta wwwroot`, disponível na Solution Explorer do Visual Studio.
+
+## 8.1 Estrutura Layouts
+
+- o uso do Bootstrap requer que todas as páginas HTML do site importem as referências para os arquivos da biblioteca (.css e .js). 
+  - com o emprego dos recursos de Layouts, podemos centralizar essas importações em um único ponto do projeto. 
+  - além disso, é comum que os websites tenham padrões e áreas comuns em todas as páginas, como cabeçalho, logotipo, menu, rodapé etc. 
+  - os recursos de Layouts do MVC permitem criar esses padrões e partes comuns uma única vez e reutilizá-los em todo o projeto, reduzindo a duplicação de código e simplificando a manutenção.
+- ao trabalharmos com a camada de visualização, é importante entender a função dos arquivos de layout `_Layout.cshtml`, `_ViewStart.cshtml` e `_ViewImports.cshtml`. 
+  - ***_Layout.cshtml***: define o layout padrão que será aplicado a todas as páginas do site, especificando elementos comuns como cabeçalho, rodapé e áreas de conteúdo dinâmico.
+  - ***_ViewStart.cshtml***: responsável por definir configurações padrão para todas as views do site, como o layout a ser usado.
+  - ***_ViewImports.cshtml***: permite importar namespaces e diretivas para todas as views, simplificando o uso de classes e recursos em todo o projeto.
+- por convenção, os layouts do MVC geralmente são armazenados em uma `subpasta chamada Shared` dentro da pasta Views, tornando-os facilmente acessíveis e gerenciáveis em todo o projeto. 
+- na pasta Shared, ***abrir o arquivo _Layout.cshtml*** e ajustar o código HTML para o nosso projeto.
+  - dentro do elemento &lt;head&gt; do HTML, é comum encontrar as tags &lt;link&gt; que referenciam o arquivo .css do Bootstrap. 
+  - porém, é ***recomendável*** explorar os recursos do framework, como o `símbolo ~`, que permite transformar caminhos de arquivos relativos em caminhos semiabsolutos, garantindo que, não importa o endereço em que a View é exibida, a tag apontará para o caminho correto dos arquivos de estilo, javascript e imagem. 
+- para incrementar um pouco mais o aplicativo, modificaremos a seção de cabeçalho, que será composto por mais dois itens de menu com a opção para a funcionalidades de Clientes e Representantes (implementado futuramente).
+
+~~~csharp
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Fiap.Web.Alunos</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Fiap.Web.Alunos.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Fiap.Web.Alunos</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
+                        <!-- NOVOS LINKS -->
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Cliente" asp-action="Index">Cliente</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Representante" asp-action="Index">Representante</a>
+                        </li>
+                        <!-- NOVOS LINKS -->
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &amp;copy; 2024 - Fiap.Web.Alunos - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+~~~
+
+- entre o cabeçalho e o rodapé, encontra-se a `tag Razor @RenderBody()`, responsável por especificar o ponto em que o conteúdo da View será renderizado, ou seja, o conteúdo HTML da View será inserido no espaço da tag @RenderBody()!
+- para juntar as peças do quebra-cabeça do Layout e da View, é necessário entender como as nossas Views utilizam o `bloco @{Layout}`nos arquivos .cshtml:
+  - observando o arquivo Views\Cliente\Index.cshtml, é possível notar que não temos nenhum bloco de código com @{Layout}, pois esse trecho está declarado no arquivo View\_ViewStart.cshtml. 
+  - o arquivo ViewStart é uma forma de declarar configurações visuais no nível da aplicação, ou seja, algo declarado nesse arquivo será usado em toda a aplicação.
+- abra o arquivo Views\Home\Index.cshtml e declare o layout logo após a tag @model.
+
+~~~csharp
+@{
+    ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+~~~
+
+> DICA: Remova o comando @Layout de todas as views deixando apenas no arquivo _ViewStart.cshtml como na primeira versão que encontramos antes das alterações!
+
+> [Link da solução final no GITHUB](https://github.com/FIAP/ON_TDS_DOTNET_MVC/tree/layout).
+
+--- 
+
+## FAST TEST
+
+### 1. Assinale a alternativa que indica corretamente se cada uma das afirmações sobre os benefícios e desafios dos microsserviços é Verdadeira (V) ou Falsa (F):
+- 1. Um dos benefícios dos microsserviços é a escalabilidade, permitindo a escalabilidade de partes específicas da aplicação conforme a demanda. 
+- 2. A resiliência é um desafio dos microsserviços, pois falhas em um microsserviços específico geralmente afetam o funcionamento de outros serviços. 
+- 3. Flexibilidade tecnológica é um benefício dos microsserviços, pois cada microsserviço pode ser desenvolvido, testado e deployado utilizando as tecnologias mais adequadas para sua função específica. 
+- 4. Um dos desafios dos microsserviços é a complexidade de gerenciamento, que envolve a orquestração e o monitoramento de múltiplos serviços independentes.
+- 5. A facilidade de manutenção e atualização é um desafio dos microsserviços, pois a independência entre os serviços dificulta a atualização, manutenção e deploy.
+> V F V V F 
+
+### 2. Como é chamada a interface utilizada em .NET para retornar uma View, JSON para o cliente.
+> IActionResult.
+
+### 3. No padrão MVC do ASP.NET, como é definido o fluxo de controle de uma aplicação?
+> O Controller toma decisões baseadas nas entradas do usuário, manipula o Model e seleciona a View apropriada.
 
 --- 
 

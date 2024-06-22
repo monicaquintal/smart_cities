@@ -1,0 +1,53 @@
+﻿@model Fiap.Web.Alunos.Models.ClienteModel
+<h1>Cliente</h1>
+<h4>Editar</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <!-- IMPORTANTE elemento form -->
+        <form asp-action="Edit" asp-controller="Cliente">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <!-- IMPORTANTE propriedade ClienteId oculto -->
+            <input type="hidden" asp-for="ClienteId" />
+            <div class="form-group">
+                <label asp-for="Nome" class="control-label"></label>
+                <input asp-for="Nome" class="form-control" />
+                <span asp-validation-for="Nome" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Sobrenome" class="control-label"></label>
+                <input asp-for="Sobrenome" class="form-control" />
+                <span asp-validation-for="Sobrenome" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DataNascimento" class="control-label"></label>
+                <input asp-for="DataNascimento" class="form-control" />
+                <span asp-validation-for="DataNascimento" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Observacao" class="control-label"></label>
+                <input asp-for="Observacao" class="form-control" />
+                <span asp-validation-for="Observacao" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RepresentanteId" class="control-label"></label>
+                <select asp-for="RepresentanteId" asp-items="@ViewBag.Representantes" class="form-select">
+                    <option value="0">Selecione</option>
+                </select>
+                <span asp-validation-for="RepresentanteId" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Gravar" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<div>
+    <a asp-action="Index">Voltar</a>
+</div>

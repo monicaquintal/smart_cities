@@ -1,12 +1,37 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\monic\\source\\repos\\ExemploCap04\\Fiap.Web.Alunos\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{D5A2396C-4AB2-4869-8B97-50BA71F2F40D}|Fiap.Web.Alunos\\Fiap.Web.Alunos.csproj|c:\\users\\monic\\source\\repos\\exemplocap04\\fiap.web.alunos\\fiap.web.alunos\\models\\representantemodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D5A2396C-4AB2-4869-8B97-50BA71F2F40D}|Fiap.Web.Alunos\\Fiap.Web.Alunos.csproj|solutionrelative:fiap.web.alunos\\models\\representantemodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": []
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "RepresentanteModel.cs",
+              "DocumentMoniker": "C:\\Users\\monic\\source\\repos\\ExemploCap04\\Fiap.Web.Alunos\\Fiap.Web.Alunos\\Models\\RepresentanteModel.cs",
+              "RelativeDocumentMoniker": "Fiap.Web.Alunos\\Models\\RepresentanteModel.cs",
+              "ToolTip": "C:\\Users\\monic\\source\\repos\\ExemploCap04\\Fiap.Web.Alunos\\Fiap.Web.Alunos\\Models\\RepresentanteModel.cs",
+              "RelativeToolTip": "Fiap.Web.Alunos\\Models\\RepresentanteModel.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAAoAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-22T22:54:11.729Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
     }
   ]
 }
