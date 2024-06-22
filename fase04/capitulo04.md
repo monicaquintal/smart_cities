@@ -308,6 +308,269 @@ public IActionResult Error()
 <h2>5. VIEWS</h2>
 </div>
 
+- no framework ASP.NET Core MVC, as Views são `arquivos .cshtml`, baseados em HTML. 
+- por convenção, são armazenadas na pasta "Views" e em subpastas com o nome do Controller associado.
+- apenas HTML por si só não oferece a capacidade de tornar as páginas dinâmicas ou interativas, especialmente quando se trata de manipular e persistir informações em um banco de dados. 
+	- para superar essa limitação, o ASP.NET Core MVC utiliza um mecanismo conhecido como `view engine`, que ***combina a linguagem C# com a marcação Razor***, permitindo que as Views sejam dinâmicas e possam interagir com o código C# do servidor. 
+	- podemos fazer uma analogia com o JSP (JavaServer Pages) da linguagem Java e a Expression Language (EL), que facilita a inclusão de scriptlets.
+
+## 5.1 ASP.NET Razor
+
+- o Razor é um dos mecanismos do ASP.NET Core MVC (Web App) responsáveis por construir Views dinâmicas. 
+- antes de seu lançamento, o mecanismo padrão era o ASPX, que utilizava scriptlets ASP.NET puro como base.
+	- porém, apesar de ainda disponível para criação de projetos MVC, não é mais recomendado pelo framework devido às vantagens oferecidas pelo Razor.
+- integrado pela primeira vez na versão do ASP.NET MVC 3, lançada em 2011.
+- introduzido com o objetivo de simplificar a codificação na camada de View.
+- `benefícios`:
+	- ***uso da linguagem C# como base de scriptlets***: o Razor utiliza a linguagem C# como base para seus scriptlets, o que oferece uma experiência de codificação familiar para os desenvolvedores do .NET.
+	- ***Sintaxe limpa, reduzindo o código***: a sintaxe do Razor é projetada para ser limpa e concisa, o que resulta em menos código e uma melhor legibilidade.
+	- ***Simplificação do acesso aos componentes Model***: o Razor simplifica o acesso aos componentes do Model, permitindo que os desenvolvedores integrem facilmente dados dinâmicos em suas Views.
+	- ***Facilidade de escrita de testes unitários para a camada de Views***: o Razor torna mais fácil escrever testes unitários para a camada de Views, facilitando a verificação do comportamento e da lógica da interface do usuário.
+	- ***Autocompletar (IntelliSense) no Visual Studio***: o uso do Razor no Visual Studio oferece suporte a recursos de autocomplete (IntelliSense), o que ajuda os desenvolvedores a escrever código mais rapidamente e com menos erros.
+	- ***Facilidade de uso de layouts predefinidos para todo o site***: facilita a definição e o uso de layouts predefinidos (como master pages) para todo o site, proporcionando uma consistência visual em todas as páginas.
+
+> Para identificar uma expressão Razor em um arquivo .cshtml, basta observar blocos de código iniciados pelo caractere @.
+
+~~~csharp
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Homepage</title>
+</head>
+<body>
+    <div>
+        <h1>Nossa home-page.</h1>
+    </div>
+    @{
+        for (int i = 0; i < 10; i++)
+        {
+            <p>@i</p>
+        }
+    }
+</body>
+</html>
+~~~
+
+## 5.2 Modos de Integração de dados com a View
+
+- há diversas maneiras de integrar dados na camada de View do ASP.NET MVC. 
+- a escolha da abordagem depende das necessidades específicas da aplicação e da preferência do desenvolvedor.
+- algumas das principais são:
+	- `Model Binding`: o ASP.NET MVC possui um recurso chamado Model Binding, que automaticamente mapeia os valores dos parâmetros de uma action para as propriedades de um objeto Model. Isso permite que os dados do Model sejam facilmente acessíveis na View.
+	- `Passagem de dados via ViewBag e ViewData`: são mecanismos que permitem passar dados da Controller para a View; são úteis quando você precisa passar dados simples e não complexos para a View, como strings ou valores booleanos.
+	- `Strongly Typed Views`: permitem que você defina explicitamente o tipo de dados que a View espera receber, utilizando um Model específico. Isso torna mais fácil e seguro acessar os dados do Model na View, pois você tem acesso ao IntelliSense e verificações de tipo durante o desenvolvimento.
+	- `ViewModels`: são classes que representam os dados necessários para uma determinada View. Eles permitem agrupar dados de vários Models em um único objeto, tornando mais fácil e organizada a passagem de dados da Controller para a View. Os ViewModels são especialmente úteis quando uma View precisa exibir dados de várias entidades relacionadas.
+
+## 5.3 Razor TagHelpers
+
+- para facilitar o desenvolvimento na camada de View, o ASP.NET, utilizando o engine Razor, oferece elementos e tags personalizadas para exibir dados aos clientes da aplicação, conhecidas como TagHelpers. 
+- essa praticidade, presente no framework ASP.NET Core MVC (Web App), disponibiliza componentes auxiliares para o desenvolvimento das Views.
+- Tag Helpers, permitem definir e usar elementos HTML personalizados diretamente nas Views, tornando o código mais limpo e legível.
+- os Helpers criam tags HTML com funcionalidades específicas, processadas pelo ASP.NET Core durante a renderização da página.
+- algumas características dos Tag Helpers:
+	- `sintaxe semelhante a HTML`: por ser escrito com sintaxe semelhante ao HTML, os Tag Helpers são mais fáceis de ler e escrever do que os helpers tradicionais do Razor.
+	- `integração com IntelliSense do Visual Studio`: facilitando a descoberta e o uso dos Tag Helpers disponíveis.
+	- `melhor manutenção do código`: permitem a separação do código de apresentação do código de lógica, simplificando a manutenção do código e o trabalho em equipe.
+	- `Reutilização`: podem ser reaproveitados em várias Views, reduzindo a duplicação de código e mantendo uma consistência visual em toda a aplicação.
+
+<div align="center">
+
+Tag Helper | Método tipado
+--------------|-------------------
+Anchor tag helper | Link tag helper
+Cache tag helper | Option tag helper
+Environment tag helper | Partial tag helper
+Form Action tag helper | Script tag helper
+Form tag helper | Select tag helper
+Imagem tag helper | Textarea tag helper
+Input tag helper | Validation Message tag helper
+Label tag helper | Validation Summary tag helper
+
+</div>
+
+- o exemplo abaixo apresenta a sintaxe para a criação de uma caixa de texto usando o helper e o código HTML gerado depois que o view engine renderiza o código da View.
+
+~~~csharp
+<!-- Tag Help -->
+<input asp-for="DescricaoTipo" placeholder ="Digite a descrição." />
+~~~
+
+~~~html
+<!-- Tag Help -->
+<input placeholder="Digite a descrição." type="text" id="DescricaoTipo" name="DescricaoTipo" value/>
+~~~
+
+<div align="center">
+<h2>6. IMPLEMENTANDO ASP.NET CORE WEB APP MVC</h2>
+</div>
+
+- agora serão implementados os códigos.
+- a ideia é implementar uma funcionalidade simples, mas que demonstre o fluxo de navegação e a troca de informações entre as diferentes partes do sistema - a camada de visualização e o Controller.
+
+## 6.1 Funcionalidades
+
+- abordaremos o módulo de clientes e representantes. 
+- a proposta é criar uma entidade simples que represente as informações de um cliente associado a um representante. 
+- inicialmente não exploremos os modelos em detalhes, uma vez que são classes com propriedades básicas; posteriormente, poderemos aprimorar esse relacionamento no banco de dados.
+- no Diagrama de Classe, temos:
+	- Classe Representante: RepresentanteId, Cpf, NomeRepresentante (+ getters e setters).
+	- Classe Cliente: ClienteId, Nome, SobreNome, DataNascimento, Observacao, Representante (+ getters e setters).
+- o objetivo é construir os seguintes comportamentos ou funcionalidades:
+	- criação de um novo cliente.
+	- remoção de um cliente já existente.
+	- alteração dos dados de um cliente.
+	- listagem de todos os clientes cadastrados.
+- os componentes da camada de modelo são simples classes C#, que devem ser adicionadas no namespace Models do projeto. 
+- para criar o modelo `RepresentanteModel` e `ClienteModel`, clique com o botão direito na pasta Models e escolha a opção Add > Class. Defina o nome como `RepresentanteModel.cs` e `ClienteModel.cs`,  e adicione os atributos de cada uma das classes.
+
+~~~csharp
+namespace Fiap.Web.Alunos.Models
+{
+    public class RepresentanteModel
+    {
+        public int RepresentanteId { get; set; }
+        public string? NomeRepresentante { get; set; }
+        public string? Cpf { get; set; }
+    }
+}
+~~~
+
+~~~csharp
+namespace Fiap.Web.Alunos.Models
+{
+    public class ClienteModel
+    {
+        public int ClienteId { get; set; }
+        public string? Nome { get; set; }
+        public string? Sobrenome { get; set; }
+        public string? Email { get; set; }
+        public DateTime DataNascimento { get; set; }
+        public string? Observacao { get; set; }
+        public int RepresentanteId { get; set; }
+        public RepresentanteModel? Representante { get; set; }
+    }
+}
+~~~
+
+- detalhes importantes:
+	- o destaque dado à funcionalidade do cliente serve como uma forma de ilustrar o relacionamento e a dependência presentes; nessa modelagem, um cliente está sempre associado a um representante.
+	- após adicionar uma classe no seu projeto, observe o namespace declarado na classe a pasta que a classe foi adicionada, devemos manter sempre o nome. Verifique também se a classe está declarada como public.
+
+## 6.2 Controllers e Actions
+
+- em um projeto ASP.NET Core MVC, toda solicitação do usuário feita pelo navegador será recebida e gerenciada por um Controller, ficando este responsável por receber o pedido, acionar os componentes necessários e gerar a resposta para o navegador.
+- podemos criar um Controller para cada funcionalidade da nossa aplicação (por exemplo: CriarProduto, ExcluirProduto, AlterarProduto e ListaProdutos), porém ***não é recomendado***. 
+- para organizar melhor as funcionalidades, há os conceitos das `Actions`.
+	- ***ações (Actions) são métodos adicionados na classe de controle com o objetivo de organizar e padronizar ainda mais o código***. Com o
+	- com o seu uso, devemos criar um controlador para cada domínio e ações para cada funcionalidade (por exemplo: ControllerRepresentante, Actions Criar, Excluir, Alterar, Detalhar e Listar).
+	- ***todo Controller necessita de uma Action***; caso não seja criada, nada será executado. 
+- além da pasta Controller (namespace), a criação de Controllers e  Actions deve seguir algumas `particularidades`:
+	- o nome da classe do controlador deverá ter o sufixo Controller (como: ClienteControlller, ProdutoController ou FavorecidoController).
+	- os métodos que representam as ações devem ser declarados como públicos.
+	- os métodos Actions não podem ser declarados como static.
+	- os métodos Actions só podem ser sobrecarregados (overloading) com uso de Anotações (Attributes).
+	- o mapeamento-padrão adota o nome de Index para a Action inicial de um Controller.
+	- o retorno mais comum de uma Action é um componente View em HTML implementado pela classe ActionResult ou pela interface IActionResult.
+	- é possível criar uma Action sem resposta.
+	- uma Action tem o mapeamento um para um, ou seja, deve ser implementada para executar apenas uma ação.
+- as Actions podem ser implementadas com algumas responsabilidades diferentes, como de apresentar uma View ao usuário, por exemplo, ações que serão responsáveis por retornar um arquivo para download.
+
+## 6.3 Implementando Controllers
+
+- clique com o botão direito do mouse na pasta Controllers do projeto e selecione a opção Add > Controller; o Visual Studio apresentará a janela Add Scaffold. 
+- selecione a opção MVC Controller–Empty.
+- o próximo passo é definir o nome do controlador (ClienteController): clique no botão Add e aguarde a criação. 
+	- lembre-se que todo Controller deverá ter o sufixo Controller.
+- agora podemos observar a classe criada no namespace Controllers; no código da classe Controller, é possível ver a importação do namespace Microsoft.AspNetCore.Mvc e a extensão da classe Microsoft.AspNetCore.Mvc.Controller. 
+- como padrão da criação de todo Controller, a action Index foi adicionada na classe, por meio do método de mesmo nome, e o  retorno é um objeto do tipo IActionResult. 
+
+~~~csharp
+using Microsoft.AspNetCore.Mvc;
+
+namespace Fiap.Web.Alunos.Controllers
+{
+	public class ClienteController : Controller {
+		public IActionResult Index() {
+			return View;
+		}
+	}
+}
+~~~
+
+- com o Controller criado, agora podemos fazer o primeiro teste. 
+- pressione a tecla F5 e aguarde o navegador-padrão do computador ser aberto. 
+- com o navegador aberto, complemente o endereço com o caminho /Cliente e pressione Enter. 
+	- o navegador vai exibir uma tela de erro informando que nenhuma View com o nome de Index foi encontrada. 
+	- isso significa que o teste foi bem-sucedido (pois ainda não criamos a View).
+
+## 6.4 Associando uma View e Controller
+
+- criar a primeira View e validar a execução do Controller: a View será uma página HTML simples com uma mensagem de texto informando o nome do Controller e da Action.
+- com o Controller ClienteController aberto na janela de edição, clique com o botão direito sobre o nome da Action Index e selecione a opção “Add View” (Adicionar edição) (uma janela com detalhes da View será apresentada). Selecione o modelo vazio.
+
+> IMPORTANTE: Quando um projeto está em execução, alguns recursos de edição, como adicionar novos arquivos à solução, podem ficar indisponíveis temporariamente. Portanto, é importante parar o projeto antes de tentar adicionar novos arquivos à solução (clicar no botão Stop ou pressionar Shift + F5).
+
+- também é possível criar uma View abrindo a pasta Views correspondente ao Controller desejado (por exemplo, Views/Cliente), criar um novo arquivo com o nome da Action desejada seguido da extensão cshtml (por exemplo, Index.cshtml para a action Index), e, em seguida, escrever diretamente o código HTML e Razor.
+- com a View adicionada, verifique na janela Solution Explorer se na pasta “Views” foram adicionados uma subpasta Cliente e um arquivo Index.cshtml (arquivo da View).
+- o próximo passo é editar o arquivo Index.cshtml e, no bloco body, adicionar uma mensagem com o nome do Controller e a Action à qual a View pertence.
+
+~~~csharp
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+    <div>
+        Executando Controller Cliente, a Action Index 
+        e renderizando a View Index.cshtml
+    </div>
+</body>
+</html>
+~~~
+
+- para testar o Controller, pressione F5, aguarde o navegador ser carregado, informe o caminho /Cliente/Index e pressione Enter: o Controller será executado novamente e a View Index será retornada.
+
+## 6.5 Método de retorno – View()
+
+- o Controller e a Action criados retornam para a requisição a View do mesmo nome da ação por meio método View().
+- o método View() apresenta algumas sobrecargas, as quais permitem passagem de parâmetros para informar resultados diferentes, como outra View. 
+  - podemos alterar a View-padrão, passando uma string como parâmetro, ou informar um objeto que será usado para a renderização da View. 
+
+<div align="center">
+
+Nome | Descrição
+-----|---------------
+View() | Cria um ViewResult objeto que renderiza uma exibição para a resposta.
+View(Object) | Cria um ViewResult objeto especificando um model a ser renderizado pelo modo de exibição.
+View(String) | Cria um ViewResult objeto especificando um viewName.
+View(IView) | Cria um ViewResult que processa especificado do objeto IView objeto.
+View(String, Object) | Cria um ViewResult objeto usando o nome de exibição e o modelo que processa um modo de exibição para a resposta.
+View(String, String) | Cria um ViewResult objeto usando o nome e o nome da página mestra que processa um modo de exibição para a resposta.
+View(IView, Object) | Cria um ViewResult que processa especificado do objeto IView objeto.
+View(String, String, Object) | Cria um ViewResult objeto usando o nome de exibição, o nome da página mestra e o modelo que processa um modo de exibição.
+
+</div>
+
+<div align="center">
+<h2>7. ROTAS E NAVEGAÇÃO</h2>
+</div>
+
+## 7.1 Convenções
+
+
+
+
+
+
 
 
 
