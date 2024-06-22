@@ -566,10 +566,509 @@ View(String, String, Object) | Cria um ViewResult objeto usando o nome de exibi�
 
 ## 7.1 Convenções
 
+- o ASP.NET Core MVC emprega uma convenção simples para associar as actions dos controllers às views. 
+  - exemplo: no caso do ClienteController, uma subpasta chamada "Cliente" é automaticamente criada dentro da pasta "Views", e um arquivo "Index.cshtml" é gerado para a action "Index". 
+- convenções padronizadas simplificam o desenvolvimento, reduzindo a necessidade de configurações manuais por parte do desenvolvedor e delegando essa responsabilidade ao framework, tornando a estrutura do projeto coesa e organizada.
 
+## 7.2 Rotas da URL 
 
+- agora vamos entender como a aplicação interpreta a URL digitada e determina qual Controller e qual Action devem ser executados.
+- ao analisar a URL da aplicação &lt;https://localhost:32768/Cliente/Index&gt;:
+  - o primeiro bloco apresenta o protocolo, o nome do servidor e a porta de comunicação; 
+  - o segundo bloco representa:
+    - Cliente: Controller responsável por gerenciar a execução.
+    - Index: Action que atenderá à requisição.
+- a combinação entre Controller e Action é conhecida como `Rota`, e é configurada por meio da `classe “Program.cs”`, presente em todo projeto ASP.NET Core MVC (Web App), onde ocorre a chamada ao `método MapControllerRoute`. 
 
+~~~csharp
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+~~~
 
+- o bloco de código que chama o método MapControllerRoute é responsável por interceptar todas as chamadas do aplicativo, analisar o caminho da URL requisitada e mapear para o Controller e a Action correspondentes.
+- o padrão na propriedade URL é `{controller}/{action}/{id}`, definindo que os caminhos devem ser compostos pelo nome do Controller, da Action e um ID (valores opcionais).
+- além disso, no método MapControllerRoute, há uma definição “default” que especifica quais Controller e Action serão executados caso nenhuma informação seja fornecida na URL (exemplo: o Controller padrão é chamado de Home e a Action padrão é Index).
+- embora seja possível alterar essas configurações, é recomendável manter o padrão para garantir a consistência da aplicação. 
+- para garantir uma apresentação inicial da aplicação, o Visual Studio oferece um Controller chamado HomeController e sua View correspondente (Index.cshtml). Na View, podemos escrever uma mensagem de boas-vindas ou qualquer conteúdo relevante para identificar que estamos navegando pela página inicial.
+- execute novamente o aplicativo, note que a nossa homepage será apresentada como página inicial; acesse os endereços abaixo no navegador e verifique que todos vão exibir a mesma visão (homepage):
+  - http://localhost:32768/
+  - http://localhost:32768/Home
+  - http://localhost:32768/Home/Index
+- isso ocorre porque o ASP.NET Core MVC utiliza a rota padrão para o Controller Home e a Action Index quando nenhum caminho adicional é especificado na URL, garantindo assim uma experiência consistente para os usuários, independentemente da forma como eles acessam a aplicação.
+
+## 7.3 Listando dados na tela (View)
+
+- a partir daqui serão adicionados os comportamentos: cadastro, alteração, exclusão e consulta (CRUD).
+- para evitar a configuração de um banco de dados real neste momento, optaremos por uma estratégia de simulação, conhecida como `Mock`. 
+  - simula os comandos de integração com as tabelas do banco de dados, permitindo-nos testar os componentes do MVC e o fluxo de navegação antes de implementar a integração real com o banco de dados.
+- o objetivo neste momento é criar uma listagem de dados para os clientes. 
+  - para cada entrada na lista, será necessário criar uma ação que será posteriormente implementada para consultar, editar e excluir, além de uma opção para criar um novo cliente. 
+  - faremos uso da Action e da View já criadas.
+- dentro do ClienteController, criaremos um atributo do tipo lista e, no construtor do Controller, popularemos essa lista com 5 objetos ClienteModel(apenas para organizar o código; a lista será preenchida por um método Mock). 
+- no método de retorno da Action Index, passaremos essa lista como parâmetro. 
+
+~~~csharp
+using Fiap.Web.Alunos.Models;
+using Microsoft.AspNetCore.Mvc;
+namespace Fiap.Web.Alunos.Controllers
+{
+    public class ClienteController : Controller
+    {
+        //Lista para armazenar os clientes
+        public IList<ClienteModel> clientes { get; set; }
+        public ClienteController()
+        {
+            //Simula a busca de clientes no banco de dados
+            clientes = GerarClientesMocados();
+        }
+        public IActionResult Index()
+        {
+            // Evitando valores null 
+            if (clientes == null)
+            {
+                clientes = new List<ClienteModel>();
+            }
+            return View(clientes);
+        }
+        /**
+         * Este método estático GerarClientesMocados 
+         * cria uma lista de 5 clientes com dados fictícios
+         */
+        public static List<ClienteModel> GerarClientesMocados()
+        {
+            var clientes = new List<ClienteModel>();
+            for (int i = 1; i <= 5; i++)
+            {
+                var cliente = new ClienteModel
+                {
+                    ClienteId = i,
+                    Nome = "Cliente" + i,
+                    Sobrenome = "Sobrenome" + i,
+                    Email = "cliente" + i + "@example.com",
+                    DataNascimento = DateTime.Now.AddYears(-30),
+                    Observacao = "Observação do cliente " + i,
+                    RepresentanteId = i,
+                    Representante = new RepresentanteModel
+                    {
+                        RepresentanteId = i,
+                        NomeRepresentante = "Representante" + i,
+                        Cpf = "00000000191"
+                    }
+                };
+                clientes.Add(cliente);
+            }
+            return clientes;
+        }
+    }
+}
+~~~
+
+- com a lista de clientes simulada e retornada para a View, é hora de implementar o mecanismo de exibição e as ações futuras. 
+- o objetivo para o `componente View` é criar uma tabela que apresente os dados da lista:
+  - para cada item da lista, serão criados três (3) hiperlinks (Editar, Excluir e Consultar) e, por fim, um (1) hiperlink para cadastrar um novo tipo. 
+  - a codificação para as tags Razor da nossa implementação deve incluir: a declaração @model para definir o tipo do objeto modelo, um bloco @foreach para listar os elementos da lista e as declarações ***asp-controller***, ***asp-action*** e ***asp-route-id*** para os hiperlinks de edição, exclusão, cadastro e consulta.
+- como estamos usando a abordagem StronglyTyped View, utilizaremos a tag @Model para referenciar o modelo fortemente tipado na View. 
+- como o objeto modelo é uma lista, devemos especificar o tipo IEnumerable na declaração @model.
+
+~~~csharp
+@model IEnumerable<Fiap.Web.Alunos.Models.ClienteModel>
+<h1>Clientes</h1>
+<p>
+    <!-- uso de TagHelpers para definir o Controller e a Action -->
+    <a asp-controller="Cliente" asp-action="Create">Novo Cliente</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Sobrenome</th>
+            <th>Email</th>
+            <th>Nascimento</th>
+            <th>Representante</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                <label>@item.ClienteId</label>
+            </td>
+            <td>
+                <label>@item.Nome</label>
+            </td>
+            <td>
+                <label>@item.Sobrenome</label>
+            </td>
+            <td>
+                <label>@item.Email</label>
+            </td>
+            <td>
+                <label>@item.DataNascimento</label>
+            </td>
+            <td>
+                <label>@item.Representante.NomeRepresentante</label>
+            </td>
+            <td>
+          <!-- asp-route-id é usado para informar o Id do Item selecionado. -->
+                <a asp-controller="Cliente"
+                    asp-action="Edit"
+                    asp-route-id="@item.ClienteId">Editar</a>
+                <a asp-controller="Cliente"
+                    asp-action="Detail"
+                       asp-route-id="@item.ClienteId">Consultar</a>
+                <a asp-controller="Cliente"
+                    asp-action="Delete"
+                    asp-route-id="@item.ClienteId">Excluir</a>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+~~~
+
+- executar a aplicação e, em seguida, no navegador, digitar o caminho "/Cliente".
+- agora o código está completo e funcional! 
+- para reforçar e fixar o conhecimento, vamos revisar o código cshtml e destacar os seguintes pontos:
+  - `declaração do Modelo (@model):` a linha `@model IEnumerable<Fiap.Web.Alunos.Models.ClienteModel>` especifica que esta View é fortemente tipada e espera receber uma lista de objetos do tipo `ClienteModel`.
+  - `uso de TagHelpers`: o uso de `asp-controller` e `asp-action` nos hiperlinks simplifica a criação de URLs dinâmicas para criar novos clientes e para as ações de editar, consultar e excluir, com base nas rotas definidas nos Controllers.
+  - `looping com foreach (@foreach)`: o bloco `@foreach (var item in Model)` itera sobre cada item na lista de clientes passada para a View.
+  - `exibição dos dados do cliente`: dentro do loop foreach, cada propriedade do objeto `ClienteModel` é exibida em células da tabela HTML usando as tags `<label>`. Isso demonstra como acessar e exibir os dados do modelo na View.
+  - `hiperlinks de Ação`: cada linha da tabela contém hiperlinks para as ações de editar, consultar e excluir um cliente específico. Esses hiperlinks usam a propriedade `asp-route-id` para passar o ID do cliente correspondente para o Controller.
+  - `ações dos Controllers`: os atributos `asp-controller` e `asp-action` nos hiperlinks indicam qual Controller e qual Action devem ser acionados quando o hiperlink é clicado.
+
+> [Link da solução implementada até o momento para download no GitHub](https://github.com/FIAP/ON_TDS_DOTNET_MVC).
+
+## 7.4 Inserindo dados (View e Controller)
+
+- ações de inserção e alteração começam a trazer mais complexidade. 
+- abordaremos essa funcionalidade em duas fases distintas: na primeira fase, criaremos a funcionalidade com um defeito de usabilidade que ajustaremos no segundo cenário. 
+- embora a View fortemente tipada ajude em muitos casos, para essa funcionalidade precisaremos fazer um mix de tipagem forte e o uso do conceito de ViewBage TempData.
+- para iniciar a construção, precisamos criar os elementos do framework MVC que permitam ao usuário preencher os dados de um cliente e simular a gravação na base de dados. 
+- no mesmo Controller, adicionar dois novos métodos (Actions) chamados "Create". 
+  - como mencionado anteriormente, optaremos por esse mesmo nome para testar uma forma específica de sobrecarga de métodos em Controllers.
+  - para diferenciar os dois métodos de mesmo nome, utilizaremos duas abordagens: 
+    - a primeira através do uso de uma anotação que define qual verbo HTTP (Get ou Post) a Action irá aceitar durante a execução. 
+    - a segunda abordagem envolve o uso de um parâmetro; um dos métodos receberá um modelo Cliente. 
+
+<div align="center">
+
+Nome | Verbo Http | Parâmetro | Funcionalidade
+------|-----------|------------|-------------
+Create | GET | N/A | Abrir a tela de formulário para cadastro de um novo cliente, com os dados todos em branco.
+Create | POST | Classe Cliente Model | Receber os dados digitados no formulário, simular a gravação no banco de dados e redirecionar o usuário para tela de lista de cliente. Na tela de lista de clientes vamos exibir uma mensagem de sucesso ou falha na operação.
+
+</div>
+
+- para utilizar as anotações que indicam qual verbo HTTP é utilizado no método, declarar acima da implementação do método as expressões: `[HttpGet]`, `[HttpPost]`.
+- a simulação de gravação dos dados no banco de dados será realizada pelo comando Console.WriteLine().
+- implementando o Controller:
+
+~~~csharp
+// Anotação de uso do Verb HTTP Get
+[HttpGet]
+public IActionResult Create()
+{
+    Console.WriteLine("Executou a Action Cadastrar()");
+    // Retorna para a View Create um 
+    // objeto modelo com as propriedades em branco 
+    return View(new ClienteModel());
+}
+// Anotação de uso do Verb HTTP Post
+[HttpPost]
+public IActionResult Create(ClienteModel clienteModel)
+{
+    // Simila que os dados foram gravados.
+    Console.WriteLine("Gravando o cliente");
+    // Substituímos o return View()
+    // pelo método de redirecionamento
+    return RedirectToAction(nameof(Index));
+    // O trecho nameof(Index) poderia ser usado da forma abaixo
+    // return RedirectToAction("Index");
+}
+~~~
+
+- criar uma nova View para fornecer um formulário e os elementos para a digitação dos dados.
+- pelas convenções do framework, devemos criar a nova View com o mesmo nome da Action: "Create", a qual deverá estar dentro de Views > Cliente, e deverá fazer uso dos taghelpers asp-controller e asp-action para criação do formulário, além dos elementos HTML puros para posicionamento e formatação da tela.
+
+~~~csharp
+@model Fiap.Web.Alunos.Models.ClienteModel
+<h1>Cliente</h1>
+<h4>Novo</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <!-- IMPORTANTE elemento form -->
+        <form asp-action="Create" asp-controller="Cliente">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ClienteId" class="control-label"></label>
+                <!-- IMPORTANTE elementos input asp-for="Nome da Propriedade do Model" -->
+                <input asp-for="ClienteId" class="form-control" />
+                <span asp-validation-for="ClienteId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Nome" class="control-label"></label>
+                <input asp-for="Nome" class="form-control" />
+                <span asp-validation-for="Nome" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Sobrenome" class="control-label"></label>
+                <input asp-for="Sobrenome" class="form-control" />
+                <span asp-validation-for="Sobrenome" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DataNascimento" class="control-label"></label>
+                <input asp-for="DataNascimento" class="form-control" />
+                <span asp-validation-for="DataNascimento" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Observacao" class="control-label"></label>
+                <input asp-for="Observacao" class="form-control" />
+                <span asp-validation-for="Observacao" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RepresentanteId" class="control-label"></label>
+                <input asp-for="RepresentanteId" class="form-control" />
+                <span asp-validation-for="RepresentanteId" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Cadastrar" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<div>
+    <a asp-action="Index">Voltar</a>
+</div>
+~~~
+
+- para iniciar o fluxo de cadastro, há duas possibilidades: digitando a própria URL no navegador (caminho: https://localhost:32768/Cliente/Create), ou clicando no link "Novo Cliente" na tela de lista de clientes. 
+- simular um cadastro de clientes.
+
+## 7.5 Ajustando a funcionalidade de cadastro (View e Controller)
+
+- para aprimorar a funcionalidade de cadastro, há ***3 postos-chaves para ajustes***.
+- o ***primeiro*** envolve a exibição de uma mensagem de sucesso assim que o usuário finaliza o fluxo e é redirecionado para a tela de listagem.
+  - para resolver esse caso, precisaremos modificar a View de listagem de clientes (Index).
+  - como temos uma navegação que altera a ação (o fluxo final do controller não é definido pelo retorno do método View(), mas sim pelo retorno do RedirectToAction()), o `TempData` proporciona a capacidade de recuperar objetos que são passados do Controller para a View, o que é essencial para transmitir a mensagem de sucesso entre diferentes ações.
+  - iniciar as alterações pelo Controller de Cliente, na ação Create (Post), e em seguida ajustar a ViewIndex para exibir a mensagem de sucesso. 
+
+~~~csharp
+// Controller de Cliente
+
+// Anotação de uso do Verb HTTP Post
+[HttpPost]
+public IActionResult Create(ClienteModel clienteModel)
+{
+    // Simila que os dados foram gravados.
+    Console.WriteLine("Gravando o cliente");
+    //Criando a mensagem de sucesso que será exibida para o Cliente
+    TempData["mensagemSucesso"] = $"O cliente {clienteModel.Nome} foi cadastrado com suceso";
+    // Substituímos o return View()
+    // pelo método de redirecionamento
+    return RedirectToAction(nameof(Index));
+    // O trecho nameof(Index) poderia ser usado da forma abaixo
+    // return RedirectToAction("Index");
+}
+~~~
+
+~~~csharp
+// ViewIndex
+
+@model IEnumerable<Fiap.Web.Alunos.Models.ClienteModel>
+<h1>Clientes</h1>
+@if (!string.IsNullOrEmpty((String)TempData["mensagemSucesso"]))
+{
+    <div class="alert alert-warning" role="alert">@TempData["mensagemSucesso"]</div>
+}
+<p>
+    <!-- uso de TagHelpers para definir o Controller e a Action -->
+    <a asp-controller="Cliente" asp-action="Create">Novo Cliente</a>
+</p>
+<!-- Código suprimido ... -->
+~~~
+
+- pontos importantes sobre o uso e a abordagem do TempData:
+  - `TempData como um Dicionário`: é um dicionário que pode ser usado para armazenar dados temporários que serão preservados entre solicitações HTTP. É útil para transmitir informações entre diferentes ações de um Controller ou mesmo entre diferentes Controllers.
+  - `Chave e Valor`: o TempData utiliza o conceito de chave-valor para armazenar e recuperar dados. Em nosso código, `"mensagemSucesso"` é a chave que será usada para recuperar a mensagem posteriormente, enquanto `$"O cliente {clienteModel.Nome} foi cadastrado com sucesso"` é o valor associado a essa chave, que neste caso é uma mensagem de sucesso.
+  - `Preservação Temporária`: o TempData preserva os dados apenas por uma única solicitação HTTP subsequente. Isso significa que os dados definidos no TempData estarão disponíveis para a próxima solicitação HTTP, mas serão removidos após isso. Portanto, o TempData é adequado para transmitir informações temporárias entre solicitações, como mensagens de sucesso após uma operação de cadastro, por exemplo.
+  - `Recuperação de Dados`: basta usar a mesma chave utilizada para definir os dados. Por exemplo, para acessar a mensagem de sucesso definida anteriormente, podemos fazer: `var mensagemSucesso = TempData["mensagemSucesso"];`. Certifique-se de verificar se o valor não é nulo antes de utilizá-lo, pois o TempData é esvaziado após a leitura.
+  - `Uso Conveniente`: é uma ferramenta conveniente para transmitir mensagens, erros ou outro tipo de informação entre solicitações HTTP, sem a necessidade de armazenamento persistente no banco de dados ou em sessões.
+
+> Em resumo, o TempData é uma ferramenta útil para transmitir informações temporárias entre ações do Controller ou entre diferentes partes da aplicação durante uma única sessão HTTP.
+
+- a ***segunda área de ajuste*** está relacionada à usabilidade.
+  - exemplo: em relação ao campo 'Representante', o usuário precisa inserir manualmente o código toda vez que cadastrar um cliente, o que levaria o usuário a recorrer a anotações para verificar os dados antes de inseri-los.
+  - há uma solução simples para esse problema: adicionar um elemento HTML que exibe uma lista de representantes para o usuário selecionar o representante desejado - em vez de digitar o código, o usuário poderá escolher o representante de uma lista de nomes.
+  - para implementar, precisaremos trabalhar nas camadas View e Controller, adicionando dois recursos: 
+    - `ViewBag` (utilizado para transmitir informações entre Controllere View), e 
+    - `TagHelperSelectList` (que simplificará a criação de um objeto de seleção na camada View).
+- começar pela implementação no Controller. 
+  - precisaremos simular uma lista de representantes, da mesma forma como fizemos para os clientes. 
+  - como ainda não temos um banco de dados nem uma camada de integração com ele, vamos criar uma lista de representantes simulada. 
+  - em seguida, criaremos o código para gerar um objeto do tipo SelectList com o conteúdo da lista de representantes. 
+  - posteriormente, adicionaremos esse objeto a uma propriedade da ViewBag do Controller. 
+
+~~~csharp
+// alterações no Controller (Create (GET))
+
+using Fiap.Web.Alunos.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering; // importando o SelectList
+namespace Fiap.Web.Alunos.Controllers
+{
+    public class ClienteController : Controller
+    {
+        //Lista para armazenar os clientes
+        public IList<ClienteModel> clientes { get; set; }
+        //Lista para armazenar os representantes
+        public IList<RepresentanteModel> representantes { get; set; } 
+        public ClienteController()
+        {
+            //Simula a busca de clientes no banco de dados
+            clientes = GerarClientesMocados();
+            representantes = GerarRepresentantesMocados();
+        }
+        public IActionResult Index()
+        {
+            // Evitando valores null 
+            if (clientes == null)
+            {
+                clientes = new List<ClienteModel>();
+            }
+            return View(clientes);
+        }
+        // Anotação de uso do Verb HTTP Get
+        [HttpGet]
+        public IActionResult Create()
+        {
+            Console.WriteLine("Executou a Action Cadastrar()");
+            //Cria a variável para armazenar o SelectList
+            var selectListRepresentantes =
+                new SelectList(representantes,
+                                nameof(RepresentanteModel.RepresentanteId),
+                                nameof(RepresentanteModel.NomeRepresentante));
+            //Adiciona o SelectList a ViewBag para se enviado para a View
+            //A propriedade Representantes é criada de forma dinâmica na ViewBag
+            ViewBag.Representantes = selectListRepresentantes;
+            // Retorna para a View Create um 
+            // objeto modelo com as propriedades em branco 
+            return View(new ClienteModel());
+        }
+        // Anotação de uso do Verb HTTP Post
+        [HttpPost]
+        public IActionResult Create(ClienteModel clienteModel)
+        {
+            // Simila que os dados foram gravados.
+            Console.WriteLine("Gravando o cliente");
+            //Criando a mensagem de sucesso que será exibida para o Cliente
+            TempData["mensagemSucesso"] = $"O cliente {clienteModel.Nome} foi cadastrado com suceso";
+            // Substituímos o return View()
+            // pelo método de redirecionamento
+            return RedirectToAction(nameof(Index));
+            // O trecho nameof(Index) poderia ser usado da forma abaixo
+            // return RedirectToAction("Index");
+        }
+        /**
+         * Este método estático GerarRepresentantesMocados 
+         */
+        public static List<RepresentanteModel> GerarRepresentantesMocados()
+        {
+            var representantes = new List<RepresentanteModel>
+            {
+                new RepresentanteModel { RepresentanteId = 1, NomeRepresentante = "Representante 1", Cpf = "111.111.111-11" },
+                new RepresentanteModel { RepresentanteId = 2, NomeRepresentante = "Representante 2", Cpf = "222.222.222-22" },
+                new RepresentanteModel { RepresentanteId = 3, NomeRepresentante = "Representante 3", Cpf = "333.333.333-33" },
+                new RepresentanteModel { RepresentanteId = 4, NomeRepresentante = "Representante 4", Cpf = "444.444.444-44" }
+            };
+            return representantes;
+        }
+        /**
+         * Este método estático GerarClientesMocados 
+         * cria uma lista de 5 clientes com dados fictícios
+         */
+        public static List<ClienteModel> GerarClientesMocados()
+        {
+            var clientes = new List<ClienteModel>();
+            for (int i = 1; i <= 5; i++)
+            {
+                var cliente = new ClienteModel
+                {
+                    ClienteId = i,
+                    Nome = "Cliente" + i,
+                    Sobrenome = "Sobrenome" + i,
+                    Email = "cliente" + i + "@example.com",
+                    DataNascimento = DateTime.Now.AddYears(-30),
+                    Observacao = "Observação do cliente " + i,
+                    RepresentanteId = i,
+                    Representante = new RepresentanteModel
+                    {
+                        RepresentanteId = i,
+                        NomeRepresentante = "Representante" + i,
+                        Cpf = "00000000191"
+                    }
+                };
+                clientes.Add(cliente);
+            }
+            return clientes;
+        }
+    }
+}
+~~~
+
+- o controller ficou pronto! 
+  - assim que a ação Create (GET) é executada, a lista de representantes é recuperada do banco de dados (simulado) e adicionada a uma lista.
+  - em seguida, essa lista é adicionada ao componente SelectList e, por fim, é inserida na ViewBag. 
+- exibir na View:
+
+~~~csharp
+// na View
+
+<div class="form-group">
+    <label asp-for="RepresentanteId" class="control-label"></label>
+    <select asp-for="RepresentanteId" 
+            asp-items="@ViewBag.Representantes" class="form-select">
+        <option value="0">Selecione</option>
+    </select>
+    <span asp-validation-for="RepresentanteId" class="text-danger"></span>
+</div>
+~~~
+
+- recapitulando o uso do SelectList e ViewBag:
+  - `criação do SelectList`: o código começa criando um SelectList chamado selectListRepresentantes. Ele é construído usando o construtor SelectList, que recebe três parâmetros:
+    - 1. lista de representantes, de onde o SelectList será gerado.
+    - 2. nome da propriedade, que será usada como valor para cada item do SelectList. Nesse caso, é especificado nameof(RepresentanteModel.RepresentanteId), que se refere à propriedade RepresentanteId da classe RepresentanteModel.
+    - 3. nome da propriedade que será usada como texto de exibição para cada item do SelectList. Aqui, é especificado nameof(RepresentanteModel.NomeRepresentante), referindo-se à propriedade NomeRepresentante da classe RepresentanteModel.
+  - `adição do SelectList à ViewBag`: em seguida, o SelectList criado é adicionado à ViewBag com a chave Representantes. Isso é feito para que o SelectList esteja disponível na View para uso posterior.
+  - `uso na View`: na View, é utilizado um elemento "select", que usa o asp-items para vincular os itens do SelectList à lista suspensa. A ViewBag é acessada usando @ViewBag.Representantes. Isso preenche o elemento "select" com os itens do SelectList.A opção padrão &lt;option value="0"&gt;Selecione&lt;/option&gt; é incluída para fornecer uma opção inicial padrão no elemento select.
+  - `propriedades da ViewBag`: a ViewBag é um objeto dinâmico em ASP.NET MVC usado para transmitir dados da Controller para a View. É importante observar que as propriedades adicionadas à ViewBag são acessíveis apenas na View em que foram definidas: não persistem entre solicitações HTTP e são destruídos após a conclusão do ciclo de vida da solicitação.
+
+- o ***terceiro ajuste*** é o mais simples: remoção do bloco de código que exibe o input para digitação do campo ClienteId. Nesse caso, iremos até a View Create e comentaremos o bloco.
+
+~~~csharp
+... Suprimido ...
+<form asp-action="Create" asp-controller="Cliente">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <!--
+    <div class="form-group">
+        <label asp-for="ClienteId" class="control-label"></label>
+        <input asp-for="ClienteId" class="form-control" />
+        <span asp-validation-for="ClienteId" class="text-danger"></span>
+    </div>
+    -->
+    ... Suprimido ...
+~~~
+
+> [Link da solução implementada até o momento para download no GitHub](https://github.com/FIAP/ON_TDS_DOTNET_MVC/tree/cliente-cadastro-ajustes).
 
 
 
