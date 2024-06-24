@@ -212,6 +212,30 @@ export ASPNETCORE_ENVIRONMENT=Development
 
 ## 3.3 String de Conexão
 
+- configuração essencial para estabelecer a conexão com o banco de dados, seja qual for. 
+- cada banco de dados possui sua própria string de conexão, que contém informações como servidor de banco de dados, nome do banco de dados, credenciais de autenticação e outras configurações relevantes.
+- no caso do `Oracle`, configurar uma string de conexão que seja compatível com este banco de dados.
+  - o site [Connection Strings.com](https://www.connectionstrings.com/) oferece uma vasta lista de strings de conexão para uma variedade de bancos de dados e diferentes métodos de conexão.
+- utilizar o código abaixo como base para modificar o arquivo appsettings.development.json e appsettings.json do projeto.
+
+~~~json
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "ConnectionStrings": {
+    "DatabaseConnection": "Data Source=(DESCRIPTION = (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = oracle.fiap.com.br)(PORT = 1521)))(CONNECT_DATA = (SID = orcl)));Persist Security Info=True;User ID=;Password=;Pooling=True;Connection Timeout=60;"
+  },
+  "AllowedHosts": "*"
+}
+~~~
+
+> IMPORTANTE: Para utilizar o banco de dados Oracle da FIAP, certifique-se de alterar as propriedades User ID e Password, para outros bancos de dados Oracle lembre-se também de alterar as propriedades HOST, PORT e SID.
+
+
 
 
 
