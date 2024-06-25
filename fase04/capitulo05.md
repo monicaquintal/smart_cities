@@ -975,6 +975,310 @@ namespace Fiap.Web.Alunos.Data.Contexts
 <h2>7. MANIPULANDO DADOS</h2>
 </div>
 
+- como podemos inserir, alterar ou consulta informações na base de dados que acabamos de estruturar?
+
+## 7.1 `DBSet<T>`
+
+- faz parte do namespace `Microsoft.EntityFrameworkCore`.
+- desempenha papel fundamental na interação entre o código da aplicação e o banco de dados, servindo como ponto central para as operações de CRUD (Criar, Ler, Atualizar, Deletar) nas entidades mapeadas.
+
+### 7.1.1 Características Principais do `DbSet<T>`
+- ***Consulta de Dados***:
+  - o `DbSet<T>` suporta operações de consulta LINQ, permitindo que desenvolvedores elaborem consultas de forma expressiva e em alto nível. 
+  - as consultas são traduzidas pelo EF Core para SQL, facilitando operações como filtragem, ordenação, agrupamento e junção de dados.
+- ***Rastreamento de Entidades***:
+  - por padrão, quando uma entidade é obtida por meio de um `DbSet`, o EF Core rastreia suas alterações. 
+  - significa que, ao executar o método `SaveChanges()` no contexto, o EF Core gera e executa comandos SQL para persistir qualquer alteração feita nas entidades desde o momento em que foram carregadas.
+- ***Operações CRUD***:
+  - além das consultas, o `DbSet<T>` facilita a criação, atualização e exclusão de entidades. 
+  - métodos como `Add()`, `Remove()`, e `Update()` permitem manipular as entidades na coleção. 
+  - essas alterações são sincronizadas com o banco de dados quando o contexto é salvo.
+- ***Carregamento de Relacionamentos***:
+  - `DbSet<T>` também suporta operações para carregar explicitamente relacionamentos entre entidades. 
+  - inclui técnicas como carregamento preguiçoso (lazy loading), carregamento antecipado (eager loading) e carregamento explícito (explicit loading). 
+  - esses mecanismos são essenciais para controlar como e quando os dados relacionados são carregados do banco de dados, otimizando tanto o desempenho quanto a utilização de recursos.
+
+### 7.1.2 Funcionalidades Avançadas do `DbSet<T>`
+- ***AsNoTracking***: 
+  - utilize o método `AsNoTracking()` para realizar consultas quando não necessita de rastreamento de entidades.
+  - pode melhorar significativamente a performance das operações de leitura, pois o EF Core não precisa manter o estado das entidades retornadas.
+  - é particularmente útil em cenários de leitura onde os dados não serão modificados.
+- ***Global Query Filters***: 
+  - os filtros globais de consulta permitem que você defina condições que são automaticamente aplicadas a todas as consultas realizadas para esse conjunto de entidades.
+  - é útil para lógicas como soft delete, onde entidades marcadas como excluídas não são retornadas nas consultas padrão.
+- ***HasQueryFilter***: 
+  - pode ser usado no `OnModelCreating` para aplicar filtros globais. 
+  - por exemplo, você pode ocultar entidades que estão marcadas como inativas ou excluídas sem precisar incluir essa filtragem em todas as consultas manualmente.
+
+## 7.2 Operações
+
+- antes de implementar as operações, é importante entender o ciclo de vida de uma entidade no EF, o que facilitará a manipulação adequada das operações no banco de dados.
+- no Entity Framework, ***uma entidade pode estar em um dos cinco estados***:
+  - `Detached`: A entidade não está vinculada ao contexto, ou seja, não será persistida, alterada ou removida do banco de dados.
+  - `Unchanged`: A entidade está vinculada ao contexto, mas não sofreu nenhuma alteração. Este é o estado padrão de qualquer entidade recuperada do banco de dados.
+  - `Added`: A entidade foi marcada dentro do contexto para ser adicionada ao banco de dados.
+  - `Modified`: A entidade teve alterações e o contexto precisa atuar para persistir essas modificações no banco de dados.
+  - `Deleted`: A entidade foi marcada para ser removida pelo contexto.
+
+<div align="center">
+<img src="./images/estado-entidades-ef.png" width="60%"><br>
+<em>Estado das entidades do EF.</em><br>
+</div>
+
+- no projeto Fiap.Web.Alunos, utilizamos o `ClienteController` para simular o acesso aos dados. 
+- essa simulação será transformada em implementações reais dos métodos, aproveitando os recursos do Entity Framework. 
+- com isso, substituiremos os comandos 'mocks' por funcionalidades ativas, trazendo vida ao projeto.
+
+### 7.2.1 Integrar o DbContext
+- o primeiro passo é injetar ou integrar nossa classe de contexto DatabaseContext no construtor da classe ClienteController. 
+- isso permite que o controller acesse o banco de dados através do EF.
+
+~~~csharp
+/// Código suprimido 
+private readonly DatabaseContext _context;
+public ClienteController(DatabaseContext context)
+{
+    _context = context;
+}
+/// Código suprimido
+~~~ 
+
+- IMPORTANTE: antes de prosseguir com a implementação dos métodos no `ClienteController`, é essencial que se insira alguns registros na tabela de representantes. 
+  - como a tabela de clientes está relacionada com a de representantes, a ausência de registros impede a manipulação efetiva de dados dos clientes. 
+  - alternativamente, você pode implementar a funcionalidade de representantes diretamente associada ao Entity Framework. 
+  - script SQL necessário para essa inserção inicial:
+
+~~~sql
+INSERT INTO RMXXXX."Representantes" VALUES (1,'João da Silva','26924456101');
+INSERT INTO RMXXXX."Representantes" VALUES (2,'Maria Alencar','26924456102');
+INSERT INTO RMXXXX."Representantes" VALUES (3,'Alcides Souza','26924456103');
+COMMIT;
+~~~
+
+### 7.2.2 Add
+- o trecho abaixo ilustra o processo de inserção de dados utilizando o Entity Framework. 
+- observe o método Create do controller, utilizamos o método `Add` para adicionar os dados a partir de um objeto modelo, e finalizamos com o `SaveChanges` para efetivar a gravação no banco de dados.
+
+~~~csharp
+[HttpPost]
+public IActionResult Create(ClienteModel clienteModel)
+{
+    _context.Clientes.Add(clienteModel);
+    _context.SaveChanges();
+    TempData["mensagemSucesso"] = $"O cliente {clienteModel.Nome} foi cadastrado com sucesso";
+    return RedirectToAction(nameof(Index));
+}
+~~~
+
+## 7.3 Uptade - Modified
+
+- esta operação requer a alteração do estado do registro para 'Modified' antes de efetivar a transação.
+
+~~~csharp
+[HttpPost]
+public IActionResult Edit(ClienteModel clienteModel)
+{
+    _context.Update(clienteModel);
+    _context.SaveChanges();
+    TempData["mensagemSucesso"] = $"Os dados do cliente {clienteModel.Nome} foram alterados com sucesso";
+    return RedirectToAction(nameof(Index));
+}
+~~~
+
+## 7.4 Delete
+
+- semelhante ao processo de atualização, o método de exclusão também requer a alteração do estado do objeto para efetivar a mudança. 
+- antes de proceder com a exclusão, é crucial primeiro localizar o objeto específico na base de dados, realizado através de uma consulta que recupera a instância da classe model correspondente, utilizando o ID desejado. 
+- uma vez obtido o objeto, é necessário criar uma instância dessa classe model e associar o ID que se deseja excluir. 
+- em seguida, o estado do objeto é alterado para permitir a exclusão.
+
+~~~csharp
+[HttpGet]
+public IActionResult Delete(int id)
+{
+    var cliente = _context.Clientes.Find(id);
+    if (cliente != null)
+    {
+        _context.Clientes.Remove(cliente);
+        _context.SaveChanges();
+        TempData["mensagemSucesso"] = $"Os dados do cliente {cliente.Nome} foram removidos com sucesso";
+    }
+    else
+    {
+        TempData["mensagemSucesso"] = "OPS !!! Cliente inexistente.";
+    }
+    return RedirectToAction(nameof(Index));
+}
+~~~
+
+## 7.5 List 
+
+- a penúltima operação básica no nosso projeto envolve a recuperação de todos os registros de tipos de produto, substituindo o tradicional comando `SELECT *` por um método simplificado do Entity Framework. 
+- para realizar essa operação de listagem, é essencial importar o namespace `System.Linq`, que oferece recursos para manipular coleções de dados de forma eficiente e expressiva.
+
+~~~csharp
+public IActionResult Index()
+{
+    // O método Include será explicado posteriomente
+    var clientes = _context.Clientes.Include(c => c.Representante).ToList();
+    return View(clientes);
+}
+~~~
+
+## 7.6 Find 
+
+- o método `Find` é utilizado para recuperar os dados de um registro específico através do seu Id.
+
+~~~csharp
+// Anotação de uso do Verb HTTP Get
+[HttpGet]
+public IActionResult Edit(int id)
+{
+    var cliente = _context.Clientes.Find(id);
+    if (cliente == null)
+    {
+        return NotFound();
+    } else {  
+        ViewBag.Representantes = 
+            new SelectList(_context.Representantes.ToList(), 
+                            "RepresentanteId", 
+                            "NomeRepresentante", 
+                            cliente.RepresentanteId);
+        return View(cliente);
+    }
+}
+~~~
+
+- você pode estar se perguntando por que não utilizamos o método Find na ação Details do controller: a questão é que, ao usar apenas o Find, encontramos uma limitação ao tentar exibir o nome do representante na tela, pois esse método não carrega automaticamente as entidades relacionadas. Para incluir os dados do representante associado ao cliente na busca, você deve modificar o método para usar o `Include` ao invés de `Find`, pois `Find` só recupera a entidade principal sem carregar suas relações. O `Include` é parte do Entity Framework Core e permite a carga antecipada (eager loading) das entidades relacionadas. 
+- aqui está como você pode ajustar o método `Detail` para incluir os dados do representante:
+
+~~~csharp
+// Anotação de uso do Verb HTTP Get
+[HttpGet]
+public IActionResult Detail(int id)
+{
+    // Usando o método Include para carregar o representante associado
+    var cliente = _context.Clientes
+                    .Include(c => c.Representante) // Carrega o representante junto com o cliente
+                    .FirstOrDefault(c => c.ClienteId == id); // Encontra o cliente pelo id
+    if (cliente == null)
+    {
+        return NotFound(); // Retorna um erro 404 se o cliente não for encontrado
+    }
+    else
+    {
+        return View(cliente); // Retorna a view com os dados do cliente e seu representante
+    }
+}
+~~~
+
+- nesta versão modificada, o método `FirstOrDefault` é usado em conjunto com `Include` para carregar o cliente e seu representante com baseno ID fornecido. 
+- versão final desta implementação:
+
+~~~csharp
+using Fiap.Web.Alunos.Data.Contexts;
+using Fiap.Web.Alunos.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore; 
+namespace Fiap.Web.Alunos.Controllers
+{
+    public class ClienteController : Controller
+    {
+        private readonly DatabaseContext _context;
+        public ClienteController(DatabaseContext context)
+        {
+            _context = context;
+        }
+        public IActionResult Index()
+        {
+            // O método Include será explicado posteriomente
+            var clientes = _context.Clientes.Include(c => c.Representante).ToList();
+            return View(clientes);
+        }
+        [HttpGet]
+        public IActionResult Create()
+        {
+            ViewBag.Representantes = 
+                new SelectList(_context.Representantes.ToList()
+                                , "RepresentanteId"
+                                , "NomeRepresentante");
+            return View();
+        }
+        // Anotação de uso do Verb HTTP Post
+        [HttpPost]
+        public IActionResult Create(ClienteModel clienteModel)
+        {
+            _context.Clientes.Add(clienteModel);
+            _context.SaveChanges();
+            TempData["mensagemSucesso"] = $"O cliente {clienteModel.Nome} foi cadastrado com sucesso";
+            return RedirectToAction(nameof(Index));
+        }
+        // Anotação de uso do Verb HTTP Get
+        [HttpGet]
+        public IActionResult Detail(int id)
+        {
+            // Usando o método Include para carregar o representante associado
+            var cliente = _context.Clientes
+                            .Include(c => c.Representante) // Carrega o representante junto com o cliente
+                            .FirstOrDefault(c => c.ClienteId == id); // Encontra o cliente pelo id
+            if (cliente == null)
+            {
+                return NotFound(); // Retorna um erro 404 se o cliente não for encontrado
+            }
+            else
+            {
+                return View(cliente); // Retorna a view com os dados do cliente e seu representante
+            }
+        }
+        // Anotação de uso do Verb HTTP Get
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            var cliente = _context.Clientes.Find(id);
+            if (cliente == null)
+            {
+                return NotFound();
+            } else {  
+                ViewBag.Representantes = 
+                    new SelectList(_context.Representantes.ToList(), 
+                                    "RepresentanteId", 
+                                    "NomeRepresentante", 
+                                    cliente.RepresentanteId);
+                return View(cliente);
+            }
+        }
+        [HttpPost]
+        public IActionResult Edit(ClienteModel clienteModel)
+        {
+            _context.Update(clienteModel);
+            _context.SaveChanges();
+            TempData["mensagemSucesso"] = $"Os dados do cliente {clienteModel.Nome} foram alterados com sucesso";
+            return RedirectToAction(nameof(Index));
+        }
+        [HttpGet]
+        public IActionResult Delete(int id)
+        {
+            var cliente = _context.Clientes.Find(id);
+            if (cliente != null)
+            {
+                _context.Clientes.Remove(cliente);
+                _context.SaveChanges();
+                TempData["mensagemSucesso"] = $"Os dados do cliente {cliente.Nome} foram removidos com sucesso";
+            }
+            else
+            {
+                TempData["mensagemSucesso"] = "OPS !!! Cliente inexistente.";
+            }
+            return RedirectToAction(nameof(Index));
+        }
+    }
+}
+~~~
+
+> [Link da solução implementada até o momento para download no GitHub](https://github.com/FIAP/ON_TDS_DOTNET_EF/tree/12-manipulando-dados).
+
+p; 72
 
 
 
