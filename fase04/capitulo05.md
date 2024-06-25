@@ -1278,20 +1278,183 @@ namespace Fiap.Web.Alunos.Controllers
 
 > [Link da solução implementada até o momento para download no GitHub](https://github.com/FIAP/ON_TDS_DOTNET_EF/tree/12-manipulando-dados).
 
-p; 72
+<div align="center">
+<h2>8. CARREGAMENTO DE DADOS</h2>
+</div>
 
+- o Entity Framework Core oferece diferentes técnicas de carregamento de dados relacionados, e cada uma pode ser escolhida dependendo do cenário específico e das necessidades de desempenho. 
 
+## 8.1 Carregamento Preguiçoso (Lazy Loading)
 
+- técnica onde as entidades relacionadas são carregadas automaticamente da base de dados apenas quando você acessa a propriedade pela primeira vez.
+- para habilitar o carregamento preguiçoso no EF Core, você precisa instalar o pacote NuGet `Microsoft.EntityFrameworkCore.Proxies` e habilitar o uso de proxies no contexto.
 
+~~~csharp
+public class ApplicationContext : DbContext
+{
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseLazyLoadingProxies().UseOracle(connectionString);
+    }
+}
+public class Blog{
+    public int BlogId { get; set; }
+    public string Name { get; set; }
+    public virtual List<Post> Posts { get; set; }
+}
+~~~
 
+- quando você acessa `blog.Posts`, o EF Core carrega os posts relacionados automaticamente.
 
+## 8.2 Carregamento Antecipado (Eager Loading)
 
+- técnica onde você especifica explicitamente quais entidades relacionadas devem ser carregadas juntamente com as entidades principais. 
+- é feito usando o método `Include()`.
 
+~~~csharp
+...
+using (var context = new ApplicationContext())
+{
+    var blogs = context.Blogs
+                       .Include(b => b.Posts)
+                       .ToList();
+}
+...
+~~~
 
+- ao carregar os blogs, o EF Core também carrega todos os posts associados a cada blog em uma única consulta.
 
+## 8.3 Carregamento Explícito (Explicit Loading)
 
+- permite que você carregue explicitamente uma entidade relacionada em um momento de sua escolha, não automaticamente ao acessar a propriedade.
 
+~~~csharp
+…
+using (var context = new ApplicationContext())
+{
+    var blog = context.Blogs
+                      .Single(b => b.BlogId == 1);
+    context.Entry(blog)
+           .Collection(b => b.Posts)
+           .Load();
+}
+...
+~~~
 
+- neste exemplo, o blog é carregado primeiro e, em um momento posterior, os posts relacionados são carregados explicitamente.
+
+> Cada uma dessas técnicas tem suas vantagens e desvantagens, e a escolha depende de fatores como: estrutura da aplicação, modelo de dados e necessidades de desempenho. Carregar dados desnecessários pode afetar o desempenho, enquanto carregar dados muito tarde pode causar atrasos devido a várias idas e vindas ao banco de dados.
+
+## 8.4 Operações Avançadas
+
+- exploraremos o uso avançado de consultas com o Entity Framework para efetuar operações complexas de busca e manipulação de dados. 
+- abordaremos como implementar filtros por range de valores, combinar buscas textuais com outros critérios, e aplicar ordenações e paginações. 
+
+### 8.4.1 Busca textual
+- para realizar uma busca textual na entidade ClienteModel por exemplo, você pode utilizar o método Where com o operador Contains.
+
+~~~csharp
+var clientes = _context.Clientes
+                        .Where(c => c.Nome.Contains("Nome do Cliente"))
+                        .ToList();
+~~~
+
+### 8.4.2 Busca textual em entidades relacionadas
+- buscar clientes baseado no nome do representante associado.
+
+~~~csharp
+var clientes = _context.Clientes
+                        .Include(c => c.Representante)
+                        .Where(c => c.Representante.NomeRepresentante.Contains("nome do representante"))
+                        .ToList();
+~~~
+
+### 8.4.3 Filtros e Ordenação
+- listar produtos ordenados por preço de forma descendente e filtrados por uma descrição específica.
+
+~~~csharp
+var produtosFiltrados = _context.Produtos
+                                 .Where(p => p.Descricao.Contains("palavra chave"))
+                                 .OrderByDescending(p => p.Preco)
+                                 .ToList();
+~~~
+
+### 8.4.4 Relacionamento muitos-para-muitos
+- para listar pedidos e os produtos associados a cada um, aproveitando o relacionamento muitos-para-muitos.
+
+~~~csharp
+var pedidos = _context.Pedidos
+                      .Include(p => p.PedidoProdutos)
+                      .ThenInclude(pp => pp.Produto)
+                      .ToList();
+~~~
+
+- o código busca recuperar todos os `Pedidos` do banco de dados, incluindo os detalhes dos produtos associados a cada pedido, utilizando os métodos `Include` e `ThenInclude` do Entity Framework para carregar relacionamentos de entidades de forma eficiente. 
+- o uso desses métodos é fundamental em aplicações que necessitam acessar informações de entidades relacionadas, prevenindo o problema de "N+1 consultas", onde múltiplas consultas sequenciais inflam o número total de operações no banco. 
+- carregando todos os dados necessários numa única consulta, o Entity Framework aprimora significativamente o desempenho da aplicação.
+
+### 8.4.5 Filtro com intervalos
+
+- listar produtos em um determinado intervalo de preços.
+- é possível combinar Where com condições para definir esse intervalo.
+
+~~~csharp
+var produtosEmFaixaDePreco = _context.Produtos
+    .Where(p => p.Preco >= 100 &amp;&amp; p.Preco <= 500)
+    .ToList();
+~~~
+
+### 8.4.6 Busca textual combinada com intervalos
+- para buscar produtos por nome e que também estejam dentro de um determinado intervalo de preços.
+
+~~~csharp
+var produtosFiltrados = _context.Produtos
+    .Where(p => p.Nome.Contains("busca") &amp;&amp; p.Preco >= 50 &amp;&amp; p.Preco <= 200)
+    .ToList();
+~~~
+
+### 8.4.7 Busca textual combinada com intervalos e outros critérios
+- buscar clientes pelo nome, que tenham nascido em um determinado período e cujo representante tenha um nome específico. 
+
+~~~csharp
+var clientesFiltrados = _context.Clientes
+    .Include(c => c.Representante)
+    .Where(c => c.Nome.Contains("João") &amp;&amp;
+                c.DataNascimento >= new DateTime(1980, 1, 1) &amp;&amp;
+                c.DataNascimento <= new DateTime(1990, 12, 31) &amp;&amp;
+                c.Representante.NomeRepresentante.Contains("Silva"))
+     .ToList();
+~~~
+
+### 8.4.8 Paginação e Ordenação
+- essa consulta busca, ordena e aplica paginação em produtos, que é útil em interfaces que apresentam grandes volumes de dados.
+
+~~~csharp
+int pageSize = 10; // número de itens por página
+int pageNumber = 2; // página atual
+var paginatedProducts = _context.Produtos
+    .Where(p => p.Preco >= 20 &amp;&amp; p.Preco <= 300)
+    .OrderBy(p => p.Nome)
+    .Skip((pageNumber - 1) * pageSize)
+    .Take(pageSize)
+    .ToList();
+~~~
+
+- inicialmente, define-se o tamanho da página (`pageSize`) em 10 itens e a página atual (`pageNumber`) como 2. 
+- a consulta ao banco de dados filtra os produtos cujo preço está entre 20 e 300.
+- em seguida, os produtos são ordenados alfabeticamente pelo nome. 
+- para aplicar a paginação, o método `Skip` é usado para descartar os registros das páginas anteriores, pulando os primeiros 10 itens (resultado da operação `(pageNumber -1) * pageSize`), e o método `Take` limita a consulta aos próximos 10 itens, correspondendo ao tamanho da página definido. 
+- o resultado é uma lista dos produtos da segunda página, facilitando a manipulação de grandes volumes de dados de forma eficiente e escalável.
+
+---
+
+## FAST TEST
+
+### 1. Qual é a principal função do Entity Framework (EF) no desenvolvimento de aplicações .NET?
+> Facilitar a manipulação e consulta de dados em um banco de dados de maneira orientada a objetos.
+
+### 2. Em um ambiente Entity Framework (EF) no .NET, qual é a principal função da classe `DbContext`?
+> Facilitar o mapeamento de objetos de domínio para um banco de dados relacional e gerenciar consultas e operações de salvamento.
 
 --- 
 
