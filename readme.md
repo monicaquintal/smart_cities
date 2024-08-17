@@ -120,8 +120,8 @@
 - [Cap 3 - Programando em C#](./fase04/capitulo03.md)
 - [Cap 4 - Desenvolvimento Web com ASP.NET](./fase04/capitulo04.md)
 - [Cap 5 - Persistência de Dados](./fase04/capitulo05.md)
-- [Cap 6]()
-- [Cap 7]()
+- [Cap 6 - Padrões e Práticas Avançadas](./fase04/capitulo06.md)
+- [Cap 7 - APIs e Integração de Sistemas](./fase04/capitulo07.md)
 
 </details>
 
@@ -129,6 +129,37 @@
 <summary>ENTREPRENEURSHIP PROGRAM</summary>
 
 - [Cap 8 - Prototipação](./fase04/capitulo08.md)
+
+</details>
+<br>
+
+<h2>🎲 FASE 5: DATA UNIVERSE (de 05/08 até 10/09)</h2>
+
+<details>
+<summary>MASTERING RELATIONAL AND NON-RELATIONAL DATABASE</summary>
+
+- [Capítulo 01: A Evolução do Universo de Dados](./fase05/capitulo01.md)
+- [Capítulo 02: NOT ONLY SQL](./fase05/capitulo02.md)
+- [Capítulo 03: Conhecendo o MongoDB](./fase05/capitulo03.md)
+- [Capítulo 04: ]()
+- [Capítulo 05: ]()
+- [Capítulo 06: ]()
+
+</details>
+
+<details>
+<summary>DevOps TOOLS & CLOUD COMPUTING</summary>
+
+- [Capítulo 07: ]()
+- [Capítulo 08: ]()
+
+</details>
+
+<details>
+<summary>ENTERPRENEURSHIP PROGRAM</summary>
+
+- [Capítulo 09: ]()
+- [Capítulo 10: ]()
 
 </details>
 <br>
