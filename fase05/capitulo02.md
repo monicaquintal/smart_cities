@@ -40,7 +40,7 @@
 - de maneira geral, `bancos de dados não relacionais foram desenvolvidos para executar operações em cluster`, decisão estratégica afeta o modelo de dados e a forma como trabalham com a consistência. 
 	- `bancos de dados relacionais` trabalham com ***escalabilidade vertical***, ou seja, trocamos de servidor, caso precisemos de mais poder de processamento. 
 	- `bancos de dados não relacionais` trabalham com ***escalabilidade horizontal***, ou seja, aumentamos o número de máquinas disponíveis caso precisemos de mais poder de processamento.
-- uma característica marcante em bancos de dados não relacionais é que eles `não possuem um esquema`, (***schema free ou schemaless***),  indicando que não existe uma estrutura fixa.
+- uma característica marcante em bancos de dados não relacionais é que eles `não possuem um esquema`, (***schema free ou schemaless***), indicando que não existe uma estrutura fixa.
 	- isso permite que campos possam ser adicionados livremente a um registro do banco de dados, sem que seja necessário efetuar uma alteração prévia na estrutura do registro, podendo-se lidar com campos personalizados e dados não uniformes.
 	- em bancos de dados relacionais, é importante distinguir entre a descrição do banco de dados e o próprio banco de dados. A descrição é o chamado esquema de banco de dados, em inglês, schema database, especificado durante o projeto de banco de dados e não se espera que mude com frequência.
 
