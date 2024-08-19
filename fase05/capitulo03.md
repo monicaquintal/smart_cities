@@ -94,12 +94,27 @@
   - `camada do Enterprise Server`: tem recursos como engine para gravação em memória, auditoria, autenticação e criptografia. 
 
 - os ***administradores*** podem usar o log de auditoria nativo do MongoDB para registrar todas as atividades e alterações realizadas no banco de dados.
-- a ***autenticação***é usada para simplificar o controle de acesso ao banco de dados, incluindo LDAP, Windows Active Directory, Kerberos, certificados x.509 e AWS IAM. 
+- a ***autenticação*** é usada para simplificar o controle de acesso ao banco de dados, incluindo LDAP, Windows Active Directory, Kerberos, certificados x.509 e AWS IAM. 
 - a ***criptografia dos dados*** está presente no MongoDB enquanto os dados estiverem circulando pela rede, no uso do banco de dados e nos dados armazenados, seja no disco ou em backups.
 
-- uma ***camada à esquerda*** destaca `suporte 24x7 ` composta por plataforma para certificações, patches emergenciais, trocas de experiências entre clientes e treinamentos.
+- uma ***camada à esquerda*** destaca `suporte 24x7` composta por plataforma para certificações, patches emergenciais, trocas de experiências entre clientes e treinamentos.
 - uma ***camada à direita*** para `licenciamento comercial` com aspectos relacionados a indenizações, limitação de responsabilidades e garantias.
 
+- o MongoDB é `altamente escalável` e `não possui um ponto único de falha`. 
+- é `composto por um nó árbitro (heartbeat)`, `um nó primário (primary ou master)` e `muitos nós secudários (secondary ou slaves)`, ou seja, ***replicação master-slave***. 
+  - os nós secundários são cópias do nó primário e usados para leituras ou backups.
+
+- o MongoDB usa arquivos mapeados de memória para gerenciamento de arquivos, portanto, nesse componente, ele ***depende muito do lado do sistema operacional*** - vamos ver isso com base no sistema operacional Linux. 
+- o MongoDB mapeia arquivos na memória usando a `chamada padrão mmap da glibc`.
+
+### 1.4.1 Como funciona?
+
+- no início, o MongoDB mapeia todos os seus arquivos de armazenamento de dados na memória. 
+  - RAM não é usado de todo, esse processo só reserva o espaço de endereço, o que é refletido como uso de memória virtual pelo processo mongod.
+- eles podem ser encontrados no topo (VIRT) ou no monitor MongoDB (Memory Virt). 
+  - basicamente, eles refletem o tamanho dos dados + índices. 
+  - o uso de memória Res / RSS não reflete nada de relevante.
+- então, de certo modo, todos os dados e índices estão na memória, divididos por pequenas páginas de memória. O MongoDB possui ponteiros para cada página, mas eles ainda não estão na RAM.
 
 
 
