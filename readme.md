@@ -141,7 +141,7 @@
 - [Capítulo 01: A Evolução do Universo de Dados](./fase05/capitulo01.md)
 - [Capítulo 02: NOT ONLY SQL](./fase05/capitulo02.md)
 - [Capítulo 03: Conhecendo o MongoDB](./fase05/capitulo03.md)
-- [Capítulo 04: ]()
+- [Capítulo 04: MongoDB na Prática](./fase05/capitulo04.md)
 - [Capítulo 05: ]()
 - [Capítulo 06: ]()
 
