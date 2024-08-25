@@ -583,6 +583,189 @@ db.grade.findOne();
 
 ### 2.2.1 Atributo _id
 
+- o atributo _id tem o comportamento similar a uma chave primária em bancos de dados relacional. 
+- ***cada documento possui seu próprio _id e o seu número é único***. 
+- um índice único (unique index) é criado para o atributo _id quando a coleção é criada.
+- ***sempre é o primeiro campo de um documento***, e ***se não for informado durante a inclusão de dados, um tipo de dados ObjectId do BSON com 12 bytes será atribuído a ele***. 
+- se o valor do _id for informado e ele não for o primeiro campo, o servidor desloca o atributo para a primeira posição.
+
+- normalmente, a `estrutura do _id` possui a seguinte composição:
+  - quatro primeiros bytes indicam o timestamp da criação do objeto.
+  - 3 bytes identificam a máquina.
+  - 2 bytes mostram o identificador (id) do processo.
+  - 3 bytes contador, iniciado com um valor aleatório.
+
+- ordenar os documentos pelo _id é o equivalente a ordená-los pela data de criação. 
+- podemos usar o `método getTimestamp()` para verificar a data de criação de um objeto. 
+- exemplo de uso do método getTimestamp():
+
+~~~
+ObjectId("667b2c8bc3ae93d5a5c721b1").getTimestamp();
+~~~
+
+### 2.2.2 Pesquisa por igualdade
+- uma consulta vazia ({}) retorna todos os documentos de uma coleção. 
+  - não especificar uma consulta é o equivalente a uma consulta vazia. 
+  - isso quer dizer que o comando db.emp.find() é equivalente a db.emp.find({}).
+- listar todos os dados de uma coleção é útil, mas as vezes precisamos fazer consultas por igualdade.
+- para isso, basta usar o `método find() com uma chave-valor`. 
+- exemplo:
+
+~~~
+db.emp.find({Idade: 20});
+~~~
+
+- neste exemplo, serão listados todos os documentos cujo atributo Idade seja igual a 20. 
+- ***o método find() pode encadear vários métodos para melhorar a busca de documentos***. 
+  - por exemplo, podemos encadear o `método pretty` para formatar a saída de nossa consulta e deixá-la mais legível. 
+
+- o exemplo a seguir ilustra a ***saída formatada***.
+
+~~~
+db.emp.find({Idade: 19}).pretty;
+~~~
+
+### 2.2.3 Classificando a saída dos dados
+- vários outros métodos podem ser concatenados ao método find(), o `método sort()`, por exemplo, ***classifica a saída em ordem crescente ou decrescente***. 
+  - o `valor 1` no parâmetro indica que os dados serão classificados em ordem crescente.
+  - o `valor -1` no parâmetro indica que os dados serão classificados em ordem decrescente.
+
+- exemplos de utilização:
+
+~~~
+db.emp.find().sort({Nome:1});
+db.emp.find().sort({Idade:-1});
+db.emp.find().sort({Cargo:1, Idade:-1});
+~~~
+
+- no exemplo, o primeiro comando retorna todos os documentos da coleção emp classificados pelo nome, em ordem crescente; 
+- o segundo comando retorna todos os documentos da coleção classificados pela idade, em ordem decrescente; 
+- e o último comando retorna todos os documentos classificados pelo cargo, em ordem crescente, e pela idade, em ordem decrescente.
+
+### 2.2.4 Operadores de comparação
+- operadores de comparação retornam um valor booleano. 
+- comparam as duas expressões informadas nos argumentos e retornam o valor true ou false.
+
+- `$lt` (abreviação de less than): 
+  - verifica se um valor é menor que outro. 
+  - retorna true se o primeiro valor for menor que o segundo.
+
+~~~
+db.emp.find({Idade:{$lt: 22}});
+~~~
+
+- `$lte` (abreviação de less than or equal):
+  - analisa se um valor é menor ou igual a outro. 
+  - retorna true se o primeiro valor for menor ou igual ao segundo.
+
+~~~
+db.emp.find({Idade:{$lte: 22}});
+~~~
+
+- `$gt` (abreviação de greater than):
+  - avalia se um valor é maior que outro. 
+  - retorna true se o primeiro valor for maior que o segundo.
+
+~~~
+db.emp.find({Idade:{$gt: 22}});
+~~~
+
+- `$gte` (abreviação de greater than or equal):
+  - apura se um valor é maior ou igual a outro. 
+  - retorna true se o primeiro valor for maior ou igual ao segundo.
+
+~~~
+db.emp.find({Idade:{$gte: 22}});
+~~~
+
+- o quadro abaixo resume esses operadores e os exemplifica:
+
+<div align="center">
+
+| Operador | Significado          | Exemplo de Uso                     |
+|----------|----------------------|------------------------------------|
+| $lt      | Menor que            | db.emp.find({Idade:{$lt: 23}});    |
+| $lte     | Menor que ou igual a | db.emp.find({Idade:{$lte: 23}});   |
+| $gt      | Maior que            | db.emp.find({Idade:{$gt: 23}});    |
+| $gte     | Maior que ou igual a | db.emp.find({Idade:{$gte: 23}});   |
+
+
+</div>
+
+- o quadro abaixo compara o uso de comandos SQL dos bancos de dados relacionais e o MongoDB:
+
+<div align="center">
+
+| Exemplo em SQL                      | Exemplo em MongoDB                    |
+|-------------------------------------|---------------------------------------|
+| SELECT * FROM emp                   | db.emp.find()                         |
+| SELECT * FROM emp WHERE idade = 33  | db.emp.find({idade: 33})              |
+| SELECT * FROM emp WHERE idade > 33  | db.emp.find({idade: {$gt: 33}})       |
+| SELECT * FROM emp WHERE idade >= 33 | db.emp.find({idade: {$gte: 33}})      |
+| SELECT * FROM emp WHERE idade < 33  | db.emp.find({idade: {$lt: 33}})       |
+| SELECT * FROM emp WHERE idade <= 33 | db.emp.find({idade: {$lte: 33}})      |
+
+</div>
+
+### 2.2.5 Operadores lógicos
+
+- `$or`: retorna documentos pesquisados quando pelo menos uma das cláusulas de comparação for verdadeira.
+
+~~~
+db.emp.find({$or:[{Idade:{$gt:21}},{Salario:{$lt:12500}}]});
+~~~
+
+- `$and`: retorna documentos pesquisados quando todas as cláusulas de comparação forem verdadeiras.
+
+~~~
+db.emp.find({$and:[{Idade:{$gt:21}},{Salario:{$lt:12500}}]});
+ou
+db.emp.find({Idade: {$gt: 21},Salario:{$lt: 12500}});
+~~~
+
+- `$nor`: retorna documentos pesquisados que não satisfaçam as cláusulas de comparação. 
+
+~~~
+db.emp.find({$nor:[{Idade:{$gt:22}},{Salario:{$gt:12500}}]});
+~~~
+
+- `$ne`: retorna documentos pesquisados cujos valores sejam diferentes do valor informado. 
+
+~~~
+db.emp.find({Idade:{$ne:22}});
+~~~
+
+- `$not`: efetua uma operação NOT lógica. 
+
+~~~
+db.emp.find({Idade:{$not:{$gt:21}}});
+~~~
+
+<div align="center">
+
+| Operador | Significado | Exemplo de Uso                   |
+|---|---|---|
+| $or      | Ou lógico   | db.emp.find({$or:[{Idade:{$lt:21}}, {Salario:{$gt:12500}}]}); |
+| $and     | E lógico    | db.emp.find({Idade: {$lt: 21}, Salario: {$gt: 12500}});     |
+| $nor     | NOR lógico  | db.emp.find({$nor:[{Idade:{$lt:21}}, {Salario:{$gt:12500}}]}); |
+| $ne      | Diferente    | db.emp.find({Idade: {$ne:21}});                        |
+
+</div>
+
+- comparação de comandos SQL com MongoDB:
+
+<div align="center">
+
+| Exemplo em SQL                               | Exemplo em MongoDB                                     |
+|---|---|
+| SELECT * FROM clientes WHERE idade > 30       | db.clientes.find({ idade: { $gt: 30 } })              |
+| SELECT nome, sobrenome FROM funcionários     | db.funcionarios.find({}, { nome: 1, sobrenome: 1 }) |
+| SELECT COUNT(*) FROM pedidos                 | db.pedidos.countDocuments({})                         |
+| SELECT AVG(valor) FROM vendas                | db.vendas.aggregate([{ $avg: "$valor" }])           |
+| SELECT * FROM produtos WHERE categoria = 'Eletrônicos' | db.produtos.find({ categoria: 'Eletrônicos' })       |
+| SELECT * FROM clientes ORDER BY nome ASC      | db.clientes.find().sort({ nome: 1 })                |
+
+</div>
 
 
 
