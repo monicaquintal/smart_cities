@@ -767,15 +767,365 @@ db.emp.find({Idade:{$not:{$gt:21}}});
 
 </div>
 
+### 2.2.6 Operadores para tratamento de arrays
+
+- `$in`: retorna documentos nos quais o valor pesquisado esteja na lista de valores de um array.
+
+~~~
+db.emp.find({Dependentes:{$in:["Jhonny", "Clarinha"]}});
+~~~
+
+- `$nin`: retorna documentos nos quais o valor pesquisado não esteja na lista de valores de um array ou o campo pesquisado não exista no documento. 
+
+~~~
+db.emp.find({Dependentes:{$nin:["Rosa", "Rita"]}});
+~~~
+
+- `$all`: retorna documentos nos quais todos os valores pesquisados estejam na lista de valores de um array.
+
+~~~
+db.emp.find({Dependentes:{$all:["Gohan"]}});
+~~~
+
+- `$exists`: não específico para o uso em arrays, mas pode ser utilizado para complementar os operadores $in e $nin. Testa se um campo existe em um documento ou não. No exemplo, usamos o método count(), que conta o número de elementos retornados.
+
+~~~
+db.emp.find({Dependentes:{$exists: true}}).count()
+ou
+db.emp.find({Dependentes:{$exists: false}}).count()
+~~~
+
+<div align="center">
+
+| Operador | Exemplo de Uso                                        |
+|---|---|
+| $in      | db.emp.find({Dependentes: {$in:["Dora", "Pietra"]}}); |
+| $nin     | db.emp.find({Dependentes: {$nin:["Dora", "Pietra"]}}); |
+| $all     | db.emp.find({Dependentes: {$all:["Dora", "Hugo"]}});   |
+| $exists  | db.emp.find({Dependentes: {$exists:true, $nin:["Dora", "Pietra"]}}); |
+
+</div>
+
+### 2.2.7 Projeção
+- o uso do opcional de projeção permite indicar quais campos serão retornados pelo método find().
+
+~~~
+db.emp.find({Idade:20},{_id:0, Idade:0, Cargo:0});
+~~~
+
+- no exemplo, serão apontados todos os campos dos funcionários com idade igual a 20 anos, exceto os campos _id, Idade e Cargo.
+- o quadro abaixo compara o uso de comandos SQL dos bancos de dados relacional e o MongoDB.
+
+<div align="center">
+
+| Exemplo em SQL | Exemplo em MongoDB |
+|--------------------------|----------------|
+| SELECT * FROM emp | db.emp.find() |
+| SELECT Nome, Salario FROM emp WHERE Idade = 22 | db.emp.find({Idade:22},{_id:0, Idade:0, Cargo:0})      |
+| SELECT Nome, Salario FROM emp WHERE Idade = 22 | db.emp.find({Idade:22},{Nome:1, Salario:1})     |
+
+</div>
+
+### 2.2.8 Expressões regulares
+- em MongoDB, expressões regulares permitem pesquisar por padrões em campos texto. 
+- há duas formas para a sintaxe de expressões regulares.
+
+~~~
+{<campo>: { $regex: /padrão/, $options: '<opções>' } }
+{<campo>: { $regex: 'padrão', $options: '<opções>' } }
+{<campo>: { $regex: /padrão/<opções> } }
+Ou
+{ <campo>: /padrão/<opções> }
+~~~
+
+- em que:
+  - `Campo`: indica o campo onde será pesquisado o padrão.
+  - `Padrão`: mostra o padrão a ser pesquisado.
+  - `Opções`: aponta as opções a serem usadas com a expressão regular. Algumas das opções são:
+    - ***i***: indica case insensitive, isto é, o texto pode estar tanto em letras maiúsculas quanto em minúsculas.
+    - ***m***: usado em padrões que incluem âncoras, isto é, ^ para o início de um texto e $ para o final do texto.
+    - ***x***: utilizado para ignorar todos os espaços em branco no padrão.
+
+- alguns exemplos:
+
+~~~
+db.emp.find({Nome:{$regex:"^F"}});
+// Pesquisa por todos os nomes iniciados pela letra F maiúscula.
+~~~
+
+~~~
+db.emp.find({Nome:{$regex:"^f", $options: 'i'}});
+// Pesquisa pelos nomes iniciados pela letra F, 
+//independente se maiúscula ou minúscula.
+~~~
+
+~~~
+db.emp.find({Nome:{$regex:"i"}});
+// Pesquisa por todos os nomes que possuem a letra i, 
+// minúscula, em qualquer parte do nome.
+~~~
+
+~~~
+db.emp.find({Nome:{$regex:"i", $options: 'i'}});
+// Pesquisa por todos os nomes que possuem a letra i, 
+// independente se for maiúscula ou minúscula,
+// em qualquer parte do nome.
+~~~
+
+~~~
+db.emp.find({Nome:{$regex:"n$"}});
+// Pesquisa por todos os nomes terminados pela letra n minúscula.
+~~~
+
+<div align="center">
+
+Exemplo em SQL | Exemplo em MongoDB
+----------------|------------------
+SELECT * FROM emp WHERE nomeLIKE '%h%' | db.emp.fund({Nome: {regex:"h"}});
+
+</div>
+
+## 2.3 Alterando dados
+
+- o `método updateOne()` permite alterar um ou mais documentos em uma coleção. 
+- é possível alterar um ou mais campos de um documento ou, até mesmo, o documento inteiro. 
+- o método updateOne() altera apenas um documento por vez. 
+- sua sintaxe é:
+
+~~~
+db.coleção.updateOne(consulta, atualização, opções)
+~~~
+
+- em que:
+  - `Coleção`: indica o nome da coleção.
+  - `Consulta`: aponta quais serão os critérios para pesquisar o documento que será alterado.
+  - `Atualização`: mostra a modificação que será feita. Aqui precisamos adicionar o ***comando $set*** antes das alterações que serão realizadas. 
+  - `Opções`: apresenta quais são as opções para o comando. Entre as opções, estão:
+    - ***upsert***: opcional. Se definido como true, cria um novo documento caso nenhum documento atenda aos critérios de busca. O padrão é false.
+    - ***multi***: opcional. Se definido como true, atualiza todos os documentos que atendam aos critérios de busca. O padrão é false.
+
+- o método updateOne() pode alterar um documento inteiro. 
+- exemplo:
+
+~~~
+db.paises.find();
+db.paises.insertOne({_id:504,Nome:"Mauritânia",Capital: "Nouakchott"});
+db.paises.find();
+db.paises.updateOne({_id:504},{$set:{Pais:"Honduras", Capital:"Tegucigalpa"}});
+~~~
+
+- neste caso, o documento inteiro foi substituído. 
+- o método updateOne() tem ***operadores*** para tratar os campos individualmente:
+  - `$inc`: incrementa o valor de um campo pelo valor informado no operador.
+
+~~~
+db.emp.insert({Nome: "Ana", idade: 22});
+db.emp.find({Nome: "Ana"});
+db.emp.updateOne({Nome: "Ana"}, {$inc: { idade: 5}});
+db.emp.find({Nome: "Ana"});
+~~~
+
+  - `$set`: modifica o conteúdo de um campo específico. Caso o campo não exista, um novo campo será acrescido ao documento.
+
+~~~
+db.emp.updateOne({Nome: "Ana"}, {$set: { idade: 22}});
+db.emp.find({Nome: "Ana"});
+db.emp.updateOne({Nome:"Ana"}, {$set: {salario: 15000}});
+db.emp.find({Nome: "Ana"});
+~~~
+
+  - `$rename`: renomeia um campo.
+
+~~~
+db.emp.find({Nome: "Ana"});
+db.emp.updateOne({Nome:"Ana"},{$rename:{"salario":"Remuneracao"}});
+db.emp.find({Nome: "Ana"});
+~~~
+
+  - `$unset`: remove um campo específico de um documento.
+
+~~~
+db.emp.find({Nome: "Ana"});
+db.emp.updateOne({Nome:"Ana"},{$unset:{remuneracao:""}});
+db.emp.find({Nome: "Ana"});
+~~~
+
+<div align="center">
+
+| Exemplo em SQL | Exemplo em MongoDB |
+|--------------------------|-------------------------------------|
+| UPDATE emp SET Idade = Idade + 2 WHERE Nome = 'Ana' | db.emp.update({Nome: "Ana"}, {$inc: {Idade: 2}}, {multi: true}) |
+| UPDATE emp SET Idade = 33 WHERE Nome = 'Ana' | db.emp.update({Nome: "Ana"}, {$set: {Idade: 33}}, {multi: true}) |
+
+</div>
+
+## 2.4 Eliminando dados
+
+- o `método deleteMany()` elimina todos os documentos que atendam às condições de pesquisa especificadas.
+- sintaxe:
+
+~~~
+db.coleção.deleteMany(consulta);
+~~~
+
+- em que:
+  - ***Coleção***: mostra o nome da coleção.
+  - ***Consulta***: indica quais serão os critérios para pesquisar o documento que será removido. 
+  
+> Se todos os documentos forem eliminados, mesmo assim a coleção continuará existindo. Caso queira eliminar a coleção, use o `método drop();`!
+
+~~~
+db.apaga.insertOne({cod:7369,nome:"Maria",cargo:"DBA"});
+db.apaga.insertOne ({cod:7499,nome:"Rosa",cargo:"DBA"});
+db.apaga.insertOne({cod:7521,nome:"Ana",cargo:"DBA"});
+db.apaga.insertOne({cod:7566,nome:"Rita",cargo:"DBA"});
+db.apaga.find();
+db.apaga.deleteMany({cod:{$gt:7521}});
+db.apaga.find();
+db.apaga.deleteMany({cargo:"DBA"});
+db.apaga.find();
+show collections;
+db.apaga.drop();
+show collections;
+~~~
+
+<div align="center">
+<h2>3. CONSULTAS COM AGREGAÇÃO</h2>
+</div>
+
+- para fins analíticos, o MongoDB conta com um componente chamado `Aggregation Framework`. 
+- esse componente é responsável por consultas onde teremos transformações ou agregações dos dados, permitindo que cálculos sejam processados dentro do próprio ambiente do MongoDB. 
+- até o momento aprendemos como consultar os documentos utilizando filtros, agora poderemos retornar resultados que possibilitem alguma tomada de decisão sem termos que ler individualmente cada um dos documentos retornados em nossas consultas.
+
+## 3.1 Introdução ao Aggregation Framework
+
+- no MongoDB, há duas formas básicas de consultar dados: 
+  - através do comando find(), 
+  - e através do ***framework de agregação*** pelo `comando aggregate()`.
+- enquanto o comando find possibilita transformações simples como contagens e ordenação de documentos, o comando aggregate possibilita um novo leque de opções que são geralmente utilizadas para finalidades analíticas e construção de relatórios. 
+- ***o Aggregation Framework é definido por uma sequência de operações (Stages), que chamaremos de “Pipeline” seguindo o padrão da documentação do MongoDB***.
+
+## 3.2 Stages
+
+- há cerca de 40 estágios de agregação disponíveis, que nos permitem realizar uma série de transformações para diferentes finalidades. 
+- algumas características:
+  - um pipeline será iniciado com documentos.
+  - para cada estágio, os documentos entram, são trabalhados, e um ou mais documentos saem.
+  - alguns estágios podem aparecer mais de uma vez no mesmo pipeline.
+
+- a sintaxe de um pipeline pode se tornar volumosa, pois cada estágio é adicionado como um componente dentro de uma lista, que será o principal parâmetro do comando aggregate.
+
+~~~
+db.coleção.aggregate(pipeline, opções);
+~~~
+
+- em que:
+  - ***Coleção***: indica o nome da coleção.
+  - ***Pipeline***: lista com todos os estágios a serem executados. Podemos definir o pipeline como uma variável externa para facilitar a definição de cada estágio.
+  - ***Opções***: apresenta quais são as opções para o comando. Parâmetro opcional.
+
+- podemos focar em 3 estágios fundamentais do aggregation framework: `$match`, `$project` e `$group`. 
+- se os 3 forem utilizados, uma variável contendo a sequência de comandos seguiria um padrão semelhante ao exemplo:
+
+~~~
+pipeline = [
+        { $match : { … } },
+        { $project : { … } },
+        { $group : { … } }
+       ]
+~~~
+
+### 3.2.1 Match
+- o comando $match funciona como um filtro, onde reduzimos os documentos que utilizaremos no nosso pipeline de acordo com os critérios definidos. 
+- a sintaxe se assemelha bastante ao find, onde passamos uma consulta para realizar nosso filtro.
+
+~~~
+db.emp.aggregate([{$match: {Salario: {$gte: 12000}}}]);
+~~~
+
+### 3.2.2 Project
+- funciona como um SELECT se fizermos uma analogia ao SQL, onde reduzimos a quantidade de campos a serem retornados dos nossos documentos.
+- o campo _id precisa ser explicitamente removido caso não seja necessário, enquanto os demais podem ser apenas ignorados no comando.
+- para um exemplo onde precisamos trazer apenas Nome e Salário dos documentos na collection emp:
+
+~~~
+db.emp.aggregate([{$project: {_id: 0, Nome: 1, Salario: 1}}]);
+~~~
+
+### 3.2.3 Group
+- utilizado para operações com funções de agregação.
+- as funções mais comuns são: `$count`, `$max`, `$min`, `$avg` e `$sum`.
+- de forma semelhante ao SQL, definimos quais os campos de agregação e quais as funções que aplicaremos a eles. 
+- em um cenário onde precisaríamos calcular a média dos salários da collection emp:
+
+~~~
+db.emp.aggregate([{$group: {_id:null, SalarioMedio: {$avg: '$Salario'}}}]);
+~~~
+
+- no qual:
+  - _id: é um campo obrigatório, sendo um ou mais campos que trarão a granularidade da agregação. No caso queremos a média total dos documentos, por isso o valor Null.
+  - a função $avg recebe o campo Salário no formato ‘$Salario’.
+
+## 3.3 O pipeline completo
+
+- para encadearmos todos os estágios anteriores vamos organizar o código em uma variável e executar da seguinte forma:
+
+~~~
+pipeline = [
+  {$match: {Salario: {$gte: 12000}}},
+  {$project: {_id: 0, Nome: 1, Salario: 1}},
+  {$group: {_id:null, SalarioMedio: {$avg: '$Salario'}}}
+];
+
+db.emp.aggregate(pipeline);
+~~~
+
+## 3.4 Performance em consultas
+
+- boas práticas na hora de utilizarmos esse banco. 
+- a modelagem de dados é um tópico extremamente importante para a escalabilidade de um projeto utilizando MongoDB, principalmente visando a velocidade das consultas.
+- algumas técnicas e boas práticas podem ser utilizadas em paralelo para garantir performance:
+  - `Indexação`:
+    - para melhorar o desempenho das queries que seu aplicativo executa com frequência, crie índices nos campos comumente consultados.
+    - à medida o aplicativo cresce, monitore o uso do índice da implantação para garantir que os índices ainda estejam dando suporte a consultas relevantes.
+    - ao mesmo tempo, não mantenha índices que não são mais utilizados pois eles depreciam a performance do banco para serem mantidos. 
+    - utilize a visualização de cobertura de índices do Atlas para auxiliar na definição e gerenciamento dos índices da sua instancia de MongoDB.
+    - índices são simples de serem criados, a gestão deles que é o real desafio, garantindo que ainda estão eficientes e úteis no decorrer do tempo. 
+    - para criar um novo índice, podemos utilizar o comando ***createIndex***:
+
+~~~
+db.emp.createIndex({Nome: -1});
+~~~
+
+> Para visualizar todos os índices existentes em uma coleção, podemos executar o `comando getIndexes`:
+
+~~~
+db.emp.getIndexes();
+~~~
+
+> Perceba que criamos apenas um índice, mas o comando retornou dois. Isso se deve ao campo _id, que por si só já é um índice criado automaticamente em todas as coleções e, por padrão, deve ser mantido para garantir a performance correta para consultas com este campo. Como em nossa coleção emp sabemos que grande parte das consultas utilizam o nome do funcionário, adicionar o índice no campo Nome ajuda na performance conforme o volume de dados na coleção aumentar.
+
+- `$lookup`:
+  - MongoDB não oferece joins, mas o Lookup visa atender algumas demandas onde é necessário enriquecer um documento com mais dados do que os disponíveis. 
+  - não deve ser utilizado como uma funcionalidade padrão em nossas consultas pois reduz drasticamente a performance do banco. 
+  - é um recurso que deve ser utilizado como suporte para operações não planejadas, mas não parte do modelo de dados.
+  
+- `Regex`:
+  - evite o uso de expressões regulares que não diferenciam maiúsculas de minúsculas pois estas configurações podem ser feitas em nível de indexação e são muito mais rápidas.
+
+---
+
+## FAST TEST
+
+### 1. Qual comando é utilizado para obter informações sobre quais coleções existem em nosso banco, quais são os bancos de dados existentes no servidor e quais são os usuários do banco de dados corrente?
+> show.
+
+### 2. Em relação aos tipos de dados suportados pelo MongoDB, assinale a alternativa correta:
+> Code: tipo de dados utilizado para armazenar código JavaScript dentro do documento.
 
 
-
-
-
-
-
-
-
+### 3. Assinale a alternativa que completa corretamente a seguinte frase: "Em um banco MongoDB, um _____________ é o equivalente a uma tupla em uma tabela de um banco relacional. O _____________ é representado por um conjunto de pares de chave-valor".
+> documento / documento.
 
 --- 
 
