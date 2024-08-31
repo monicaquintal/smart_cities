@@ -143,14 +143,14 @@
 - [Capítulo 03: Conhecendo o MongoDB](./fase05/capitulo03.md)
 - [Capítulo 04: MongoDB na Prática](./fase05/capitulo04.md)
 - [Capítulo 05: Big Data](./fase05/capitulo05.md)
-- [Capítulo 06: ]()
+- [Capítulo 06: Business Intelligence com Tableau](./fase05/capitulo06.md)
 
 </details>
 
 <details>
 <summary>DevOps TOOLS & CLOUD COMPUTING</summary>
 
-- [Capítulo 07: ]()
+- [Capítulo 07: Cloud Computing](./fase05/capitulo07.md)
 - [Capítulo 08: ]()
 
 </details>
