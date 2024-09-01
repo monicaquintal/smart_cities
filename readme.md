@@ -151,7 +151,7 @@
 <summary>DevOps TOOLS & CLOUD COMPUTING</summary>
 
 - [Capítulo 07: Cloud Computing](./fase05/capitulo07.md)
-- [Capítulo 08: ]()
+- [Capítulo 08: Arquitetura e Aplicações Cloud](./fase05/capitulo08.md)
 
 </details>
 
