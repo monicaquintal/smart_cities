@@ -159,7 +159,7 @@
 <summary>ENTERPRENEURSHIP PROGRAM</summary>
 
 - [Capítulo 09: Startup - Validando a Solução](./fase05/capitulo09.md)
-- [Capítulo 10: ]()
+- [Capítulo 10: Startup - Viabilidade Financeira](./fase05/capitulo10.md)
 
 </details>
 <br>
