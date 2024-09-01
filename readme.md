@@ -158,7 +158,7 @@
 <details>
 <summary>ENTERPRENEURSHIP PROGRAM</summary>
 
-- [Capítulo 09: ]()
+- [Capítulo 09: Startup - Validando a Solução](./fase05/capitulo09.md)
 - [Capítulo 10: ]()
 
 </details>
