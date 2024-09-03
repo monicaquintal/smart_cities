@@ -132,4 +132,80 @@
 
 ---
 
+## QUIZ
+
+### 1. Sobre os bancos de dados não relacionais (NoSQL), são feitas as seguintes afirmações:
+- I – O modelo relacional não processa facilmente grandes volumes de dados distribuídos em clusters de servidores.
+- II – Os bancos de dados não relacionais trabalham com escalabilidade horizontal em vez de escalabilidade vertical.
+- III – Uma característica marcante em bancos de dados não relacionais é que eles não possuem um esquema, indicando que não existe uma estrutura fixa.
+Em relação às afirmações acima, assinale a alternativa correta:
+> Todas as afirmações estão corretas.
+
+### 2. Em relação às propriedades ACID, a frase "Assegura que, depois de uma transação ser executada com sucesso, o seu resultado será representado no banco de dados, mesmo na eventualidade de erros ou falhas de sistema”, refere-se à qual propriedade?
+> Durabilidade.
+
+### 3. A frase "Nos bancos NoSQL, os metadados são definidos com os comandos de inserção. Assim, as instâncias dos dados podem sofrer modificações nos seus metadados e nem por isso deixam de ser armazenadas no banco de dados", refere-se a qual característica dos bancos de dados NoSQL?
+> schemaless
+
+### 4. A frase "Pode ser comparada com as tabelas de um banco de dados relacional, mas sua estrutura é muito menos rígida do que em um banco de dados relacional, é um conjunto de documentos MongoDB", refere-se a:
+> Coleções.
+
+### 5. Assinale a alternativa que completa corretamente a seguinte frase: "Os documentos _____________ do MongoDB são schemaless e aceitam quase qualquer coisa que você quiser armazenar, sendo um mecanismo de persistência perfeito para uso com tecnologias que trabalham com _____________ nativamente, como JavaScript (e, consequentemente, Node.js)":
+> BSON / JSON
+
+### 6. A frase: "No MongoDB, quando temos muitos dados e estamos no limite do disco, podemos dividir esses dados entre várias máquinas e, assim, ter mais rendimento e maior capacidade de armazenamento em disco”, refere-se a:
+> sharding
+
+### 7. As quatro operações básicas em banco de dados são incluir dados (create), consultar dados (read), alterar dados (update) e apagar dados (delete); cujo acrônimo das quatro palavras em inglês (create, read, update e delete) forma a palavra CRUD. Neste contexto, a estrutura básica de um comando no banco de dados MongoDB é:
+> database.coleção.função()
+
+### 8. Em MongoDB, qual é o comando equivalente ao comando SQL: SELECT * FROM emp WHERE idade = 37
+> db.emp.find({idade: 37})
+
+### 9. Assinale a alternativa que completa corretamente a seguinte frase: "Recentemente, ocorreu um pico _____________ de dados gerados por sensores. Agora os sensores são instalados em um número cada vez maior de locais e objetos. Eles incluem câmeras de segurança, semáforos, carros inteligentes e eletrodomésticos”:
+> no volume
+
+### 10. Assinale a alternativa mais adequada: 
+> O V de volume para definição de Big Data está ligado a capacidades que excedem as tecnologias tradicionais.
+
+### 11. A frase "Dados são informações provenientes de uma variedade de fontes, como pessoas, fotos, texto, sensores e sites da Web", refere-se a qual característica do Big Data?
+> variedade
+
+### 12. Sobre o Tableau, são feitas as seguintes afirmações:
+- I – O Tableau possibilita a conexão com diversas fontes de dados, como arquivos de planilha ou texto.
+- II – O Tableau possibilita a conexão com diversas fontes de dados, como bancos de dados relacionais.
+- III – O Tableau possibilita a conexão com diversas fontes de dados, até mesmo com dados disponíveis na Web.
+Em relação às afirmações acima, assinale a alternativa correta:
+> Todas as afirmações estão corretas.
+
+### 13. Sobre o Tableau, são feitas as seguintes afirmações:
+- I – O Tableau Desktop pode ser instalado em ambiente Windows e Mac.
+- II – Para iniciarmos as análises dos dados, devemos selecionar nossa base de dados e conectá-la ao Tableau.
+- III – O próprio Tableau pode identificar os relacionamentos entre os dados de forma automática.
+Em relação às afirmações acima, assinale a alternativa correta:
+> Todas as afirmações estão corretas.
+
+### 14. Quais são os três principais tipos de virtualização existentes? 
+> Computacional, armazenamento e rede.
+
+### 15. A virtualização é uma técnica de abstrair recursos físicos, como computação, armazenamento e rede, e fazê-los parecer como se fossem recursos lógicos. Neste contexto, assinale a alternativa correta: 
+> A virtualização de armazenamento permite que vários dispositivos de armazenamento em pool apareçam como uma única entidade de armazenamento.
+
+### 16. A frase "Um modelo para permitir acesso conveniente e sob demanda à rede a um pool compartilhado de recursos de computação configuráveis, como redes, servidores, armazenamento, aplicativos e serviços; que podem ser rapidamente provisionados e liberados com o mínimo esforço de gerenciamento ou interação do provedor de serviços”, refere-se a:
+> cloud computing
+
+### 17. Qual modelo de serviço em nuvem é definido como "A capacidade fornecida ao consumidor de implantar na infraestrutura de nuvem aplicativos criados ou adquiridos por ele, criados usando linguagens de programação, bibliotecas, serviços e ferramentas suportados pelo provedor"?
+> Platform as a Service (PaaS)
+
+### 18. Considere o desenvolvimento de uma aplicação na qual deseja-se focar as etapas desenvolver, testar, implantar e gerenciar aplicativos. Nesta situação, qual tipo de serviço de nuvem é mais indicado?
+> Platform as a Service (PaaS)
+
+### 19. A frase "A capacidade fornecida ao consumidor de processamento, armazenamento, redes e outros recursos computacionais fundamentais onde ele é capaz de implantar e executar software arbitrário, que pode incluir sistemas operacionais e aplicativos”, refere-se a qual tipo de serviço de nuvem?
+> Infrastructure as a Service (IaaS)
+
+### 20. A frase "A capacidade fornecida ao consumidor de usar os aplicativos do provedor em execução em uma infraestrutura de nuvem. Os aplicativos são acessíveis a partir de vários dispositivos clientes por meio de uma interface thin-client, como um navegador Web, e-mail baseado na Web ou uma interface de programa", refere-se a qual tipo de serviço de nuvem?
+> Software as a Service (SaaS)
+
+---
+
 [Voltar ao início!](https://github.com/monicaquintal/smart_cities)
