@@ -163,3 +163,33 @@
 
 </details>
 <br>
+
+<h2>⚙️ FASE 6: DEVOPS (de 11/09 até 15/10)</h2>
+
+<details>
+<summary>DEVOPS TOOLS & CLOUD COMPUTING</summary>
+
+- [Capítulo 01: Navegando pelo Mundo DevOps](./fase06/capitulo01.md)
+- [Capítulo 02:]()
+- [Capítulo 03:]()
+- [Capítulo 04:]()
+- [Capítulo 05:]()
+- [Capítulo 06:]()
+
+</details>
+
+<details>
+<summary>COMPLIANCE, QUALITY ASSURANCE & TESTS</summary>
+
+- [Capítulo 07:]()
+- [Capítulo 08:]()
+
+</details>
+
+<details>
+<summary>ENTERPRENEURSHIP PROGRAM</summary>
+
+- [Capítulo 09:](./fase05/capitulo09.md)
+
+</details>
+<br>
