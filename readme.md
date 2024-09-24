@@ -170,7 +170,7 @@
 <summary>DEVOPS TOOLS & CLOUD COMPUTING</summary>
 
 - [Capítulo 01: Navegando pelo Mundo DevOps](./fase06/capitulo01.md)
-- [Capítulo 02:]()
+- [Capítulo 02: DevOps e sua Importância](./fase06/capitulo02.md)
 - [Capítulo 03:]()
 - [Capítulo 04:]()
 - [Capítulo 05:]()
