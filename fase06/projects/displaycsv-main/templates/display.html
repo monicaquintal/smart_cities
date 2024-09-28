@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Visualização dos dados</title>
+        <style>
+            .data {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            .data th, .data td {
+                border: 1px solid black;
+                padding: 8px;
+                text-align: left;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Conteudo do arquivo CSV</h1>
+        {% for table in tables %}
+            {{ table|safe }}
+        {% endfor %}
+        <br>
+        <a href="/">Enviar outro arquivo</a>
+    </body>
+</html>

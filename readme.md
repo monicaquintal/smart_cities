@@ -171,7 +171,7 @@
 
 - [Capítulo 01: Navegando pelo Mundo DevOps](./fase06/capitulo01.md)
 - [Capítulo 02: DevOps e sua Importância](./fase06/capitulo02.md)
-- [Capítulo 03:]()
+- [Capítulo 03: Deployment na Nuvem](./fase06/capitulo03.md)
 - [Capítulo 04:]()
 - [Capítulo 05:]()
 - [Capítulo 06:]()
