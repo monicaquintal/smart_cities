@@ -345,13 +345,101 @@ Azure Artifacts | Permite que as equipes compartilhem pacotes como o Maven, npm,
 - estes cards são inicialmente colocados na coluna Novo, indicando que os trabalhos associados ainda não foram iniciados. 
 - a movimentação destes cards para outras colunas reflete o progresso nas tarefas e ajuda a equipe a visualizar o estado atual do desenvolvimento.
 
+## 2.10 Atribuição de atividades
 
+- na gestão de projetos usando o Azure Board, cada card representa uma atividade específica que precisa ser realizada. 
+- estes cards são inicialmente colocados na coluna Novo, indicando que os trabalhos associados ainda não foram iniciados. 
+- a movimentação destes cards para outras colunas reflete o progresso nas tarefas e ajuda a equipe a visualizar o estado atual do desenvolvimento.
+- exemplo: card Tela Inicial, que precisa ser movido para a coluna Aprovado para indicar que a atividade passou pela revisão inicial e está pronta para ser executada; passos:
+	- a) `Movimentação do Card`: Selecione o card Tela Inicial e arraste-o para a coluna Aprovado. Isso altera o status do card para refletir que ele foi aprovado para progressão.
+	- b) `Atribuição de Responsabilidade`: Clique no card movido e insira os detalhes do usuário responsável pela execução da tarefa. Isso garante que cada membro da equipe saiba quem é responsável por cada parte do projeto.
+	- c) `Salvar Alterações`: Após atribuir o responsável, clique em Save and Close para finalizar a atualização do card.
 
+> IMPORTANTE: Para garantir que todas as atividades sejam progressivamente aprovadas e atribuídas, continue movendo outros cards para a coluna Aprovado e atribuindo-os aos membros responsáveis. Este processo não apenas organiza o fluxo de trabalho, mas também promove a transparência e a eficiência, pois cada membro da equipe pode visualizar claramente as expectativas e as responsabilidades atribuídas. Esta prática de gestão visual e atribuição detalhada ajuda a manter o projeto no caminho certo e assegura que todos os componentes necessários para a conclusão do projeto sejam adequadamente monitorados e executados.
 
+<div align="center">
+<h2>3. Integração com repositórios de código</h2>
+</div>
 
+- a integração dos cards no Azure Board com commits, pull requests e branches em repositórios de código como GitHub ou Azure Repos é uma prática que potencializa a rastreabilidade e a sincronização entre a gestão de projetos e o desenvolvimento de software. 
+- este processo permite uma conexão direta entre as atividades planejadas e as modificações no código, assegurando que todo o progresso seja claramente documentado e facilmente acessível.
+- inicialmente, vamos configurar um repositório que será usado ao longo do curso. Trata-se do repositório [simple-api-java](https://github.com/acnaweb/simple-api-java/), que é uma aplicação Java com uma API implementada em Spring Boot. 
+- esta aplicação acessa uma base de dados MySQL e tem um Dockerfile configurado. 
+- o objetivo do fork é permitir que você pratique as atividades no seu próprio ambiente.
 
+## 3.1 Criando um Fork do Repositório
 
+- navegue até o repositório https://github.com/acnaweb/simple-api-java/.
+- clique no botão Fork para criar uma cópia do repositório na sua conta GitHub.
+- na tela Create a new Fork, confirme a criação clicando em Create Fork.
+- verifique o repositório recém-criado na sua conta.
 
+## 3.2 Conectar o Azure Board ao GitHub
+
+- conectar o Azure Board ao GitHub é uma prática que aprimora a gestão e a visibilidade dos projetos de desenvolvimento de software, integrando a gestão de tarefas com o controle de versão e colaboração de código. 
+- esta conexão estabelece um vínculo direto entre as atividades planejadas no Azure Board e as alterações efetivas no código armazenadas nos repositórios do GitHub. 
+- como e por que realizar essa integração:
+	- 1. `Acesso às Configurações do Projeto`: Comece selecionando o projeto desejado e acessando as Project settings no menu inferior esquerdo.
+	- 2. `Estabelecimento da Conexão com GitHub`: Clique em GitHub Connections para começar o processo de vinculação com sua conta GitHub. 
+	- 3. `Autorização do Azure Boards no GitHub`: Selecione Connect your GitHub account e proceda com a autorização no GitHub. 
+	- 4. `Autorize o Acesso`: Clique em Authorize AzureBoards para permitir que o Azure Boards interaja com seu GitHub. 
+	- 5. `Seleção do Repositório`: Escolha o repositório que você deseja conectar ao Azure Boards e salve essa configuração. 
+	- 6. `Finalize a Autorização`: Confirme a autorização clicando em Approve, Install & Authorize.
+
+## 3.3 Por que fazer isso?
+
+- esta integração permite que desenvolvedores e gestores de projeto vejam o impacto direto de suas alterações de código nos itens de trabalho, facilitando a avaliação de progresso e a eficácia das soluções implementadas. 
+- além disso, melhora a colaboração entre a equipe ao vincular discussões de código com tarefas específicas e objetivos de projeto, proporcionando uma visão clara de como as mudanças no código contribuem para os objetivos gerais do projeto. 
+- implementar essa conexão é um passo estratégico para alavancar a eficiência e a precisão na gestão de projetos de software.
+
+## 3.4 Associando Cards a Commits
+
+- integrar de forma eficaz os cards do Azure Board com as alterações de código no GitHub é uma prática que transforma a maneira como as equipes de desenvolvimento gerenciam e rastreiam o progresso dos projetos. 
+- essa integração não apenas facilita a visualização do impacto direto das alterações de código nos itens de trabalho, mas também melhora significativamente a comunicação e a coordenação entre os membros da equipe. 
+- processo para associar commits aos cards do Azure Board:
+	- 1. `Atribuição de um card`: Selecione um card na coluna Aprovado no board. Este card deve representar uma tarefa ou recurso que você está prestes a trabalhar. Atribua este card a si mesmo e anote o ID do card para futura referência. 
+	- 2. `Clone e configuração do repositório`: Clone o repositório onde você fará as mudanças usando o comando Git: 
+
+```
+git clone https://github.com/antonioclj/simple-api-java.git
+cd simple-api-java
+git config user.email "seuemail@dominio.com"
+git config user.name "Seu Nome"
+```
+
+  - 3. `Edição e preparação para o commit`: abra o arquivo README.md com um editor de texto ou sua IDE favorita e faça as alterações necessárias. Salve o arquivo após as modificações e em seguida aplique o commit usando o comando git add README.md. Isso adiciona suas mudanças ao "stage" do Git, preparando-as para serem commitadas.
+  - 4. `Criação do commit`: Crie um commit com uma mensagem que referencia o ID do card no Azure Board. Isso é feito utilizando o formato AB#{id docard}. Este comando cria um registro no repositório que está diretamente ligado ao item de trabalho no Azure Board. Por exemplo:
+
+~~~
+git commit -m "Adicionado comentário para AB#3"
+~~~
+
+- 5. `Envio das alterações`: Envie suas alterações para o repositório remoto com git push. Isso atualiza o repositório com seu commit mais recente, que agora
+está vinculado ao card no Azure Board.
+- 6. `Verificação no Azure Board`: Retorne ao Azure Board e verifique que o card associado mostra um novo ícone indicando que um commit foi realizado referente a esse item. Isso proporciona uma visualização imediata do trabalho que foi feito e como ele se relaciona com o planejamento no board.
+
+> Este procedimento detalhado de vincular cards do Azure Boards a commits no GitHub é essencial para garantir uma integração fluida e eficaz entre o planejamento de tarefas e a execução de código. Esta integração melhora a rastreabilidade e a responsabilidade dentro do projeto, além de manter uma transparência total para toda a equipe.
+
+- ao seguir estas etapas, as equipes conseguem uma correspondência clara entre as tarefas planejadas e as ações realizadas, garantindo que todas as mudanças de código sejam diretamente vinculadas aos itens de trabalho correspondentes no Azure Boards.
+- além disso, essa conexão entre os sistemas de gestão de tarefas e controle de versões facilita a gestão eficaz do projeto, proporcionando alinhamento entre as expectativas e os resultados reais. 
+- cada alteração de código torna-se um registro auditável associado diretamente a um item de trabalho específico, assegurando que todas as tarefas sejam gerenciadas eficientemente dentro do contexto mais amplo do projeto. 
+- este nível de integração ajuda a fortalecer a accountability e a precisão no acompanhamento do progresso do projeto, contribuindo para uma execução mais disciplinada e orientada a resultados.
+
+---
+
+## FAST TEST
+
+### 1. Qual é o serviço do ecossistema Azure DevOps que oferece aos desenvolvedores uma plataforma segura e eficiente para gerenciar alterações no código-fonte?
+> Azure Repos.
+
+### 2. Sobre backlog, assinale a alternativa correta:
+> O backlog, ou lista de pendências, é uma ferramenta essencial no Azure Boards que permite um planejamento eficaz e rápido de projetos através da adição de user stories (histórias de usuário) ou requisitos.
+
+### 3. Qual serviço do ecossistema Azure é utilizado para automatizar o processo de build e teste, e também a implantação de aplicações em qualquer ambiente, seja ele na nuvem, híbrido ou on-premises?
+> Azure Pipelines.
+
+### 4. A escolha adequada de um modelo de processo no Azure DevOps é crucial para alinhar as ferramentas de gerenciamento de projetos às necessidades específicas da equipe e do projeto. O modelo CMMI é mais adequado para:
+> Equipes que seguem metodologias de projeto mais estruturadas e que necessitam de um registro auditável de decisões e mudanças.
 
 --- 
 
