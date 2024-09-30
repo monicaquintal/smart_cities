@@ -30,7 +30,7 @@ Azure Artifacts | Permite que as equipes compartilhem pacotes como o Maven, npm,
 </div>
 
 - a abordagem ágil no desenvolvimento de software, fundamentada no Manifesto Ágil, destaca a importância da colaboração, resposta a mudanças e entrega funcional. 
-- o Azure DevOps encarna esses princípios através de suas ferramentas integradas, oferecendo um ambiente que promove práticas ágeis entre as  equipes de desenvolvimento.
+- o Azure DevOps encarna esses princípios através de suas ferramentas integradas, oferecendo um ambiente que promove práticas ágeis entre as equipes de desenvolvimento.
 
 > Dica: Para explorar mais sobre os princípios que moldam métodos ágeis e eficazes no desenvolvimento de software, visite o [Manifesto para Desenvolvimento Ágil de Software](https://agilemanifesto.org/iso/ptbr/m/manifesto.html).
 
@@ -179,8 +179,171 @@ Azure Artifacts | Permite que as equipes compartilhem pacotes como o Maven, npm,
 
 ## 2.3 Criando e configurando um novo projeto
 
+- desenvolvimento do primeiro projeto no Azure DevOps, chamado "fiap-on". 
+- este projeto servirá como uma plataforma de demonstração para praticarmos a gestão de projetos de software e entendermos como aplicar as metodologias ágeis no desenvolvimento.
+- passos para criar o projeto "fiap-on":
+  - ***Informação dos dados do projeto***:
+    - `Nome do Projeto`: insira "fiap-on" como o nome do projeto. 
+    - `Descrição`: forneça uma breve descrição para o projeto, como "Projeto de software demonstração". Esta descrição deve oferecer uma visão clara do propósito e dos objetivos do projeto, facilitando o entendimento para novos membros da equipe e stakeholders.
+    - `Configuração de Privacidade`: marque a opção Private para garantir que o acesso ao projeto seja restrito aos membros da equipe e pessoas convidadas, proporcionando segurança e controle sobre quem pode visualizar e interagir com o projeto.
+    - `Configurações Avançadas`: expanda o item Advanced. Dentro das opções avançadas, clique em Work item processe selecione Scrum. A escolha do processo Scrum é ideal para equipes que desejam adotar uma metodologia ágil que enfatiza iterações rápidas, revisões regulares e adaptação contínua.
+    - `Criação do Projeto`: após preencher todas as informações e configurar as opções desejadas, clique em Create Project para criar oficialmente o seu projeto no Azure DevOps.
+- ao completar esses passos, o projeto "fiap-on" estará configurado e pronto para ser utilizado.
 
+> IMPORTANTE: Para acessar a URL do projeto diretamente pelo navegador, use o padrão https://dev.azure.com/{Nome da Organização}/{Nome do Projeto}.
 
+## 2.4 Adicionando e gerenciando usuários
+
+- inicialmente, todo projeto possui apenas um usuário: o proprietário do projeto. 
+- vamos adicionar usuários à organização para garantir que todos os envolvidos possam colaborar de forma eficaz:
+  - a. Saia do projeto atual e acesse a organização clicando no ícone Azure DevOps no canto superior esquerdo da tela.
+  - b. Na tela seguinte, acesse o menu Organization settings, localizado no canto inferior esquerdo da tela.
+  - c. No menu lateral esquerdo, clique no item Users.
+- na próxima tela, você verá a lista de usuários adicionados à organização; inicialmente, apenas o seu usuário (proprietário) está listado.
+- nesta mesma tela, você pode adicionar novos usuários à organização.
+  - a. Clique em Add users.
+  - b. Na janela Add new users, acesse a caixa de texto Users or Service Principals e digite os e-mails das pessoas que irão participar do projeto.
+  - c. Clique em Add to projects e selecione o(s) projeto(s) ao qual o usuário terá acesso.
+  - d. Em seguida, clique em Add para confirmar a adição do usuário e click em Add para adicionar.
+
+## 2.5 Processos no Azure Boards
+
+- ao aprofundar no uso do Azure DevOps, especialmente no Azure Boards, é fundamental compreender a flexibilidade oferecida pela escolha de processos adequados para gerenciar itens de trabalho.
+- a seleção correta do processo é um elemento chave para otimizar o fluxo de trabalho de um projeto e assegurar seu sucesso.
+- este aspecto de personalização permite que equipes de desenvolvimento de software ajustem suas ferramentas de gerenciamento de projetos às necessidades específicas do projeto e à metodologia de trabalho da equipe.
+- a escolha entre esses modelos depende da complexidade do projeto, da cultura da equipe, e das necessidades específicas de gerenciamento e reporte. 
+- cada modelo vem com seu próprio conjunto de tipos de item de trabalho e estados configurados, que ajudam as equipes a manterem-se organizadas e alinhadas com os objetivos do projeto.
+- principais distinções entre os tipos de item de trabalho e os estados usados pelos quatro processos padrão:
+
+<div align="center">
+<img src="./assets/modelos-de-processo.png" width="70%"><br>
+<em>Comparação de modelos de processo.</em><br>
+</div>
+
+- os estados do fluxo de trabalho no Azure DevOps são essenciais para monitorar e gerenciar o progresso dos itens de trabalho ao longo de seu ciclo de vida. 
+- desde o estado inicial "New" até o estado final "Closed" ou "Done", o sistema de fluxo de trabalho proporciona uma estrutura clara para acompanhar as mudanças no status dos itens. 
+- essa estrutura não só inclui os estados, mas também as transições válidas entre eles e os motivos específicos para essas transições, garantindo que todas as mudanças sejam bem documentadas e justificadas.
+- cada modelo de processo no Azure DevOps define seu próprio conjunto de regras para o fluxo de trabalho, incluindo regressões a estados anteriores e transições para estados que podem ser removidos em determinadas circunstâncias. 
+- os diagramas a seguir ilustram a progressão típica dos tipos de itens de trabalho dentro dos quatro processos padrão usados para rastrear e gerenciar defeitos e código. 
+- cada diagrama destaca não apenas as transições padrão entre os estados, mas também inclui exemplos das regressões para estados anteriores e os motivos padrão associados a cada transição. 
+
+### 2.5.1 Basic:
+- o modelo Basic é ideal para equipes que necessitam de um processo de gerenciamento de tarefas direto e sem complicações. 
+- foca em proporcionar uma visualização clara do ciclo de vida do item de trabalho, com menos estados e transições simplificadas, facilitando para equipes pequenas ou projetos menos complexos.
+
+<div align="center">
+<img src="./assets/transicao-estados-processo-basico.jpg" width="50%"><br>
+<em>Transição de estados do processo básico.</em><br>
+</div>
+
+### 2.5.2 Scrum:
+- adaptado para equipes que seguem a metodologia Scrum, este modelo enfatiza sprints, backlogs de sprint e revisões de sprint. 
+- é projetado para suportar o ritmo rápido e iterativo do Scrum, com estados que refletem as fases de planejamento, desenvolvimento, revisão e lançamento de software.
+
+<div align="center">
+<img src="./assets/transicao-estados-processo-scrum.jpg" width="50%"><br>
+<em>Transição de estados do processo Scrum.</em><br>
+</div>
+
+### 2.5.3 Agile: 
+- suporta uma abordagem mais flexível do que o Scrum, ideal para equipes que utilizam práticas ágeis, mas necessitam de mais liberdade do que as estruturas tradicionais do Scrum. 
+- permite uma variedade maior de tipos de itens de trabalho e transições mais fluidas, suportando um ambiente dinâmico de desenvolvimento.
+
+<div align="center">
+<img src="./assets/transicao-estados-processo-agile.jpg" width="50%"><br>
+<em>Transição de estados do processo Agile.</em><br>
+</div>
+
+### 2.5.4 CMMI (Capability Maturity Model Integration): 
+- o modelo CMMI é destinado a projetos que requerem um alto nível de governança e documentação. 
+- este modelo é caracterizado por processos mais formais e um controle rigoroso sobre as alterações, adequado para indústrias e projetos que necessitam de aderência estrita a padrões e regulamentações.
+
+<div align="center">
+<img src="./assets/transicao-estados-processo-cmmi.jpg width="50%"><br>
+<em>Transição de estados do processo CMMI.</em><br>
+</div>
+
+> Para visualizar a progressão típica dos tipos de item de trabalho em cada um desses modelos de processo, diagramas específicos podem ser extremamente úteis, pois mostram a sequência de estados, além das possíveis regressões e transições removidas, destacando o motivo padrão associado a cada transição. 
+
+## 2.6 Critérios para escolha de modelos de processo
+
+- cada modelo oferece um conjunto distinto de características que são projetadas para otimizar a eficiência e a clareza no acompanhamento e gestão de itens de trabalho. 
+- entender as peculiaridades de cada modelo ajudará a garantir que você selecione o mais adequado para a dinâmica e os objetivos do seu projeto.
+
+### a) Basic:
+- opte pelo modelo Basic se sua equipe busca uma abordagem direta e sem complicações. 
+- utiliza tipos de itens de trabalho como Problema, Tarefa e Épico, simplificando o rastreamento de atividades rotineiras e permitindo uma visualização clara do progresso das tarefas. 
+- ideal para projetos menores ou equipes que não necessitam de processos complexos de gerenciamento.
+
+### b) Scrum:
+- escolha perfeita para equipes que já implementam esta metodologia ágil. 
+- é especialmente eficaz para gerenciar a lista de pendências do produto e bugs, utilizando um quadro Kanban para visualizar o fluxo de trabalho. 
+- suporta sprints e ajuda a manter todos na equipe alinhados com os objetivos do sprint e do projeto.
+
+### c) Agile:
+- se sua equipe utiliza métodos de planejamento Agile mais flexíveis, incluindo Scrum, o modelo Agile pode ser o mais adequado. 
+- permite rastrear Histórias de Usuários e, opcionalmente, bugs de maneira eficiente, também por meio de um quadro Kanban. 
+- este modelo favorece equipes que precisam de flexibilidade para adaptar seus processos de trabalho conforme o projeto evolui.
+
+### d) CMMI:
+- para projetos que exigem aderência a processos formais e proporcionam uma estrutura rigorosa para aperfeiçoamento contínuo, o modelo CMMI é ideal. 
+- recomendado para equipes que seguem metodologias de projeto mais estruturadas e que necessitam de um registro auditável de decisões e mudanças. 
+- este modelo é muitas vezes preferido em ambientes que requerem altos níveis de conformidade e governança.
+
+> Para este curso específico, estamos utilizando o modelo de processo Scrum. 
+
+## 2.7 Backlog (Lista de Pendências)
+
+- o backlog, ou lista de pendências, é uma ferramenta que permite um planejamento eficaz e rápido de projetos através da adição de user stories (histórias de usuário) ou requisitos. 
+- esta lista organizada e priorizada de itens de trabalho serve como o coração do esforço de desenvolvimento, orientando a equipe ao longo do ciclo de vida do desenvolvimento de software.
+- não apenas ajuda a gerenciar o escopo do projeto, mas também facilita a comunicação e colaboração entre todos os envolvidos.
+- utilizar o backlog efetivamente permite realizar diversas tarefas críticas:
+  - `Definição de Itens`: Incluir histórias de usuários ou requisitos específicos que detalhem as necessidades e expectativas para o produto final.
+  - `Reorganização e Priorização`: Ajustar a ordem dos itens no backlog conforme a prioridade e os prazos, assegurando que os recursos da equipe sejam alocados de maneira eficiente.
+  - `Detalhamento e Estimação`: Adicionar detalhes e estimativas a cada item para melhor planejamento e alocação de recursos.
+  - `Atualização em Massa`: Facilitar atualizações rápidas em vários itens do backlog de uma só vez para manter a lista atualizada com as mudanças de projeto.
+  - `Integração com Sprints`: Arrastar itens do backlog para sprints específicos, ajudando a planejar iterações detalhadas e focadas.
+  - `Mapeamento Hierárquico`: Organizar itens de backlog dentro de uma hierarquia para visualizar a relação e dependência entre tarefas e requisitos.
+  - `Análise de Portfólio`: Examinar a hierarquia e o portfólio de trabalho distribuído entre várias equipes, proporcionando uma visão clara da distribuição de tarefas.
+  - `Previsão e Monitoramento`: Utilizar o backlog para prever o trabalho e monitorar o progresso através de acumulações, contagens ou totais de itens concluídos e pendentes. No Azure Board, o backlog é prontamente acessível dentro do projeto, garantindo que todos na equipe possam contribuir e interagir com ele de forma transparente.
+
+- ***para acessar e gerenciar seu backlog***:
+  - `acesso ao Projeto`: Clique no ícone Azure DevOps e selecione o projeto fiap-on.
+  - `navegação no Backlog`: No menu lateral esquerdo, selecione Boards e clique em Backlogs para visualizar e interagir com a lista de pendências.
+
+## 2.8 Work Items (Itens da Lista de Pendências)
+
+- dentro do modelo de processos Scrum no Azure DevOps, os itens de trabalho, conhecidos como work items, são categorizados em dois tipos principais para simplificar a gestão do backlog de produto. 
+  - estes tipos são: ***Product Backlog Item*** e ***Bug***. 
+  - cada um desempenha um papel vital na organização e priorização das tarefas a serem desenvolvidas e dos problemas a serem corrigidos, respectivamente.
+
+- passos básicos para adicionar novos itens ao backlog:
+  - `Criação de Novos Itens de Trabalho`: Clique no botão New Work Itempara iniciar a adição de novos itens ao backlog.
+  - `Entrada de Dados`: Insira o nome do item e clique em Add to top para adicionar o item ao topo da lista do backlog, garantindo alta visibilidade e prioridade.
+    - os itens que serão adicionados incluem:
+      - Tela inicial.
+      - Cadastro de Usuário.
+      - Cadastro de Perfil.
+      - Tela de Dashboard.
+      - Aplicativo Mobile iOS.
+      - Aplicativo Mobile Android.
+    - ao final do processo, o backlog exibirá uma configuração com estes seis itens essenciais.
+  - `Alteração do Modo de Visualização`: Para uma gestão mais eficaz, altere a visualização para Board, acessando pelo menu lateral Boards.
+    - a tela do modo Board exibirá todos os itens de trabalho de forma visual, facilitando a organização e priorização.
+
+## 2.9 Personalização e Gerenciamento do Board
+
+- no gerenciamento do Azure Board, personalização e organização são fundamentais para um fluxo de trabalho eficiente.
+- uma das funcionalidades é a capacidade de reordenar os cards dentro do board, simplesmente arrastando e soltando os cards, o que permite ajustar dinamicamente a sequência de prioridades dos itens de trabalho. 
+  - essa reorganização não só é intuitiva, mas também ajuda a equipe a visualizar e priorizar tarefas d emaneira mais eficaz, adaptando-se às mudanças nas necessidades do projeto.
+- outra opção de personalização é a renomeação das colunas dentro do board, que permite que as colunas reflitam mais precisamente as fases do seu processo de desenvolvimento. 
+  - personalizar os nomes das colunas ajuda a clarificar os estágios do processo para todos os membros da equipe, garantindo que todos tenham uma compreensão clara do status dos projetos em andamento.
+
+## 2.10 Atribuição de atividades
+
+- cada card representa uma atividade específica que precisa ser realizada. 
+- estes cards são inicialmente colocados na coluna Novo, indicando que os trabalhos associados ainda não foram iniciados. 
+- a movimentação destes cards para outras colunas reflete o progresso nas tarefas e ajuda a equipe a visualizar o estado atual do desenvolvimento.
 
 
 
