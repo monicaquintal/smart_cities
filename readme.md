@@ -173,7 +173,7 @@
 - [Capítulo 02: DevOps e sua Importância](./fase06/capitulo02.md)
 - [Capítulo 03: Deployment na Nuvem](./fase06/capitulo03.md)
 - [Capítulo 04: Azure DevOps e Ferramentas](./fase06/capitulo04.md)
-- [Capítulo 05:]()
+- [Capítulo 05: Continuous Integration e Continuous Delivery](./fase06/capitulo05.md)
 - [Capítulo 06:]()
 
 </details>
