@@ -52,6 +52,160 @@ spring.jpa.open-in-view=true
 - ao implementar CI/CD, garantirá que qualquer atualização no código seja automaticamente testada e, se bem-sucedida, entregue de forma contínua ao ambiente de produção. 
 - isso agiliza o processo de desenvolvimento, além de reduzir o risco de erros na aplicação ao vivo.
 
+## 1.4 Container
+
+- em implantações modernas, containers se destacam como uma solução robusta para garantir a consistência entre os ambientes de desenvolvimento, teste e produção. 
+- utilizando o Docker, é possível encapsular a aplicação e suas dependências em um container isolado, o que simplifica as configurações e aumenta a segurança ao reduzir discrepâncias entre os ambientes.
+- para essa aplicação Java com Spring Boot, configuramos o Docker para facilitar a implantação e o gerenciamento em qualquer ambiente de nuvem que suporte containers. 
+- Dockerfile utilizado para construir a imagem da API:
+
+~~~
+FROM maven:3.9.8-eclipse-temurin-21 AS build
+RUN mkdir /opt/app
+COPY . /opt/app
+WORKDIR /opt/app
+RUN mvn clean package
+FROM eclipse-temurin:21-jre-alpine
+RUN mkdir /opt/app
+COPY --from=build  /opt/app/target/app.jar /opt/app/app.jar
+WORKDIR /opt/app
+ENV PROFILE=prd
+EXPOSE 8080
+ENTRYPOINT ["java", "-Dspring.profiles.active=${PROFILE}", "-jar", "app.jar"]
+~~~
+
+- explicação detalhada do Dockerfile:
+  - ***Build Stage***: utilizamos uma imagem base do Maven para compilar o projeto Java e empacotá-lo em um arquivo JAR.
+  - ***Runtime Stage***: em seguida, partimos de uma imagem base do JRE Alpine para manter a imagem final leve. O arquivo JAR é copiado para a nova imagem, configurado para rodar no ambiente de produção.
+- o processo de criação da imagem do Docker é feito com o seguinte comando, que constrói a imagem usando o Dockerfile presente no diretório atual e a marca com a tag api:
+
+~~~
+docker build -t api .
+~~~
+
+- para executar a aplicação, o container é iniciado a partir da imagem construída, com configuração de rede e variáveis de ambiente específicas que controlam os detalhes da conexão ao banco de dados e o perfil da aplicação.
+
+~~~
+docker run -p 8080:8080 --net=host \
+-e PROFILE=prd \
+-e DATABASE_URL=jdbc:mysql://localhost:3306/api?createDatabaseIfNotExist=true \
+-e DATABASE_USER=root \
+-e DATABASE_PWD=1234 \
+api
+~~~ 
+
+- essa abordagem garante que a aplicação execute em um ambiente isolado e controlado, além de facilitar o processo de CI/CD ao permitir que cada etapa do desenvolvimento, teste e produção seja replicada de forma confiável e segura. 
+- ao adotar containers, você maximiza a eficiência operacional e minimiza os riscos associados ao deploy e à manutenção de aplicações em ambientes diversos.
+
+## 1.5 Funcionalidades
+
+- a API oferece funcionalidades essenciais para o gerenciamento de produtos, incluindo operações CRUD (Create, Read, Update, Delete) que são fundamentais para manutenção do cadastro de produtos no negócio.
+- a documentação completa da API está disponível através da [interface do Swagger](http://localhost:8080/swagger-ui/index.html), que fornece uma visão interativa e detalhada de todos os endpoints disponíveis.
+- após configurar a aplicação em um ambiente controlado usando Docker, o próximo passo é automatizar os processos de integração e entrega contínua (CI/CD) usando GitHub Actions.
+
+## 1.6 Introdução ao GitHub Actions
+
+- GitHub Actions é uma plataforma disponibilizada pelo GitHub que facilita a automação de todas as fases do desenvolvimento de software, desde a construção até o teste e a implantação.
+- é possível criar fluxos de trabalho que compilam e testam cada pull request em seu repositório ou implantam pull requests mesclados em produção. 
+- além de simplificar tarefas de DevOps, GitHub Actions permite a execução de fluxos de trabalho baseados em outros eventos dentro do seu repositório. 
+  - exemplo: é possível configurar um fluxo de trabalho para adicionar automaticamente etiquetas sempre que um novo problema for criado.
+
+## 1.7 Componentes
+
+- é possível configurar um fluxo de trabalho do GitHub Actions para ser disparado por eventos específicos no seu repositório, como a abertura de uma solicitação de pull ou a criação de um problema. 
+- cada fluxo de trabalho contém um ou mais trabalhos que podem ser executados tanto em ordem sequencial quanto em paralelo. 
+- cada trabalho opera em um executor próprio, seja uma máquina virtual ou um contêiner, e inclui várias etapas que executam scripts definidos por você ou ações, que são extensões reutilizáveis projetadas para simplificar seu processo.
+
+## 1.8 Fluxos de trabalho
+
+- fluxo de trabalho é um processo automatizado configurável que executa um ou mais trabalhos, definidos por um arquivo YAML no `diretório .github/workflows` de um repositório, e serão executados quando acionados por um evento no repositório, manualmente ou conforme cronograma pré-definido.
+- um repositório pode ter múltiplos fluxos de trabalho, cada um realizando diferentes tarefas, como:
+  - compilar e testar pull requests.
+  - implantar a aplicação sempre que uma versão for criada.
+  - adicionar um rótulo sempre que um novo problema for aberto.
+- também é possível referenciar um fluxo de trabalho dentro de outro, aumentando a modularidade e a reutilização das tarefas.
+
+## 1.9 Eventos 
+
+- eventos são atividades específicas no repositório que disparam a execução de um fluxo de trabalho. 
+- podem ser originados pelo GitHub quando alguém cria uma solicitação de pull, abre um problema, ou faz um push de um commit. 
+- além disso, fluxos de trabalho podem ser acionados por eventos programados, postagens em uma API REST, ou de forma manual.
+
+## 1.10 Trabalhos
+
+- um trabalho é um conjunto de etapas dentro de um fluxo de trabalho, todas executadas no mesmo executor. 
+- cada etapa consiste em um script de shell ou uma ação predefinida que é executada. 
+- essas etapas são executadas em sequência e cada uma depende da conclusão da anterior para o seu início.
+- uma vez que todas as etapas ocorrem no mesmo executor, é possível compartilhar dados entre elas, facilitando a continuidade e a integridade do processo.
+  - exemplo: você pode configurar uma etapa que compila sua aplicação, seguida imediatamente por outra que realiza testes no aplicativo recém-compilado.
+- há a flexibilidade de definir dependências entre diferentes trabalhos dentro do mesmo fluxo de trabalho; por padrão, os trabalhos são independentes e executados em paralelo. No entanto, quando um trabalho depende de outro, ele só inicia após a conclusão do trabalho do qual depende. 
+  - exemplo: é possível configurar múltiplos trabalhos de build, cada um para uma arquitetura diferente, sem dependências entre eles, e um trabalho de empacotamento que só inicia após a conclusão bem-sucedida de todos os trabalhos de build. 
+  - essa abordagem garante que o empacotamento só ocorra quando todos os componentes necessários estiverem prontos e testados, maximizando a eficiência e reduzindo o potencial de erros no processo final de construção do software.
+
+## 1.11 Ações
+
+- uma ação é um aplicativo personalizado dentro da plataforma GitHub Actions, projetado para executar tarefas complexas que são frequentemente necessárias nos processos de desenvolvimento. 
+- use uma ação para minimizar a quantidade de código repetitivo em seus arquivos de fluxo de trabalho. 
+  - exemplo: uma ação pode clonar automaticamente seu repositório Git do GitHub, configurar a cadeia de ferramentas adequada para seu ambiente de build, ou estabelecer autenticação com seu provedor de nuvem.
+- há a opção de criar suas próprias ações personalizadas ou explorar uma variedade de ações pré-configuradas disponíveis no GitHub Marketplace, que podem ser facilmente integradas aos seus fluxos de trabalho.
+- essa flexibilidade permite que você otimize e automatize as operações de desenvolvimento sem comprometer a eficácia ou a qualidade do código produzido.
+
+## 1.12 Executores
+
+- um executor é um servidor dedicado que processa seus fluxos de trabalho assim que são acionados. 
+- cada executor é capaz de gerenciar um único trabalho por vez, garantindo que cada tarefa receba os recursos necessários para sua execução. 
+- o GitHub oferece uma gama de executores padrão, incluindo sistemas operacionais Ubuntu Linux, Microsoft Windows e macOS, para acomodar a diversidade de fluxos de trabalho. 
+- cada tarefa dentro de um fluxo de trabalho é realizada em uma máquina virtual recém-provisionada e isolada, garantindo um ambiente limpo e controlado para cada execução.
+- se as suas necessidades exigirem um sistema operacional específico ou uma configuração de hardware diferenciada, você tem a opção de hospedar seus próprios executores, o que permite uma personalização adicional e pode ser especialmente útil para fluxos de trabalho que exigem configurações de hardware ou software não padrão.
+
+> DICA: Acessar a [documentação oficial do GitHub Actions](https://docs.github.com/pt/actions/about-github-actions/understanding-github-actions), recurso que oferece informações detalhadas, tutoriais e melhores práticas para maximizar o uso da plataforma.
+
+## 1.13 Personal Acess Token
+
+- o uso de um Personal Access Token (PAT) no GitHub é essencial para garantir operações seguras e automatizadas, como git push e git pull, em repositórios remotos.
+- este token substitui a autenticação tradicional de usuário e senha, proporcionando um método mais seguro e controlável de acesso ao GitHub, especialmente útil em scripts de automação e integrações de CI/CD que exigem acesso frequente ao repositório sem intervenção manual.
+- acesse as [configurações do tokens no GitHub](https://github.com/settings/tokens), e clique em "Generate new token" e selecione a opção "Generate new token (classic)".
+- ***permissões (scopes) do Token***: 
+  - 1) Insira uma descrição no campo "Note" para identificar o propósito do token.
+  - 2) Escolha um período de validade para o token.
+  - 3) Selecione os scopes 'repo' e 'workflow', necessários para operações de repositório e automação de workflows, respectivamente.
+  - 4) Role a tela até o final e clique em "Generate new token".
+- anote o token gerado, pois ele será necessário para realizar operações de 'git push' durante a criação ou atualização de workflows no GitHub.
+- essas etapas garantem que você tenha as permissões adequadas para gerenciar seu repositório e workflows de forma segura e eficaz.
+
+> IMPORTANTE: O token gerado pode ser excluído ou regenerado a qualquer momento através das configurações de token no GitHub, garantindo controle total sobre sua segurança e acesso.
+
+<div align="center">
+<h2>2. PRIMEIRO WORKFLOW</h2>
+</div>
+
+- neste segmento, vamos detalhar como definir e executar um workflow inicial no GitHub Actions, composto por dois jobs distintos, ambos executando em um ambiente 'Ubuntu'.
+- a seguir, teremos uma sequência de passos e comandos para configurar o primeiro workflow de CI/CD do projeto.
+- acessar o terminal, clonando o repositório e configurando suas credenciais com os seguintes comandos:
+
+~~~
+git clone https://github.com/antonioclj/simple-api-java.git
+cd simple-api-java
+git config user.email "seuemail@dominio.com" 
+git config user.name "Seu Nome"
+~~~
+
+- mude para a branch "develop" para buscar as atualizações mais recentes:
+
+~~~
+git switch develop 
+git pull -r
+~~~
+
+- em seguida, crie uma branch de feature local e remota; utilize o Personal Access Token criado anteriormente se necessário:
+
+~~~
+git checkout -b feature/primeiro-workflow
+git push --set-upstream origin feature/primeiro-workflow
+~~~
+
+- para iniciar a automação de tarefas usando GitHub Actions, é essencial criar e configurar um arquivo YAML que defina os workflows. 
+- este arquivo descreve uma sequência de jobs que são executados em resposta a eventos específicos dentro de um repositório GitHub.
 
 
 
