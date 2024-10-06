@@ -206,20 +206,293 @@ git push --set-upstream origin feature/primeiro-workflow
 
 - para iniciar a automação de tarefas usando GitHub Actions, é essencial criar e configurar um arquivo YAML que defina os workflows. 
 - este arquivo descreve uma sequência de jobs que são executados em resposta a eventos específicos dentro de um repositório GitHub.
+- na pasta .github/workflows do repositório, crie o `arquivo 01-primeiro-workflow.yaml`. 
+  - ele contém a configuração do workflow que será disparado por eventos de push ao repositório. 
+  - o conteúdo do arquivo define dois jobs distintos, ***job1-hello*** e ***job2-goodbye***, que executam tarefas simples para demonstrar a funcionalidade do GitHub Actions.
 
+~~~
+on: push
 
+jobs:
+    job1-hello:
+        runs-on: ubuntu-latest
+        steps:
+        - name: Imprimir mensagem
+          run: echo "Olá, Mundo"
+    job2-goodbye:
+        runs-on: ubuntu-latest
+        steps:
+        - name: Step 1 - Sequencia de instruções
+          run: |
+            echo "Uma nova instrução"
+            ls            
+        - name: Step 2 - Imprimir mensagem
+          run: echo "Até logo!"
+~~~
 
+- um script de workflow é composto de 4 partes obrigatórias: name, on, jobs e pelo menos um job deve ser criado -observe que job1-hello e job2-goodbye são 2 jobs distintos.
 
+## 2.1 Componentes do Workflow
 
+- `name`: o nome do workflow não é explicitamente mostrado neste arquivo YAML, mas geralmente é definido no topo do arquivo para identificar o workflow dentro do GitHub Actions.
+- `on`: esta chave define o evento que dispara o workflow. No exemplo fornecido, o workflow é ativado por qualquer ação de push no repositório.
+- `jobs`: esta seção contém a definição dos jobs que serão executados quando o workflow for disparado. Cada job pode ser configurado para rodar em diferentes ambientes ou executores.
+	- `job1-hello`: este job roda no ambiente ubuntu-latest e possui uma única etapa que executa o comando para imprimir "Olá, Mundo".
+	- `job2-goodbye`: este job também roda em ubuntu-latest e é composto por duas etapas: a primeira etapa executa uma sequência de comandos que inclui imprimir uma mensagem e listar os arquivos no diretório atual, enquanto a segunda etapa imprime "Até logo!".
+- este workflow é uma introdução prática à configuração de Git Hub Actions, mostrando como tarefas automatizadas simples podem ser configuradas para responder a atividades comuns do repositório, como commits e pushes.
 
+## 2.2 Finalização e monitoramento do Workflow
 
+- depois de definir e configurar seu workflow no GitHub Actions, o próximo passo é incorporar as mudanças no repositório remoto e monitorar a execução para garantir que tudo está funcionando conforme esperado. 
+- este processo envolve fazer o commit das alterações, empurrá-las para o repositório e, em seguida, acessar e analisar os resultados do workflow através da interface do GitHub. 
+- vamos explorar esses passos em detalhes para entender como cada um contribui para o ciclo de vida do desenvolvimento de software automatizado.
+- após a criação ou modificação dos arquivos de workflow, é crucial salvá-los no repositório para que o GitHub Actions possa acessá-los e executar conforme configurado. 
+- comandos necessários para adicionar as alterações ao controle de versão e enviá-las ao repositório remoto:
 
+~~~
+git add .github/workflows/01-primeiro-workflow.yaml
+git commit -m "Adicionar primeiro workflow"
+git push
+~~~
 
+- este processo salva suas mudanças localmente, e as sincroniza com o repositório na nuvem, permitindo que o GitHub Actions detecte e execute o novo workflow.
+- após o push, você pode monitorar a execução do workflow diretamente no GitHub:
+	- 1. ***Acessando workflows***: entre no repositório pelo navegador e navegue até o menu "Actions".
+	- 2. ***Visualizando Execuções***: clique em "01–Primeiro Workflow" para ver os detalhes de como o workflow está sendo executado.
+	- 3. ***Verificando o Status do Workflow***: observe o ícone verde ao lado do nome do commit "Adicionar primeiro workflow", que indica que o workflow foi executado com sucesso.
+	- 4. ***Analisando Jobs Específicos***: clique no commit "Adicionar primeiro workflow" para verificar a existência dos dois jobs (job1-hello e job2-goodbye) executados com sucesso.
+	- 5. ***Detalhes do Job job1-hello***: ao clicar em 'job1-hello', você pode ver detalhes do job, incluindo a execução do step "Imprimir mensagem". Expandindo o step, você pode confirmar a saída "Olá, Mundo".
+- este fluxo garante que as alterações sejam adequadamente incorporadas e versionadas, e permite uma visão clara de como cada componente do workflow contribui para o funcionamento geral do processo, possibilitando ajustes rápidos e eficientes conforme necessário.
 
+## 2.3 Workflow de eventos filtrados
 
+- em alguns cenários, é essencial que diferentes workflows sejam executados com base na branch onde ocorreram as alterações de código-fonte. 
+	- por exemplo, podemos configurar que os pushes em branches com o prefixo "feature" disparem jobs de testes unitários, enquanto os pushes em branches "develop" acionem apenas jobs de validação do container.
+- o GitHub Actions permite que workflows sejam configurados para serem disparados por eventos em branches específicas, o que é particularmente útil para gerenciar diferentes estágios de desenvolvimento e garantir que apenas as ações apropriadas sejam executadas em cada fase.
+- para o exemplo a seguir, o workflow será ativado por eventos de push, mas especificamente nas branches que começam com o prefixo "feature".
+- `preparação das Branches`:
+	- ***Branch develop***: troque para a branch "develop" para buscar atualizações remotas:
 
+~~~
+git checkout develop
+git pull
+~~~
 
+- ***Branch feature/workflow-filtro***: crie branch de feature local e remota. Se necessário, utilize o token criado em Personal Access Token.
 
+~~~
+git checkout -b feature/workflow-filtro 
+git push --set-upstream origin feature/workflow-filtro
+~~~
+
+- ***Script de workflow***: na pasta base .github/workflows, crie o arquivo 02-workflow-filtro.yaml e configure o filtro de branches. Observe que o atributo "branches" é definido após o evento "push", garantindo que o workflow seja disparado em todos os eventos de push das branches iniciadas por "feature".
+
+~~~
+name: 02 - Workflow Filtro
+
+on:
+  push:
+    branches: 'feature/**'
+
+jobs:
+  echo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Exibir o evento
+        run: echo "Workflow disparado por ${{ github.event_name }}"
+~~~
+
+- após criar ou modificar o arquivo, adicione as mudanças ao stage local, comite e faça o upload para o repositório remoto:
+
+~~~
+git add .
+git commit -m "Adicionar workflow disparado em branches feature"
+git push
+~~~
+
+- acesse o menu "Actions" no repositório para visualizar os workflows. No painel esquerdo, você encontrará dois workflows e, na parte central, poderá identificar pelo commit "Adicionar workflow disparado em branches feature" qual job foi executado.
+
+> IMPORTANTE: O workflow "02–Workflow Filtro" será executado apenas em branches com o prefixo "feature", enquanto outros workflows podem ser configurados para disparar a partir de qualquer branch. Esta flexibilidade permite uma gestão eficaz dos diferentes estágios de desenvolvimento dentro do projeto!
+
+## 2.4 Ações pré-configuradas
+
+- em diversos cenários, os workflows necessitam de ações que se repetem com frequência. 
+	- por exemplo: instalar o Java 17 com Maven para o build da aplicação, instalar o Docker para a criação de imagens ou realizar o checkout do repositório. 
+- para esses casos, podemos fazer uso das "actions" disponíveis no [Marketplace do GitHub](https://github.com/marketplace?type=actions).
+- a utilização dessas "actions" pré-configuradas oferece vários benefícios, como:
+	- 1. Evitar o uso de comandos repetitivos.
+	- 2. Reduzir a duplicação de código.
+	- 3. Proporcionar flexibilidade através da parametrização.
+	- 4. Facilitar a combinação de diferentes actions para otimizar os workflows.
+- o próximo workflow visa demonstrar o uso efetivo de actions para:	
+	- [Checkout do código](https://github.com/marketplace/actions/checkout).
+	- [Setup do Java Sdk](https://github.com/marketplace/actions/setup-java-jdk).
+	- [Build de imagem Docker](https://github.com/marketplace/actions/build-and-push-docker-images).
+
+## 2.5 Preparação das Branches
+
+- `Branch develop`: Mude para a branch "develop" para buscar as últimas atualizações:
+
+~~~
+git checkout develop
+git pull
+~~~
+
+- `Branch feature/actions`: Crie uma branch de feature local e remota. Utilize o token criado anteriormente em Personal Access Token, se necessário:
+
+~~~
+git checkout -b feature/actions
+git push --set-upstream origin feature/actions
+~~~
+
+- `Script de workflow`: Na pasta base .github/workflows, crie o arquivo 03-workflow-actions.yaml, e insira o seguinte código para definir o job:
+
+~~~
+name: 03 - Actions
+
+on: 
+    push:
+        branches: "feature/**"
+
+jobs:
+    checkout_java_docker:
+        runs-on: ubuntu-latest
+        steps:            
+            - name: Git Checkout
+              uses: actions/checkout@v4
+
+            - name: Setup Java SDK
+              uses: actions/setup-java@v4
+              with:
+                distribution: 'temurin' 
+                java-version: '21'
+
+            - name: Build
+              uses: docker/build-push-action@v6
+              with:
+                push: false                    
+
+            - name: Executar scripts
+              run: |
+                git branch
+                java --version 
+                mvn clean package
+~~~
+
+- no workflow, as actions foram definidas no atributo "uses" seguido do nome da action. O nome da action pode ser encontrado nos links das referidas actions no Marketplace do GitHub.
+	- `actions/checkout@v4`: executa o checkout do código-fonte para branch atual.
+	- `actions/setup-java@v4`: instala o Java SDK para a versão expecífica definida em "java-version". Adicionalmente a action instala o Maven.
+	- `docker/build-push-action@v6`: instala o Docker e realiza o build da imagem sem realizar push para repositório de imagens.
+	- `step "Executar scripts"`: neste step são executados 3 instruções.
+
+- após criar ou modificar o arquivo, adicione as alterações ao stage local, comite e faça o upload para o repositório remoto:
+
+~~~
+git add .github/workflows/03-workflow-actions.yaml
+git commit -m "Adicionar workflow com actions"
+git push
+~~~
+
+- no menu "Actions" do repositório, localize e selecione o workflow "03–Actions".
+- clique sobre o commit "Adicionar workflow com actions" e verifique o job "checkout_java_docker", onde você pode analisar os detalhes de cada step executado.
+
+## 2.6 Script de CI/CD
+
+- com um entendimento claro sobre o GitHub Actions, incluindo seus eventos, filtros e actions pré-configuradas, estamos prontos para definir dois workflows essenciais: um para integração contínua e outro para deploy. 
+- esses workflows automatizam tarefas críticas no ciclo de vida do desenvolvimento de software, assegurando qualidade e eficiência nas entregas.
+- este workflow é designado para executar testes unitários automaticamente em cada pull request criado a partir das branches "feature". 
+- se algum teste falhar, o merge para a branch principal será bloqueado, garantindo que apenas código testado e aprovado seja integrado.
+
+~~~
+name: Continuous Integration
+on:
+    pull_request:
+        types: [opened, reopened]
+        branches: "feature/**"
+jobs:
+    tests:
+        runs-on: ubuntu-latest
+        steps:             
+        -  
+            name: Git Checkout 
+            uses: actions/checkout@v4 
+ 
+        -   name: Setup Java SDK 
+            uses: actions/setup-java@v4 
+            with: 
+              distribution: 'temurin'  
+              java-version: '21' 
+        -   name: Unit tests
+            run: mvn test
+~~~
+
+- o workflow de deploy será disparado a cada push na branch "main", este workflow contém dois jobs críticos: build e deploy. 
+- o job 'build' é responsável por criar e fazer upload da imagem Docker no Docker Hub, enquanto o job 'deploy' gerencia a publicação da imagem no Azure Web App.name: Continuous Deployment.
+
+~~~
+on:
+    push:
+        branches: "feature/main"
+ 
+env:
+  IMAGE_NAME: simple-api-java
+  AZURE_WEBAPP_NAME: simple-api-java
+ 
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:             
+        -  
+            name: Git Checkout 
+            uses: actions/checkout@v4 
+ 
+        -   name: Setup Java SDK 
+            uses: actions/setup-java@v4 
+            with: 
+              distribution: 'temurin'  
+              java-version: '21'
+        -
+            name: Login to Docker Hub
+            uses: docker/login-action@v3
+            with:
+                username: ${{ secrets.DOCKERHUB_USERNAME }}
+                password: ${{ secrets.DOCKERHUB_TOKEN }}
+        - 
+            name: Build 
+            uses: docker/build-push-action@v6 
+            with: 
+                push: true
+                tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+    deploy:
+        runs-on: ubuntu-latest
+        needs: build
+        steps:
+        - 
+            name: Deploy to Azure Web App
+            id: deploy-to-webapp
+            uses: azure/webapps-deploy@v2
+            with:
+              app-name: ${{ env.AZURE_WEBAPP_NAME }}
+              publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+              images: 'ghcr.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest'
+~~~
+
+- os scripts devem ser inicialmente criados na branch "develop". Posteriormente, branches "feature" serão derivadas desta para o desenvolvimento específico de funcionalidades. 
+- conforme o desenvolvimento evolui e as tarefas são completadas, Pull Requests e merges serão feitos das branches "feature" para "develop".
+- finalmente, o deploy ocorrerá após o merge da branch "develop" na "main", assegurando que o código promovido está estável e pronto para produção.
+
+--- 
+
+## FAST TEST
+
+### 1. Sobre integração contínua (Continuous Integration - CI), assinale a alternativa correta:
+> A integração contínua (Continuous Integration/CI) é uma prática de software que requer a confirmação frequente de código em um repositório compartilhado.
+
+### 2. Assinale a alternativa que completa corretamente a frase a seguir: "_________ é uma plataforma líder em conteinerização, que permite encapsular a aplicação e suas dependências em um container isolado, o que simplifica as configurações e aumenta a segurança ao reduzir discrepâncias entre os ambientes".
+> Docker.
+
+### 3. Leia a descrição a seguir: "Direciona uma empresa na criação de um processo simplificado e automatizado de lançamento de software. No centro desse processo há um ciclo de feedback que gira em torno da entrega de software para o usuário final o mais rápido possível, aprendendo com sua experiência prática e, em seguida, incorporando esse feedback na próxima versão". Essa descrição refere-se a:
+> Entrega Contínua.
 
 --- 
 
