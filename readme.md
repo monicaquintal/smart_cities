@@ -181,7 +181,7 @@
 <details>
 <summary>COMPLIANCE, QUALITY ASSURANCE & TESTS</summary>
 
-- [Capítulo 07:]()
+- [Capítulo 07: Hora do Compliance](./fase06/capitulo07.md)
 - [Capítulo 08:]()
 
 </details>

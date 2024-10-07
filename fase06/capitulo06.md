@@ -225,14 +225,14 @@ Modelos | Descrição
 - visão geral das fases de uma condução de um projeto com RUP:
 
 <div align="center">
-<img src="./assets/fases-rup.png" width="70%"><br>
+<img src="./assets/fases-rup.jpeg" width="70%"><br>
 <em>Fases do RUP.</em><br>
 </div>
 
 - para cada fase, é previsto o tipo de atividade a ser feita (modelagem de negócio, documentação de requisitos, análise e desenho, implementação, teste e implantação).
 
 <div align="center">
-<img src="./assets/atividades-por-fase-rup.png" width="70%"><br>
+<img src="./assets/atividades-por-fase-rup.jpeg" width="70%"><br>
 <em>Atividades previstas por fase de um projeto conduzido com RUP.</em><br>
 </div>
 
@@ -250,7 +250,7 @@ Modelos | Descrição
 - composição das equipes SCRUM:
 
 <div align="center">
-<img src="./assets/equipe-scrum.png" width="80%"><br>
+<img src="./assets/equipe-scrum.jpeg" width="80%"><br>
 <em>Formação da equipe SCRUM.</em><br>
 </div>
 
@@ -258,7 +258,7 @@ Modelos | Descrição
 - processo SCRUM quanto a suas etapas:
 
 <div align="center">
-<img src="./assets/visao-geral-scrum.png" width="70%"><br>
+<img src="./assets/visao-geral-scrum.jpeg" width="70%"><br>
 <em>Visão geral do processo SCRUM.</em><br>
 </div>
 
@@ -292,7 +292,7 @@ Modelos | Descrição
 - cada vez mais, os modelos de ciclo de vida e processo ágil ganham espaço no universo dos projetos de soluções tecnológicas.
 
 <div align="center">
-<img src="./assets/principios-devops.png" width="80%"><br>
+<img src="./assets/principios-devops.jpeg" width="80%"><br>
 <em>Princípios do DEVOPS.</em><br>
 </div>
 
