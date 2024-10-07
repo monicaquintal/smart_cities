@@ -217,23 +217,109 @@ Modelos | Descrição
   - definição de artefatos a serem produzidos em cada fase (documentação).
   - perfil dos profissionais a serem alocados e suas responsabilidades.
   - controles a serem aplicados (mecanismos de registro de plano, evolução do projeto e de ajuste de curso).
+- os processos para condução tradicional e para condução ágil são diferentes, dentre eles, tem-se o `RUP (Rational Unified Process)`, aplicável as situações de emprego dos modelos de ciclo de vida Cascata e Incremental, e tem-se o `SCRUM`, aplicável aos projetos que seguem ciclo de vida Evolutivo ou Espiral.
+- existem diversos outros modelos de processo difundidos no mercado como RAD, DSDM, Extreme Programing (XP), porém serão apresentados alguns detalhes sobre os processos RUP e SCRUM, focando na sua relação com Ciclos de Vida de Software.
 
+### 1.4.1 Processo tradicional clássico (RUP)
+- o RUP (Rational Unified Process) mantém as características de condução de projeto por fases sequenciais sem retorno, definição completa e de preferência irrevogável de requisitos antes de iniciar o desenvolvimento, muita divisão de papéis entre os desenvolvedores, alocando perfis profissionais conforme a fase do projeto e, muita documentação administrativa.
+- visão geral das fases de uma condução de um projeto com RUP:
 
+<div align="center">
+<img src="./assets/fases-rup.png" width="70%"><br>
+<em>Fases do RUP.</em><br>
+</div>
 
+- para cada fase, é previsto o tipo de atividade a ser feita (modelagem de negócio, documentação de requisitos, análise e desenho, implementação, teste e implantação).
 
+<div align="center">
+<img src="./assets/atividades-por-fase-rup.png" width="70%"><br>
+<em>Atividades previstas por fase de um projeto conduzido com RUP.</em><br>
+</div>
 
+- os profissionais da área de desenvolvimento de sistemas são categorizados pelo RUP em mais de uma dezena de papéis, distribuídos entre analistas, arquitetos, engenheiros, programadores, testadores, revisores, avaliadores e mais.
+- as fases são percorridas de forma sequencial, produzindo o sistema como um todo ou módulos que se complementam até formar o sistema.
+- o RUP ainda apresenta descrições detalhadas de cada atividade a ser desenvolvida num projeto, com exemplificação de estruturas padrão (templates) de artefatos a serem produzidos a cada atividade realizada.
+- o RUP traz bastante formalismo ao processo de desenvolvimento, com gerenciamento preciso e controle absoluto sobre materiais produzidos ao longo do projeto e sobre as ações da equipe de desenvolvimento, com implicações negativas no ritmo de entregas de software para uso, como é de se esperar de um modelo tradicional de projeto.
+- com o emprego do RUP, consegue-se construir um plano de projeto detalhado utilizando ferramentas como o MS-Project, Oracle Primavera, Open Project e outras.
 
+### 1.4.2 Processo ágil
+- o SCRUM é o modelo de processo ágil de software mais aplicado mundialmente.
+- traz fortes conceitos de flexibilização de desenvolvimento, foco em rápidas entregas de software, comunicação intensiva entre membros da equipe e com partes interessadas no produto final, desburocratização do gerenciamento, flexibilização de escopo e adaptação do projeto para adequá-lo as necessidades de negócio vigentes.
+- a forma de condução ágil exige disciplinas de planejamento, organização e controle bem diferentes das aplicáveis aos projetos com condução tradicional, dada a grande autonomia de disparos de frentes de trabalho e flexibilidade para mudanças no escopo, durante o curso do projeto.
+- o SCRUM traz um conceito forte de trabalho em TIME para concretizar resultados rápidos, tendo clara definição de papéis e responsabilidades, papéis esses que são poucos, exigindo da equipe de desenvolvedores habilidades múltiplas (full stack skills).
+- composição das equipes SCRUM:
 
+<div align="center">
+<img src="./assets/equipe-scrum.png" width="80%"><br>
+<em>Formação da equipe SCRUM.</em><br>
+</div>
 
+- é organizado em um processo definido em TIME BOXES, que são caixas de tempo pré-fixado, mantendo assim um ritmo de produção, tendo o compromisso de gerar frequentemente uma entrega útil para o cliente.
+- processo SCRUM quanto a suas etapas:
 
+<div align="center">
+<img src="./assets/visao-geral-scrum.png" width="70%"><br>
+<em>Visão geral do processo SCRUM.</em><br>
+</div>
 
+- inclui ainda um conjunto de ARTEFATOS de gestão, que são documentações gerenciais padronizadas a serem produzidas ao longo do ciclo de processo produtivo, as quais são poucas para efeito de gerenciamento de projeto.
+- a prioridade da documentação e a documentação mais extensa fica por conta da arquitetura e engenharia técnica da solução, as quais são partes integrantes do produto final, acompanhando o código da aplicação.
+- o processo SCRUM de condução de projetos que se alinha em especial com o ciclo de vida de projetos em Espiral, apesar de poder ser aplicado com segurança para atender desenvolvimentos sob o modelo Evolutivo.
+- os artefatos de planejamento e controle do projeto com SCRUM são:
+  - `Backlog de produto`: retrata um plano de entregas dos componentes do software.
+  - `Backlog de sprint`: com as tarefas a serem realizadas em uma corrida de produção, sendo planejadas uma sprint por vez.
+  - `KANBAN board`: para monitorar status de tarefas de sprints e das entregas de componentes do produto final.
+  - `Burndown chart`: representa o esforço de produção previsto e cumprido, e permite comparar o ritmo dos trabalhos com uma referência de ritmo ideal, na execução de uma sprint.
 
+## 1.5 Melhores práticas de gerenciamento do ciclo de vida em DevOps
 
+- segundo o ***modelo FLEKS***, que aplica práticas integradas para gerenciar projetos no universo do desenvolvimento ágil exigido na produção de software contemporânea, o emprego de um ciclo de vida e processo de software bem definido ajudam a definir uma forma de pensar os trabalhos em equipe que facilita o aprendizado, cria foco, reduz o desperdício, orienta o fluxo de trabalho e a responsabilização, possibilita a adaptação e customização que venha a ser exigida ao longo do projeto, levando à excelência.
+  - `mindset FLEKS`: excelência, aprendizagem, trabalho em equipe, adaptação, customização, foco, redução de desperdício, fluxo.
+- ciclos de vida e processos de software são pilares fundamentais da governança de TI, dando visibilidade de planos e resultados, além de serem instrumentos da qualidade, na medida em que auxiliam no gerenciamento da eficiência, eficácia e na efetividade do projeto e do seu produto final.
+- os projetos ágeis são os mais aplicados na atualidade do desenvolvimento do software e recomendam que o ciclo de vida e o processo de software criem orientação para a produção e entrega do produto final, devidamente adequado para as necessidades de uso, reduzindo atividades burocráticas.
+  - `Manifesto ágil`:
+    - indivíduos e interações mais que processos e ferramentas.
+    - responder a mudanças mais que seguir um plano.
+    - software funcionando mais que documentação abrangente.
+    colaboração com cliente mais que seguir um contrato.
+- ciclos de vida de projeto em Espiral e Evolutivo são os mais empregados em situações de desenvolvimento otimizado e integrado de software, porém, em situações em que o escopo do projeto é fechado (não permite modificações), com execução de curto prazo e que dificilmente enfrentará mudança de regra do negócio no curso do projeto, modelos mais tradicionais como a condução Cascata ou Incremental podem ser empregados com sucesso.
+- as vantagens dos modelos ágeis estão na flexibilidade de adaptação do projeto às necessidades de negócio e entregas de partes da solução o quanto antes para uso, enquanto os modelos tradicionais procuram rigor administrativo,simplicidade de controle e validação integrada da solução completa; na medida em que se conhece o que a equipe está fazendo a cada fase, não se retorna à discussão de assuntos de uma fase passada e só se pode entregar a solução completa ou módulos completos da solução para uso.
+- tratando de melhores práticas da atualidade, DEVOPS é a palavra de ordem. 
+  - DEVOPS é a junção de duas palavras: Development e Operations. 
+  - traz um paradigma que busca aproximar desenvolvedores de aplicações com os operadores e usuários das soluções, criando uma visão holística sobre os projetos de software.
+  - DEVOPS solicita o emprego de mecanismos que dinamizem o processo produtivo, cumprindo com um ciclo de vida ágil de produção de software, o que inclui muita automação na hora de programar, testar e entregar o software e o provimento dinâmico e sob demanda de infraestrutura para construir, validar e usar a solução no dia a dia do negócio.
+- a tendência da vida social da humanidade é a agilização de atividades e a mudança constante de comportamentos, impulsionados pelas tecnologias emergentes que ampliam os horizontes da produção, distribuição, armazenagem e consumo de mercadorias, flexibilizam e intensificam comunicações e a prestação de serviços entre as pessoas físicas e jurídicas.
+- cada vez mais, os modelos de ciclo de vida e processo ágil ganham espaço no universo dos projetos de soluções tecnológicas.
 
+<div align="center">
+<img src="./assets/principios-devops.png" width="80%"><br>
+<em>Princípios do DEVOPS.</em><br>
+</div>
 
+## 1.6 Conclusãosobre as melhores práticas de Ciclo de Vida de Software
 
+- os ciclos de vida orientam as tarefas, responsabilidades e os fluxos de trabalho para executar projetos de software e são a base dos processos de software que, por sua vez, definem papéis para os colaboradores do projeto, estabelecem ferramentas e documentações de planejamento e controle específicas, as quais precisam ser empregadas no gerenciamento dos trabalhos.
+- existem várias opções que o desenvolvedor de software pode escolher para se orientar quando ao ciclo de vida de projeto: o modelo Cascata, o modelo Incremental, o Evolutivoe o Espiral. 
+  - cada um deles traz características facilitadoras e dificultadoras conforme a caraterística do projeto que se precisa executar.
+- enquanto os modelos tradicionais como Cascata e Incremental trazem simplicidade administrativa de trabalhos (por trabalharem com escopo fechado e fases sequenciais bem definidas, embora recheados de documentação administrativa), os modelos Evolutivo e Espiral são mais flexíveis e abertos a adaptação para mudanças necessárias no curso do projeto (características presentes nos turbulentos cenários de negócios da atualidade). 
+- modelos tradicionais entregam pacotes de software integrados e completos, enquanto modelos ágeis e flexíveis primam por entregar pequenas porções de software com poucas funcionalidades que pouco a pouco, gradualmente, vão formando a solução esperada pelo usuário final.
+- a escolha do ciclo de vida a ser seguido não deve ser uma deliberação estática da empresa, ou seja, não se deve determinar que apenas um modelo seja seguido sempre; o mais apropriado é conhecer e saber empregar os diversos modelos e, por ocasião de um projeto, escolher o que é mais apropriado, avaliando o custo-benefício administrativo e para a produção e entrega do software, atendendo as expectativas das partes interessadas (stakeholders) que inclui oponto de vista dos desenvolvedores, patrocinadores, usuários finais, operadores de sistema, de dados e da infraestrutura, e equipes que prestarão suporte após a entrega do produto.
+- soma-se à escolha do ciclo de vida de projeto, a definição da estratégia de manutenção do produto, que envolve a definição do ciclo de vida pós-entrega do produto.
+  - quão frequente serão as atualizações de um produto existente e em qual período de tempo se pretende desenvolver e lançar novas versões são decisões que determinarão o quanto uma solução sobreviverá em uso e trará retorno sobre o investimento de quem a desenvolveu e comprou.
+- a escolha correta de um ciclo de vida de projeto é um grande passo para que um negócio seja lançado, cresça e se mantenha, empregando tecnologia em suas operações.
 
+--- 
 
+## FAST TEST
+
+### 1. Sobre ciclo de vida de projeto de software, assinale a afirmativa correta.
+> O conceito da Cascata de projeto é de conduzir todo o desenvolvimento como uma sequência de fases que acontecem em sequência, sendo que, uma vez superada uma fase não se volta para trás.
+
+### 2. Leia a definição a seguir: "É um modelo de processo ágil de software mais aplicado mundialmente. Esse modelo traz fortes conceitos de flexibilização de desenvolvimento, foco em rápidas entregas, comunicação intensiva, desburocratização do gerenciamento, flexibilização de escopo e adaptação do projeto". Essa definição está se referindo a qual modelo?
+> Scrum.
+
+### 3. As manutenções pelas quais o sistema pode passar são:
+> Corretivas, Adaptativas, Evolutivas e Perfectivas.
 
 --- 
 
