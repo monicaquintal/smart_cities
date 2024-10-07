@@ -174,7 +174,7 @@
 - [Capítulo 03: Deployment na Nuvem](./fase06/capitulo03.md)
 - [Capítulo 04: Azure DevOps e Ferramentas](./fase06/capitulo04.md)
 - [Capítulo 05: Continuous Integration e Continuous Delivery](./fase06/capitulo05.md)
-- [Capítulo 06:]()
+- [Capítulo 06: Application Lifecycle Management](./fase06/capitulo06.md)
 
 </details>
 
