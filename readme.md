@@ -189,7 +189,7 @@
 <details>
 <summary>ENTERPRENEURSHIP PROGRAM</summary>
 
-- [Capítulo 09:](./fase05/capitulo09.md)
+- [Capítulo 09: Pitch](./fase05/capitulo09.md)
 
 </details>
 <br>
