@@ -182,7 +182,7 @@
 <summary>COMPLIANCE, QUALITY ASSURANCE & TESTS</summary>
 
 - [Capítulo 07: Hora do Compliance](./fase06/capitulo07.md)
-- [Capítulo 08:]()
+- [Capítulo 08: Quality Assurance](./fase06/capitulo08.md)
 
 </details>
 
