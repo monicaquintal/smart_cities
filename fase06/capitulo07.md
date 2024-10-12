@@ -112,7 +112,7 @@ estamos debugando um código, estamos nos referindo ao processo de localizar e c
   - essa distribuição ajuda a detectar e corrigir problemas de forma eficiente e econômica.
 
 <div align="center">
-<img src="./assets/ilustracao-piramide-testes.png" width="60"><br>
+<img src="./assets/ilustracao-piramide-testes.png" width="60%"><br>
 <em>Ilustração da pirâmide de testes.</em><br>
 </div>
 
@@ -219,21 +219,200 @@ estamos debugando um código, estamos nos referindo ao processo de localizar e c
 - essas normas foram criadas para fornecer uma base de dados uniforme e consistente, com o objetivo de assegurar a qualidade e a eficiência dos processos de teste em diversos setores e contextos. A
 - a série ISO/IEC 29119 abrange diversas áreas fundamentais do teste de software, tais como processos, documentação e técnicas de teste, contribuindo para a melhoria das práticas e facilitando a comunicação entre as partes interessadas.
 
+### 1.3.1 Componentes principais - ISO/IEC 29119
 
+- os termos e conceitos fundamentais que estão relacionados aos testes de software, estabelecendo uma base comum para a compreensão e comunicação entre profissionais da área.
+- algumas recomendações de acordo com a ISO/IEC 29119:
 
+	- `Teste funcional`:
+		- é um método de verificação que se concentra em assegurar que o sistema esteja funcionando conforme as especificações estabelecidas. 
+		- esse tipo de teste valida se o comportamento do sistema está alinhado com as especificações funcionais. 
+		- durante a execução de testes funcionais, o foco está em confirmar se todas as funcionalidades do software operam de acordo com os requisitos definidos, o que pode incluir a verificação de funcionalidades específicas, como login do usuário, geração de relatórios e execução de operações básicas do sistema. 
+		- o principal objetivo é garantir que o sistema atenda aos requisitos funcionais e realize as operações desejadas de maneira adequada.
+	- `Teste não-funcional`:
+		- avalia aspectos do sistema que não estão diretamente relacionados à sua funcionalidade principal, como desempenho, usabilidade e segurança. 
+		- esses testes visam garantir que o software, além de funcionar corretamente, também se comporte adequadamente sob diferentes condições de carga, oferecendo uma experiência de usuário satisfatória e sendo seguro contra ameaças potenciais. 
+		- por exemplo, testes de desempenho verificam a capacidade do sistema em lidar com grandes volumes de dados e usuários simultaneamente, enquanto testes de segurança avaliam as vulnerabilidades e a proteção de dados sensíveis. 
+		- a garantia proporcionada por esses testes é que o sistema oferece uma experiência de uso eficiente e segura, mesmo em condições variadas.
 
+- pensando no teste em si ele é um conjunto de condições ou variáveis que permite determinar se um sistema atende às especificações estabelecidas. 
+- para realizar testes de forma eficaz, é necessário estabelecer claramente os critérios de aceitação e os resultados esperados. 
+- os testes devem ser planejados e projetados de acordo com as necessidades, especificações e cenários de uso do sistema. 
+- é essencial garantir que os testes avaliem tanto os aspectos funcionais quanto os não funcionais do software para uma avaliação completa do seu desempenho.
+- outro ponto importante e o `relatório de teste`, um documento que descreve as atividades e os resultados dos testes realizados. 
+	- um relatório de qualidade inclui informações detalhadas sobre o escopo dos testes, os casos de teste executados, os resultados obtidos e quaisquer defeitos encontrados. 
+	- ele fornece uma visão clara do status do software e da sua qualidade geral, auxiliando os stakeholders na tomada de decisões informadas sobre a liberação do produto ou a necessidade de correções adicionais.
 
+### 1.3.2 Maximizar resultados dos testes - ISO/IEC 29119
 
+- em ambientes de desenvolvimento de software, a priorização e o foco dos testes são essenciais para garantir a qualidade do produto final. 
+- dependendo da complexidade e das características do produto, diferentes áreas devem receber atenção especial:
+	- para ***produtos de alta complexidade***, como sistemas de gerenciamento empresarial ou aplicações que envolvem integrações complexas, é crucial concentrar-se tanto em testes funcionais detalhados quanto em testes de integração e de sistema integrado. 
+		- esses testes asseguram que a interação entre diferentes módulos e sistemas externos esteja funcionando corretamente, garantindo a integridade e a funcionalidade geral do sistema.
+	- em ***produtos com grande visibilidade***, como redes sociais ou plataformas de e-commerce, a usabilidade e a experiência do usuário são fundamentais. 
+		- além dos estes funcionais, é essencial investir em testes de usabilidade e de desempenho para assegurar uma experiência fluida e satisfatória para os usuários finais. 
+		- esses testes ajudam a identificar e corrigir problemas que possam impactar negativamente a interação do usuário com a plataforma.
+	- para ***produtos que lidam com dados sensíveis***, como sistemas bancários e de saúde, o foco deve ser em testes de segurança rigorosos. 
+		- estes testes devem incluir a identificação de vulnerabilidades e a validação das medidas de proteção contra possíveis ataques, garantindo que o sistema esteja robusto e seguro contra ameaças externas.
+- com essa estratégia, o que podemos garantir e que os testes verificam que o software atende aos requisitos estabelecidos e funciona de acordo com o esperado.
+- eles fazem uma análise da qualidade do sistema, identificando e corrigindo defeitos antes de liberar. 
+- além disso, os testes asseguram que o software é robusto, seguro e proporciona uma experiência de usuário satisfatória, o que contribui para a redução de riscos e melhoria da confiabilidade do produto final.
 
+### 1.3.3 Processos de teste - ISO/IEC 29119
 
+- os processos de teste descritos na ISO/IEC 29119 fornecem uma estrutura sistemática para a gestão e execução de testes de software. 
+- são divididos em diversas tarefas principais, cada uma com suas próprias subatividades e saídas esperadas.
+- algumas recomendações de acordo com a ISO/IEC 29119:
+	- 1. para garantir uma abordagem eficaz aos testes, o `planejamento`é essencial.
+		- inicialmente, é necessário definir os objetivos de teste, estabelecendo metas claras sobre o que se espera alcançar com as atividades de teste. 
+		- em seguida, é importante desenvolver uma estratégia de teste, que delineia a abordagem geral para a execução dos testes, incluindo métodos e ferramentas a serem utilizados. 
+		- o planejamento deve também envolver a determinação dos recursos necessários, como pessoal e ferramentas, e a criação de um cronograma detalhado para garantir que as atividades de teste sejam realizadas dentro dos prazos estabelecidos.
+	- 2. durante a fase de execução dos testes, o `monitoramento` contínuo do progresso é crucial. 
+		- isso envolve acompanhar o andamento das atividades de teste em relação ao plano estabelecido, assegurando que tudo esteja conforme o previsto.
+		- o controle de mudanças também é uma parte fundamental, gerenciando quaisquer alterações no escopo ou nos requisitos dos testes que possam surgir.
+		- relatórios de status de teste devem ser fornecidos regularmente aos stakeholders, oferecendo atualizações sobre o andamento dos testes e quaisquer problemas identificados.
+	- 3. a `análise` e o `projeto dos testes` começam com a identificação das condições de teste, definindo os requisitos específicos que precisam ser avaliados. 
+		- com base nessas condições, são desenvolvidos casos de teste detalhados, que guiarão a execução dos testes.
+		- a preparação de dados de teste é outra etapa crítica, garantindo que todos os dados necessários estejam disponíveis e corretos para a realização dos testes.
+	- 4. na fase de `implementação` e `execução` dos testes, o ambiente de teste deve ser configurado adequadamente para garantir que os testes sejam realizados em condições controladas. 
+		- os casos de teste são então executados conforme o planejado, e os resultados são registrados cuidadosamente, incluindo qualquer defeito encontrado durante o processo.
+	- 5. após a execução dos testes, é necessário avaliar se os critérios de saída foram satisfeitos e se os objetivos de teste foram atingidos; um `relatório` detalhado dos testes deve ser preparado, documentando os resultados obtidos e quaisquer problemas remanescentes. 
+		- este relatório fornece uma visão clara do estado do software e ajuda na tomada de decisões sobre a continuidade do projeto.
+	- 6. o encerramento dos testes envolve a `revisão` da `eficiência` e `eficácia` das atividades realizadas, identificando áreas para melhoria. 
+		- toda a documentação de teste deve ser arquivada para referência futura, e as lições aprendidas devem ser documentadas para aprimorar futuros projetos de teste. 
+		- esse processo finaliza a fase de teste e estabelece uma base sólida para o desenvolvimento contínuo e aprimoramento do software.
 
+### 1.3.4 Documentação do teste - ISO/IEC 29119
 
+- a elaboração e os tipos de documentação de teste são aspectos cruciais para o processo de teste de software, conforme definido pela norma ISO/IEC 29119. 
+- a documentação é fundamental para garantir um teste eficaz e organizado, pois abrange uma série de documentos essenciais que suportam o planejamento, o acompanhamento e o relato dos testes e elas são divididas em:
+***documentação organizacional***, ***projeto*** e ***nível de teste***. 
 
+- 1. `Documentação organizacional`: inclui a Política de Teste e a Estratégia de Teste. 
+	- ***Política de Teste***:
+		- define a abordagem geral e os princípios orientadores para os testes em toda a organização.
+		-  estabelece as diretrizes e normas que devem ser seguidas para garantir uma abordagem consistente e eficaz em todos os projetos de teste. 
+	- ***Estratégia de Teste***: 
+		- detalha a abordagem de teste para toda a organização, abrangendo as metodologias, ferramentas e processos a serem utilizados para atingir os objetivos de qualidade.
 
+- 2. `Projeto`: dentro da documentação de projeto, destacam-se o Plano de Teste do Projeto e o Relatório de Conclusão do Projeto de Teste. 
+	- ***Plano de Teste do Projeto***:
+		- é um documento que planeja as atividades de teste para um projeto específico, incluindo a definição dos objetivos de teste, a criação de casos de teste e a programação das atividades. 
+		- este plano é crucial para garantir que os testes sejam realizados de acordo com as especificações e requisitos do projeto. 
+	- ***Relatório de Conclusão do Projeto de Teste***:
+		-  resume os resultados e avalia a eficácia dos testes realizados. 
+		- fornece uma visão geral do desempenho do software e da qualidade alcançada, ajudando os stakeholders a tomar decisões informadas sobre a liberação do produto e possíveis ações futuras.
+		- essas recomendações ajudam a garantir que a documentação de teste seja completa, bem estruturada e alinhada com os objetivos e requisitos dos projetos de teste, contribuindo para a eficácia e a transparência do processo de teste de software.
 
+- 3. `Nível de teste`:
+	- crucial para garantir uma gestão eficaz dos testes em cada fase do processo de teste de software. 
+	- de acordo com a norma ISO/IEC 29119, a documentação inclui vários tipos de documentos, cada um com um papel específico no planejamento, execução e análise dos testes.
+	- lista dos tipos:
+		- A. ***Plano de Teste***: detalha o plano para um nível específico de teste, estabelecendo os objetivos, o escopo e a abordagem do teste. A Especificação de Teste descreve os casos de teste que devem ser executados e os critérios de aceitação que definem o sucesso dos testes. Os Resultados de Teste documentam o desempenho do software durante a execução dos testes,  fornecendo uma visão clara sobre os resultados obtidos.
+		- B.  ***Relatórios de Anomalias***: registram quaisquer defeitos ou problemas encontrados durante os testes, facilitando a rastreabilidade e a resolução das falhas. O Relatório de Status de Nível de Teste oferece atualizações sobre o progresso dos testes em um nível específico, informando sobre o andamento e quaisquer desvios em relação ao plano original.
+		- C. ***Relatório do Ambiente de Teste***: descreve as características e configurações do ambiente onde os testes foram realizados, garantindo que os resultados sejam interpretados no contexto adequado. Por fim, o Relatório de Conclusão de Nível de Teste fornece um resumo final dos resultados e da eficácia dos testes em um nível específico, oferecendo uma visão geral da qualidade do software e da conclusão das atividades de teste.
 
+- em resumo, a documentação do teste desempenha um papel fundamental no processo de teste de software, conforme definido pela norma ISO/IEC 29119. 
+- ela abrange uma variedade de documentos que são essenciais para garantir a organização, a eficiência e a eficácia dos testes. 
+- a documentação de teste ajuda a estruturar o planejamento, o acompanhamento e a avaliação dos testes, assegurando que todas as etapas sejam bem gerenciadas e que os resultados sejam claros e compreensíveis.
 
-              
+### 1.3.5 Técnicas de teste - ISO/IEC 29119
+
+- as técnicas de teste descritas na norma ISO/IEC 29119 são métodos sistemáticos utilizados para criar e testar situações de teste com o objetivo de identificar defeitos e validar o software. 
+- algumas recomendações de acordo com a ISO/IEC 29119:
+	- `técnicas de teste`: essenciais para garantir a qualidade do software e podem ser divididas em duas categorias principais: técnicas baseadas em especificações e técnicas baseadas na estrutura do código. Cada abordagem oferece métodos distintos para identificar e corrigir defeitos, proporcionando uma avaliação mais abrangente do sistema. 
+	- `técnicas baseadas em especificações` incluem a análise de valor limite, que consiste em testar as bordas dos intervalos de entrada para verificar como o sistema lida com valores extremos e limites de dados. Isso ajuda a identificar problemas que podem ocorrer em pontos críticos. Os grafos de causa-efeito relacionam causas e seus efeitos para determinar quais combinações de condições e ações devem ser testadas, visualizando a relação entre diferentes fatores que podem influenciar o comportamento do sistema. O método da árvore de classificação utiliza uma estrutura hierárquica para organizar e testar diferentes combinações de variáveis e suas possíveis interações, facilitando a cobertura de diferentes cenários e combinações.
+	- `teste combinatório`: foca na combinação de diferentes entradas para explorar como essas combinações afetam o comportamento do sistema, sendo útil para verificar a interação entre múltiplas variáveis. Os testes de tabela de decisão avaliam combinações de condições e ações, utilizando tabelas para representar e testar todas as possíveis situações que podem ocorrer no sistema. O particionamento de equivalência divide as entradas possíveis em classes de equivalência, testando uma amostra representativa de cada classe para garantir que o sistema funcione corretamente para todos os casos da classe. A adivinhação de erros baseia-se na experiência e intuição do testador para prever onde erros podem ocorrer, ajudando a identificar áreas críticas que podem não ser cobertas por outras técnicas.
+	- `testes aleatórios`: selecionam entradas de forma aleatória para testar o sistema, descobrindo problemas inesperados e garantindo uma cobertura ampla sem depender de uma estrutura específica. Os testes de cenário baseiam-se em histórias ou cenários de uso real para testar o sistema, simulando como os usuários interagem com o software em diferentes situações. Os testes de transição de estado verificam as mudanças de estado do sistema para garantir que ele transita corretamente entre diferentes condições e realiza as ações esperadas. Por fim, os testes de sintaxe avaliam a conformidade do sistema com as regras sintáticas específicas, verificando se o software segue as normas e padrões definidos para a linguagem ou formato.
+	- `técnicas baseadas na estrutura do código` incluem o teste de ramificação ou decisão, que verifica todos os ramos e decisões do código, assegurando que cada caminho possível seja testado para identificar falhas em diferentes ramificações do fluxo de controle. O teste de condição de ramificação foca na verificação de todas as combinações possíveis de condições dentro das ramificações do código, garantindo que todas as condições sejam testadas adequadamente. A cobertura de declaração testa cada declaração no código para assegurar que todas as partes do código sejam executadas pelo menos uma vez durante os testes.
+
+- essas técnicas oferecem uma abordagem estruturada e sistemática para a realização de testes, garantindo que diferentes aspectos do software sejam cuidadosamente verificados e avaliados.
+
+### 1.3.6 Testes baseados em palavras chaves - ISO/IEC 29119
+
+- testes baseados em keywords na norma ISO/IEC 29119 é uma abordagem em que as ações de teste são representadas por palavras-chave. 
+- essas palavras-chave são associadas a operações específicas que o sistema deve realizar, e o teste é estruturado usando essas palavras-chave para definir o fluxo do teste e as verificações a serem feitas.
+- algumas recomendações de acordo com a ISO/IEC 29119:
+	- o processo de automação de testes usando palavras-chave segue uma abordagem que facilita a criação e manutenção de testes de forma eficiente. 
+	- o funcionamento deste método começa com a definição de palavras-chave que representam ações e verificações comuns no teste, como "clicar", "preencher" e "verificar". 
+	- cada uma dessas palavras-chave está associada a uma função específica no código de teste, permitindo que os casos de teste sejam descritos de maneira mais intuitiva e próxima da linguagem natural.
+	- a criação de casos de teste é então realizada utilizando essas palavras-chave, o que simplifica o processo de desenvolvimento dos testes. 
+	- testadores, mesmo aqueles com menos experiência técnica, podem criar testes de forma mais acessível, sem a necessidade de escrever código complexo. 
+	- palavras-chave facilitam a comunicação dos requisitos e das ações esperadas, tornando a criação de testes mais direta e compreensível.
+- entre as principais vantagens desse método estão a simplicidade, a reutilização e a manutenção facilitada. 
+	- a simplicidade é uma característica notável, pois permite que testes sejam criados e mantidos de maneira mais acessível, especialmente para testadores que não possuem um profundo conhecimento técnico. 
+	- a reutilização das palavras-chave em diferentes testes contribui para uma maior eficiência e consistência, já que uma única palavra-chave pode ser aplicada em vários cenários de teste.
+	- a manutenção é facilitada, pois atualizações nas funcionalidades ou nas interfaces do software podem ser realizadas apenas nas implementações das palavras-chave, sem a necessidade de modificar todos os casos de teste individualmente.
+
+- exemplo: considere um caso de teste para verificar o login em uma aplicação:
+	- 1) Palavras-chave definidas.
+	- 2) Abrir Navegador.
+	- 3) Ir para URL.
+	- 4) Preencher Campo.
+	- 5) Clicar Botão.
+	- 6) Verificar Texto.
+
+<div align="center">
+
+Ação | Parâmetro 1 | Parâmetro 2
+-------|----------------|------------
+Abrir Navegador | | 
+Ir para URL | https://example.com/login | 
+Preencher Campo | username | user123
+Preencher Campo| password | pass123
+Clicar Botão | login | 
+Verificar Texto | Bem-vindo | user123
+
+</div>
+
+- ou seja, a norma ISO/IEC 29119 é uma ferramenta valiosa para qualquer empresa que queira aprimorar a qualidade do seu software e a eficiência dos seus testes. 
+- a aplicação das diretrizes e práticas recomendadas pela norma não só aumenta a confiabilidade do software, como também cria uma cultura de qualidade e excelência nas equipes de desenvolvimento e teste.
+
+## 1.4 Custo e benefício no processo de qualidade
+
+- a implementação de um processo de qualidade robusto pode envolver custos significativos, mas frequentemente resulta em economias substanciais a longo prazo.
+- investir em práticas e processos de qualidade pode demandar investimentos substanciais em diversas áreas, incluindo ferramentas e tecnologias, treinamento e desenvolvimento, além de tempo e recursos.
+- a aquisição de ferramentas avançadas para testes de software é uma das principais áreas de investimento. 
+- plataformas de automação de testes, ferramentas de gerenciamento de defeitos e soluções de monitoramento podem representar um custo considerável. 
+- ferramentas como Selenium, Postman e Datadog, por exemplo, são essenciais para garantir uma abordagem abrangente e eficiente, mas podem exigir um investimento financeiro significativo.
+- além disso, o treinamento e o desenvolvimento da equipe são fundamentais para a eficácia de um processo de qualidade. 
+- o treinamento contínuo das equipes e a contratação de especialistas em qualidade, com expertise em metodologias como Test-Driven Development (TDD) e Behavior-Driven Development (BDD), representam custos adicionais. 
+- outro aspecto relevante é o tempo e os recursos dedicados ao processo de teste: planejamento, execução e revisão dos testes exigem um investimento considerável de tempo e esforço. 
+- apesar desses custos iniciais, os benefícios de implementar um processo de qualidade robusto são evidentes a longo prazo: redução de defeitos, a melhoria da satisfação do cliente e a minimização de retrabalho são apenas algumas das vantagens que podem compensar os investimentos feitos, resultando em economias e ganhos operacionais significativos.
+
+### 1.4.1 Economias e benefícios a longo prazo
+
+- investir em qualidade pode envolver um custo inicial elevado, mas os benefícios a longo prazo frequentemente compensam esses investimentos. 
+- o aprimoramento da qualidade de software oferece economias significativas e diversos benefícios que impactam positivamente a sustentabilidade e o sucesso de uma organização.
+- uma das principais vantagens é a redução de defeitos e retrabalho. Implementar um processo de qualidade eficaz permite identificar e corrigir problemas nas fases iniciais do desenvolvimento, o que é geralmente muito mais econômico do que resolver falhas após o lançamento do produto. 
+- a correção de defeitos durante o desenvolvimento é consideravelmente mais barata do que as correções necessárias após a liberação, o que pode reduzir significativamente os custos associados a ajustes posteriores.
+- além disso, produtos de alta qualidade tendem a aumentar a satisfação do cliente e a reduzir a taxa de churn, que é a taxa de abandono de clientes ou usuários de um produto ou serviço. 
+	- quando um produto atende ou supera as expectativas dos usuários, a satisfação do cliente aumenta, o que resulta em maior lealdade e menores taxas de abandono. 
+	- isso não apenas melhora a percepção da marca, mas também contribui para a fidelização do cliente e para a construção de uma base de usuários mais estável.
+- outro benefício importante é a redução dos custos de suporte e manutenção: produtos com menor número de defeitos e maior confiabilidade exigem menos suporte técnico e manutenção, o que reduz os custos operacionais associados a essas atividades. 
+	- empresas líderes no setor, como Microsoft e Google, reconhecem a importância desse investimento e aplicam práticas rigorosas de qualidade para minimizar problemas e reduzir a demanda por suporte.
+- por fim, processos de qualidade bem definidos podem melhorar a eficiência operacional. 
+	- ao implementar métodos eficazes de teste e controle de qualidade, é possível reduzir o tempo de desenvolvimento e acelerar o lançamento de novos produtos. 
+	- essa eficiência não só melhora a capacidade de resposta da empresa às demandas do mercado, mas também otimiza o uso de recursos e melhora a agilidade organizacional.
+- portanto, apesar do custo inicial, os benefícios a longo prazo de investir em qualidade gera a redução de defeitos, aumento da satisfação do cliente, diminuição dos custos de suporte e manutenção, e melhoria da eficiência operacional que frequentemente superam os investimentos feitos. 
+- a qualidade não só garante um produto final mais confiável, mas também proporciona uma vantagem competitiva significativa e contribui para a sustentabilidade e sucesso da empresa.
+
+--- 
+
+## FAST TEST
+
+### 1. Assinale a alternativa que completa corretamente a frase a seguir: "O _____________ se concentra nas funcionalidades do software sem considerar sua estrutura interna. O testador não possui conhecimento sobre o código-fonte e foca apenas nas entradas e saídas para verificar se o software atende aos requisitos definidos.".
+> Teste de caixa preta.
+
+### 2. O que são testes de regressão?
+> Testes que verificam se alterações no código introduziram novos defeitos em partes já testadas do software.
+
+### 3. O que são testes de unidade?
+> Testes realizados no nível do código-fonte e focados em métodos e funções individuais.
+
+### 4. Leia a frase a seguir: "Alguns testes de software oferecem uma abordagem diferenciada, sem seguir um roteiro predefinido. Esse tipo de teste costuma utilizar uma abordagem criativa e intuitiva. Estamos nos referindo a qual tipo de teste?
+> Testes exploratórios.
+
 --- 
 
 [Voltar ao início!](https://github.com/monicaquintal/smart_cities)
