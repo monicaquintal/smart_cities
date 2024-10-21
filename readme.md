@@ -193,3 +193,26 @@
 
 </details>
 <br>
+
+<h2>📚 FASE 7: EMERGING TECHNOLOGIES (de 16/10 até 15/11)</h2>
+
+<details>
+<summary>COMPLIANCE, QUALITY ASSURANCE & TESTS</summary>
+
+- [Capítulo 01: There and back again](./fase07/capitulo01.md)
+- [Capítulo 02: É hora de testar](./fase07/capitulo02.md)
+- [Capítulo 03: ]()
+
+</details>
+
+<>
+<summary>DISRUPTIVE ARCHITECTURES: IOT, IOB & GENERATIVE IA</summary>
+
+- [Capítulo 04: ]()
+- [Capítulo 05: ]()
+- [Capítulo 06: ]()
+- [Capítulo 07: ]()
+- [Capítulo 08: ]()
+
+</details>
+<br>
