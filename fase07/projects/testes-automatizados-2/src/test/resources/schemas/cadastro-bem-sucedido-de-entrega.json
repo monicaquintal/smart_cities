@@ -1,0 +1,64 @@
+{
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://example.com/object1725559416.json",
+  "title": "Root",
+  "type": "object",
+  "required": [
+    "numeroEntrega",
+    "numeroPedido",
+    "nomeEntregador",
+    "statusEntrega",
+    "dataEntrega"
+  ],
+  "properties": {
+    "numeroEntrega": {
+      "$id": "#root/numeroEntrega",
+      "title": "Numeroentrega",
+      "type": "integer",
+      "examples": [
+        1
+      ],
+      "default": 0
+    },
+    "numeroPedido": {
+      "$id": "#root/numeroPedido",
+      "title": "Numeropedido",
+      "type": "integer",
+      "examples": [
+        2
+      ],
+      "default": 0
+    },
+    "nomeEntregador": {
+      "$id": "#root/nomeEntregador",
+      "title": "Nomeentregador",
+      "type": "string",
+      "default": "",
+      "examples": [
+        "Ana Silva"
+      ],
+      "pattern": "^.*$"
+    },
+    "statusEntrega": {
+      "$id": "#root/statusEntrega",
+      "title": "Statusentrega",
+      "type": "string",
+      "default": "",
+      "examples": [
+        "EM_SEPARACAO"
+      ],
+      "pattern": "^.*$"
+    },
+    "dataEntrega": {
+      "$id": "#root/dataEntrega",
+      "title": "Dataentrega",
+      "type": "string",
+      "default": "",
+      "examples": [
+        "2024-08-22"
+      ],
+      "pattern": "^.*$"
+    }
+  }
+}

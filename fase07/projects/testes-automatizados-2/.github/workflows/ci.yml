@@ -1,0 +1,28 @@
+name: Continuous Integration
+on:
+  pull_request:  # Aciona para pull requests
+  push:          # Aciona para pushs
+    branches:
+      - '*'  # Isso significa qualquer branch
+jobs:
+  continuous-integration:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '22'
+          distribution: 'adopt'
+      - name: Build and test
+        run: mvn clean test #Esse comando vai rodar os testes
+  deploy:
+    runs-on: ubuntu-latest
+    needs: continuous-integration  # Esse job depende do anterior
+    if: success()  # Esse job só será executado se o job anterior for bem-sucedido
+    steps:
+      - name: Deploy application
+        run: |
+          echo "Deploying application..."
+          # Adicione aqui seu comando de deploy

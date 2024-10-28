@@ -1022,18 +1022,415 @@ Funcionalidade: Validar o contrato ao realizar um cadastro bem-sucedido de entre
     Então o status code da resposta deve ser 201
 ~~~
 
+- vamos incluir dois novos passos no ***cenário “Validar contrato do cadastro bem-sucedido de entrega”***:
+  - o primeiro passo especificará o arquivo de contrato que o teste deve usar como referência. O
+  - o segundo passo será responsável por validar a resposta da API em conformidade com o contrato definido.
+- esses passos serão adicionados logo abaixo do passo “Então o status code da resposta deve ser 201”.
 
+~~~java
+E que o arquivo de contrato esperado é o "Cadastro bem-sucedido de entrega"
+Então a resposta da requisição deve estar em conformidade com o contrato selecionado
+~~~
 
+- agora que escrevemos esses novos passos, vamos implementá-lo na nossa classe de CadastroEntregasSteps e prosseguir com as implementações necessárias em Java para garantir que a validação desses passos seja realizada com sucesso.
+- no arquivo de ExemploContrato.feature, clique na lâmpada amarela de sugestão ao lado de um dos novos passos destacados no arquivo de feature, sublinhados em amarelo, ou pressione Alt + Enter para abrir as opções. Em seguida, selecione a opção "Create all step definitions".
+  - na janela que se abre, iremos selecionar o arquivo CadastroEntregasSteps já existente para criar a definição dos passos.
+- após selecionar o arquivo CadastroEntregasSteps, serão criados dois novos passos no arquivo com a seguinte definição.
 
+~~~java
+@E("que o arquivo de contrato esperado é o {string}")
+    public void queOArquivoDeContratoEsperadoÉO(String arg0) {
+    }
+@Então("a resposta da requisição deve estar em conformidade com o contrato selecionado")
+    public void aRespostaDaRequisiçãoDeveEstarEmConformidadeComOContratoSelecionado() {
+    }
+~~~
 
+- por boas práticas, renomear o argumento arg0 para algo mais significativo e alinhado com o contexto do passo. No caso, o argumento pode ser renomeado para contract.
 
+~~~java
+@E("que o arquivo de contrato esperado é o {string}")
+public void queOArquivoDeContratoEsperadoÉO(String contract) {
+    }
+~~~
 
+- agora que geramos os steps, eles ainda estão vazios, sem nenhuma validação de lógica; precisamos adicionar a lógica correspondente na classe CadastroEntregasService, localizada em “src/test/java/service”. 
+- primeiramente, definiremos três variáveis essenciais para trabalhar com o Json Schema. 
+  - a `variável schemasPath`, do tipo String, armazenará o caminho do diretório onde os arquivos de esquema estão localizados, que é "src/test/resources/schemas/". Esse caminho facilita o acesso aos arquivos de esquema durante a execução dos testes. 
+  - a `variável jsonSchema`, do tipo JSONObject, será utilizada para carregar e manipular o esquema JSON a partir do arquivo, permitindo validar se a resposta da API está em conformidade com o contrato definido. 
+  - a `variável mapper`, do tipo ObjectMapper, que é uma instância da classe ObjectMapper da biblioteca Jackson. O ObjectMapper é fundamental para converter o corpo da resposta da API de Json para JsonNode, uma estrutura que facilita a comparação com o Json Schema. Com essa variável, conseguimos transformar o Json da resposta em um formato que pode ser validado contra o Json Schema definido.
 
+~~~java
+String schemasPath = "src/test/resources/schemas/";
+JSONObject jsonSchema;
+private final ObjectMapper mapper = new ObjectMapper();
+~~~
 
+- após isso, criaremos o `método loadJsonFromFile()`.
+- esse método é responsável por carregar o Json Schemaa partir de um arquivo especificado pelo filePath. 
+- ele utiliza a classe Filespara abrir um fluxo de entrada (InputStream) do arquivo, e o JSONTokener para converter esse fluxo em um JSONObject.
 
+~~~java
+private JSONObject loadJsonFromFile(String filePath) throws IOException {
+        try (InputStream inputStream = Files.newInputStream(Paths.get(filePath))) {
+            JSONTokener tokener = new JSONTokener(inputStream);
+            return new JSONObject(tokener);
+        }
+    }
+~~~
 
+- além disso, será criado o `método setContract()`.
+- esse método define qual contrato deve ser utilizado para a validação.
+  - dependendo do valor do parâmetro contract, o método carrega o Json Schema correspondente usando o método loadJsonFromFile(). 
+  - por exemplo, para o contrato "Cadastro bem-sucedido de entrega", ele carrega o arquivo cadastro-bem-sucedido-de-entrega.json localizado no diretório especificado por schemasPath. 
+  - caso o contrato não esteja previsto, o método lança uma exceção IllegalStateException, indicando que o contrato fornecido não é esperado. 
+  - o método é preparado para lidar com a adição de novos contratos: se houver mais arquivos de contrato na pasta schemas, basta adicionar um novo caseno switch para carregar o Json Schema correspondente. Dessa forma, o método assegura que o esquema arquivo correto seja carregado para validação com base no contrato selecionado.
 
+~~~java
+public void setContract(String contract) throws IOException {
+        switch (contract) {
+            case "Cadastro bem-sucedido de entrega" -> jsonSchema = loadJsonFromFile(schemasPath + "cadastro-bem-sucedido-de-entrega.json");
+            default -> throw new IllegalStateException("Unexpected contract" + contract);
+        }
+    }
+~~~
 
+- por último, implementar o `método validateResponseAgainstSchema()`. 
+  - esse método valida a resposta da API contra o esquema JSON previamente setado pelo método setContract(). 
+  - primeiro, ele obtém o corpo da resposta como uma String e o converte para um JSONObject. 
+  - em seguida, usa o esquema JSON carregado (através da variável jsonSchema que foi definida pelo método setContract()) para configurar o JsonSchemaFactory e criar um Json Schema. 
+  - o corpo da resposta é então convertido para um JsonNode usando o ObjectMapper. 
+  - o método valida o JsonNode da resposta contra o JsonSchema e retorna um conjunto de ValidationMessage contendo quaisquer erros de validação encontrados. 
+  - isso permite verificar se a resposta da API está em conformidade com o contrato esperado e é essencial para garantir a integridade das respostas da API.
+
+~~~java
+public Set<ValidationMessage> validateResponseAgainstSchema() throws IOException 
+{       
+JSONObject jsonResponse = new JSONObject(response.getBody().asString());    
+JsonSchemaFactory schemaFactory = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V4);    
+JsonSchema schema = schemaFactory.getSchema(jsonSchema.toString());    
+JsonNode jsonResponseNode = mapper.readTree(jsonResponse.toString());    
+Set<ValidationMessage> schemaValidationErrors = schema.validate(jsonResponseNode);    
+return schemaValidationErrors;
+}
+~~~
+
+- para finalizar o entendimento, a validação do contrato ocorre da seguinte forma:
+  - o contrato Json especificado é utilizado para verificar se os campos da resposta da API estão em conformidade com o esquema definido. 
+  - isso inclui a verificação de tipos de dados (por exemplo, se um campo deve ser uma string, um número inteiro ou uma lista), a presença de campos obrigatórios, e outras restrições especificadas no esquema.
+
+- com as implementações dos métodos setContract() e validateResponseAgainstSchema() podemos agora passar para a implementação do código Java nos steps na classe `CadastroEntregasSteps` que estão vazios.
+- o método anotado com @E("que o arquivo de contrato esperado é o {string}") precisa ser implementado o código Java para selecionar o contrato esperado.
+
+~~~java
+@E("que o arquivo de contrato esperado é o {string}")
+    public void queOArquivoDeContratoEsperadoÉO(String contract) throws IOException {
+        cadastroEntregasService.setContract(contract);
+    }
+~~~
+
+- este método é responsável por definir qual JsonSchema será usado para a validação, utilizando o método setContract da instância cadastroEntregasService. O parâmetro contract recebe o nome do contrato esperado, conforme fornecido no cenário de teste no arquivo ExemploContrato.feature. O método setContract() carrega o esquema JSON correspondente a partir do arquivo especificado.
+- feito isso o próximo passo é a implementação do código Java no método anotado com @Então("a resposta da requisição deve estar em conformidade com o contrato selecionado"). Esse método será responsável por validar o contrato como esperado.
+
+~~~java
+@Então("a resposta da requisição deve estar em conformidade com o contrato selecionado")
+    public void aRespostaDaRequisiçãoDeveEstarEmConformidadeComOContratoSelecionado() throws IOException {
+        Set<ValidationMessage> validateResponse = cadastroEntregasService.validateResponseAgainstSchema();
+        Assert.assertTrue("O contrato está inválido. Erros encontrados: " + validateResponse, validateResponse.isEmpty());
+    }
+~~~
+
+- nesse código, o método é responsável por verificar se a resposta da requisição está em conformidade com o Json Schema selecionado.
+- o processo ocorre da seguinte forma: 
+  - o método validateResponseAgainstSchema() é chamado na instância cadastroEntregasService. 
+  - este método realiza a validação da resposta da API contra o Json Schema que foi carregado e definido anteriormente por meio do método setContract(). 
+  - o resultado é um Set&lt;ValidationMessage&gt;, que contém quaisquer erros de validação encontrados.
+- para garantir que a validação do contrato seja bem-sucedida, usamos a asserção Assert.assertTrue().
+  - a condição validateResponse.isEmpty() deve ser true para indicar que não há erros. 
+  - se validateResponse.isEmpty() for false, a mensagem de erro incluirá todos os detalhes dos erros encontrados, ajudando na identificação e correção de problemas e garantindo que a resposta da API esteja conforme o contrato definido.
+- executar o teste no arquivo ExemploContrato.feature ("Validar contrato do cadastro bem-sucedido de entrega" > ícone de execução (play)> "Run").
+
+> IMPORTANTE: [Link da solução implementada até o momento para download no GITHUB](https://github.com/proflealvjo/testes-automatizados/tree/3.4.5-usando-contrato).
+
+### 1.4.6 Usando tags nos testes
+- precedidas pelo símbolo @.
+- são uma ferramenta poderosa para categorizar, organizar e gerenciar os testes de maneira eficiente.
+- são anotações que você pode adicionar aos cenários de teste para agrupá-los de acordo com diferentes critérios. 
+- ajudam a controlar a execução dos testes, facilitam a organização e permitem a filtragem dos testes com base em suas características específicas. 
+- algumas das principais formas de usar tags:
+  - `@regressivo`: utilizada para marcar testes que garantem que mudanças recentes no código não introduziram novos erros e que as funcionalidades existentes continuam funcionando como esperado. Esses testes são essenciais para manter a integridade da aplicação ao longo do tempo.
+  - `@smoke`: Utilizada para marcar testes rápidos que verificam as principais funcionalidades da aplicação, assegurando que o sistema está operando de forma básica e aceitável.
+  - `@funcional`: Designa testes que validam funcionalidades específicas da aplicação, garantindo que essas funcionalidades atendam aos requisitos estabelecidos.
+  - `@desempenho`: Usada para testes que avaliam o desempenho da aplicação, como tempos de resposta e eficiência sob carga, assegurando que a aplicação atende às expectativas de desempenho.
+  - `@padrão`: Marca testes que devem ser executados regularmente, geralmente como parte de um processo de integração contínua, para garantir a estabilidade das funcionalidades essenciais.
+
+- você pode aplicar as tags tanto a nível de funcionalidade, onde elas são usadas para executar todos os cenários dentro do arquivo feature que possuem a tag específica. 
+  - por exemplo, ao aplicar uma tag como @regressivo em uma feature, todos os cenários dessa feature com a mesma tag serão executados, permitindo verificar a integridade geral das funcionalidades relacionadas.
+- além disso, as tags podem ser aplicadas a nível de cenário, afetando apenas os cenários que estão marcados com a tag específica. 
+  - isso é útil para executar ou pular cenários específicos conforme necessário. 
+  - por exemplo, você pode marcar um cenário específico com @padrão e executá-lo separadamente para validar funcionalidades básicas, sem executar todos os outros testes.
+- as tags permitem uma gestão mais eficiente dos testes, ajudando a manter a qualidade da aplicação e a garantir que todos os aspectos importantes sejam verificados em diferentes situações e configurações.
+- agora que entendemos o uso das tags, vamos aplicá-las para organizar e gerenciar nossos testes:
+  - adicionar a tag ***@regressivo*** em nível de funcionalidade nos arquivos de feature do projeto. Especificamente, aplicaremos a tag @regressivo nos arquivos ExemploContrato.feature, ExemploContexto.feature e CadastroEntregas.feature.
+  - ao fazer isso, estaremos preparando nosso projeto para executar todos os testes em qualquer funcionalidade onde a tag @regressivo estiver presente. 
+  - isso permitirá que rodemos de maneira eficiente todos os cenários que estão marcados como regressivos, garantindo que qualquer funcionalidade abrangida por essas tags seja testada conforme o esperado.
+
+> IMPORTANTE: [Link da solução implementada até o momento para download no GITHUB](https://github.com/proflealvjo/testes-automatizados/tree/3.4.6-usando-anotacoes).
+
+### 1.4.7 Configurando a classe TestRunner para execução dos Testes
+- o propósito do TestRunner é configurar e gerenciar a execução dos testes de aceitação escritos em Gherkin, garantindo que eles sejam executados corretamente e que os resultados sejam relatados de forma apropriada.
+- é responsável por integrar o framework de teste, como o Cucumber, com a nossa suíte de testes automatizados.
+- utiliza as tags definidas nos arquivos de feature para filtrar e executar apenas os cenários desejados. 
+- dessa forma, podemos controlar quais testes devem ser executados em diferentes contextos, como testes de regressão, testes de funcionalidade ou qualquer outra categoria definida por tags.
+- vamos criar um pacote na pasta “src/test/java/” chamado `runner` e, dentro dele, criar uma classe chamada `TestRunner`. Nessa classe, prepararemos o seguinte código:
+
+~~~java
+package runner;
+import org.junit.runner.RunWith;
+import io.cucumber.junit.Cucumber;
+import io.cucumber.junit.CucumberOptions;
+@RunWith(Cucumber.class)
+@CucumberOptions(
+        features = "src/test/resources/features",
+        glue = "steps",
+        tags = "@regressivo",
+        plugin = {"html:target/cucumber-reports.html"}
+)
+public class TestRunner {
+}
+~~~
+
+- neste código, estamos configurando o TestRunner para executar os testes definidos nas funcionalidades e cenários que possuem a tag @regressivo. 
+- a opção features especifica o local onde os arquivos .feature estão localizados, enquanto glue indica o pacote onde os passos (steps) estão definidos. 
+- a opção plugin é utilizada para gerar um relatório em formato HTML, que será salvo no diretório target como cucumber-reports.html. Isso ajuda a obter uma visualização clara dos resultados dos testes.
+
+- com essa configuração concluída, podemos executar o TestRunner de maneira simples: no ambiente de desenvolvimento, localize a classe TestRunner e clique no botão de execução (geralmente representado por um ícone de play). Em seguida, selecione a opção "Run'TestRunner'".
+  - esse processo iniciará a execução de todos os testes marcados com a tag @regressivo. 
+  - o terminal exibirá um relatório detalhado dos resultados, mostrando quais testes passaram e quais falharam, juntamente com informações adicionais que ajudam na análise dos resultados.
+  - além disso, um relatório de execução será gerado em formato HTML na pasta target chamado cucumber-reports.html. Esse arquivo HTML fornece uma visão geral dos resultados dos testes de forma visual e acessível, permitindo a análise detalhada do desempenho dos testes e facilitando a comunicação dos resultados para a equipe.
+- além desse TestRunner, você pode criar quantos Runners personalizados desejar dentro do pacote runner, permitindo configurar diferentes critérios de execução e relatórios para atender às necessidades específicas do projeto, como diferentes conjuntos de tags ou configurações de ambiente.
+
+> IMPORTANTE: [Link da solução implementada até o momento para download no GITHUB](https://github.com/proflealvjo/testes-automatizados/tree/3.4.7-usando-test-runner).
+
+### 1.4.8 Usando Hooks nos testes
+- Hooks são métodos especiais que permitem executar código específico antes e depois dos testes. 
+- são úteis para configurar o ambiente de teste, limpar dados, iniciar ou parar serviços, entre outras tarefas essenciais.
+
+- para configurar Hooks, criamos um `pacote chamado hook` dentro de “src/test/java” e, em seguida, criamos uma classe chamada Hook. 
+  - nessa classe, você pode definir os Hooks usando as anotações @Before, @After, @BeforeAll, e @AfterAll.
+- por exemplo, suponha que você precise realizar uma configuração global, como inicializar uma base de dados antes da execução de todos os testes e limpá-la após a execução. Embora, neste caso, não tenhamos uma base de dados real para gerenciar, vamos simular essas ações usando mensagens de impressão.
+
+~~~java
+package hook;
+import io.cucumber.java.After;
+import io.cucumber.java.AfterAll;
+import io.cucumber.java.Before;
+import io.cucumber.java.BeforeAll;
+public class Hook {
+    @BeforeAll
+    public static void setUpBeforeClass() {
+        // Simulação de configuração global antes da execução de todos os testes
+        System.out.println("Configuração global antes de todos os testes.");
+        inicializarAmbiente();
+    }
+    @AfterAll
+    public static void tearDownAfterClass() {
+        // Simulação de limpeza global após a execução de todos os testes
+        System.out.println("Limpeza global após todos os testes.");
+        limparAmbiente();
+    }
+    @Before
+    public void setUp() {
+        // Simulação de configuração antes da execução de cada cenário
+        System.out.println("Iniciando um novo cenário de teste...");
+        prepararDadosParaTeste();
+    }
+    @After
+    public void tearDown() {
+        // Simulação de limpeza após a execução de cada cenário
+        System.out.println("Finalizando o cenário de teste...");
+        limparDadosDepoisDoTeste();
+    }
+    private static void inicializarAmbiente() {
+        // Simulação de inicialização do ambiente
+        System.out.println("Ambiente inicializado.");
+    }
+    private static void limparAmbiente() {
+        // Simulação de limpeza do ambiente
+        System.out.println("Ambiente limpo.");
+    }
+    private void prepararDadosParaTeste() {
+        // Simulação de preparação de dados para o teste
+        System.out.println("Dados preparados para o cenário de teste.");
+    }
+    private void limparDadosDepoisDoTeste() {
+        // Simulação de limpeza de dados após o teste
+        System.out.println("Dados limpos após o cenário de teste.");
+    }
+}
+~~~
+
+- entendendo as anotações no código:
+  - `@BeforeAll`: é usado para preparar o ambiente global antes da execução de todos os testes. No nosso caso, simulamos isso com uma mensagem de impressão.
+  - `@AfterAll`: é utilizado para limpar o ambiente global após a execução de todos os testes.
+  - `@Before`: é chamado antes de cada cenário para preparar o ambiente específico para o teste.
+  - `@After`: é chamado após cada cenário para limpar ou reverter as mudanças feitas durante o teste.
+
+- como estamos simulando a limpeza e configuração sem uma base de dados real, usamos mensagens de impressão para ilustrar o processo. 
+- esses Hooks garantem que o ambiente de teste esteja corretamente configurado e limpo, ajudando a manter a integridade e a confiabilidade dos testes.
+- para que o TestRunner reconheça e utilize os Hooks ao rodar os testes, você precisa ajustar a configuração do TestRunner para incluir o pacote onde os Hooks estão localizados. 
+- você deve modificar a configuração do CucumberOptions para adicionar o pacote hook no parâmetro glue:
+
+~~~java
+package runner;
+import org.junit.runner.RunWith;
+import io.cucumber.junit.Cucumber;
+import io.cucumber.junit.CucumberOptions;
+@RunWith(Cucumber.class)
+@CucumberOptions(
+        features = "src/test/resources/features",
+        glue =  {"steps", "hook"}, // Inclua o pacote de hooks aqui
+        tags = "@regressivo",
+        plugin = {"html:target/cucumber-reports.html"}
+)
+public class TestRunner {
+}
+~~~
+
+- após configurar os Hooks e ajustar o TestRunner para incluir o pacote de hooks, você pode executar o TestRunner novamente. 
+- ao executar o TestRunner, no terminal, você verá as mensagens de impressão (prints) que foram configuradas nos métodos dos Hooks. 
+- essas mensagens irão confirmar que os Hooks estão sendo executados conforme esperado antes e depois de cada cenário, bem como antes e depois da execução de todos os testes.
+- essas mensagens ajudarão a verificar se a configuração e limpeza do ambiente de teste estão ocorrendo corretamente e fornecerão visibilidade adicional sobre o fluxo de execução dos seus testes.
+- mesmo que, no nosso caso, tenhamos simulado a funcionalidade dos Hooks com mensagens de impressão, é possível entender que seu conceito é extremamente útil. 
+- os hooks permitem que você execute código específico antes e depois de cada cenário, ou antes e depois de todos os testes, o que é fundamental para preparar e limpar o ambiente de teste.
+- essa capacidade de personalizar e gerenciar o ambiente de teste de forma eficaz é um grande diferencial para tornar a automação de testes mais robusta e confiável.
+
+> IMPORTANTE: [Link da solução implementada até o momento para download no GITHUB](https://github.com/proflealvjo/testes-automatizados/tree/3.4.8-usando-hook).
+
+### 1.4.9 Usando o maven para rodar os testesA
+- basta informar ao Maven que, quando quisermos rodar os testes, devemos direcioná-lo para nossa classe TestRunner.
+- para isso, vamos ao arquivo pom.xmle incluir a configuração na seção &lt;build&gt;e &lt;plugins&gt;, logo abaixo da última dependência; precisamos especificar quais testes devem ser executados. 
+- exemplo:
+
+~~~xml
+<build>    
+    <plugins>        
+        <plugin>            
+            <groupId>org.apache.maven.plugins</groupId>            
+            <artifactId>maven-surefire-plugin</artifactId>            
+            <version>3.0.0-M5</version>            
+            <configuration>                
+                <includes>                    
+                    <include>**/TestRunner.java</include>                
+                </includes>            
+            </configuration>        
+        </plugin>    
+    </plugins>
+</build>
+~~~
+
+- com isso configurado, o próximo passo é abrir um terminal na sua máquina e navegar até a pasta onde seu projeto está localizado. 
+- executar os testes com o seguinte comando:
+
+~~~
+mvn clean test
+~~~
+
+- o comando mvn clean test é utilizado para executar os testes em um projeto Maven. 
+  - o `mvn` é a ferramenta do Maven, que serve para automação de construção e gerenciamento de projetos Java. 
+  - o `objetivo clean` remove todos os arquivos gerados pela construção anterior, garantindo que você comece uma nova execução de teste em um ambiente limpo. 
+  - `objetivo test` instrui o Maven a rodar os testes definidos no projeto. 
+- com a configuração que fizemos anteriormente, o Maven utilizará o maven-surefire-plugin para executar a classe TestRunner.java, onde estão localizados nossos testes automatizados.
+- com essa configuração, quando você rodar os testes usando o Maven, ele irá focar na classe TestRunner.java para a execução dos testes, o que facilita a automação e a integração contínua, permitindo que você teste seu código de forma eficaz fora da IDE.
+
+> IMPORTANTE: [Link da solução implementada até o momento para download no GITHUB](https://github.com/proflealvjo/testes-automatizados/tree/3.4.9-mvn-clean-test).
+
+### 1.4.10 Executando os testes em uma pipeline devops
+- dentro dessa pipeline, a intenção é executar nossos testes automatizados: se os testes passarem, o processo seguirá para o deploy; se os testes falharem, o pipeline será interrompido, impedindo que o projeto seja implantado em produção com bugs.
+- essa abordagem garante a qualidade do código e a estabilidade do ambiente de produção, permitindo que apenas versões testadas e aprovadas sejam liberadas.
+- cada ferramenta de CI tem sua própria abordagem, porém todas seguem a mesma lógica de executar testes automatizados antes de permitir um deploy.
+
+- passos para configuração do CI usando o GitHubActions:
+  - primeiramente, criaremos uma pasta chamada .github na raiz do nosso repositório. Dentro dela, criaremos outra pasta chamada workflows. Essa estrutura é onde armazenaremos nossas definições de pipeline.
+  - criar um arquivo dentro da pasta workflows chamado ci.yml, que será a configuração da nossa pipeline de CI/CD no GitHub Actions.
+
+~~~yml
+name: Continuous Integration
+on:
+  pull_request:  # Aciona para pull requests
+  push:          # Aciona para pushs
+    branches:
+      - '*'  # Isso significa qualquer branch
+jobs:
+  continuous-integration:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '22'
+          distribution: 'adopt'
+      - name: Build and test
+        run: mvn clean test #Esse comando vai rodar os testes
+  deploy:
+    runs-on: ubuntu-latest
+    needs: continuous-integration  # Esse job depende do anterior
+    if: success()  # Esse job só será executado se o job anterior for bem-sucedido
+    steps:
+      - name: Deploy application
+        run: |
+          echo "Deploying application..."
+          # Adicione aqui seu comando de deploy
+~~~
+
+- seções:
+  - `name: Continuous Integration`, que define o nome da pipeline que será exibido no GitHub Actions.
+  - `on:` especifica os eventos que acionam a execução da pipeline. Neste caso, a pipeline é acionada tanto para pull requests quanto para pushes em qualquer branch, indicado por `branches:` -'*'.
+  - `jobs:` define os trabalhos que serão executados na pipeline. O job continuous-integration executa as etapas necessárias para compilar o código e rodar os testes. 
+  - comando `runs-on:` ubuntu-latest especifica o ambiente onde o job será executado. 
+  - seção `steps` contém as etapas a serem executadas, começando com `Checkout code`, que faz o checkout do código do repositório. 
+  - em seguida, `Set up JDK` configura o ambiente Java, especificando a versão 22. 
+  - o passo `Build and test` executa o `comando mvn clean test`, que compila o projeto e executa os testes.
+  - o próximo job, `deploy`, é responsável pelo deploy da aplicação. 
+  - a instrução `needs:` continuous-integration indica que este job depende do job anterior, ou seja, só será executado se o job de integração contínua for bem-sucedido. 
+  - a condição `if:` success() garante que o deploy só ocorra se os testes passarem. 
+  - as stepspara o deploy incluem uma mensagem inicial de deploy.
+
+- com esse arquivo configurado, a pipeline está pronta para ser acionada. 
+- assim que um pull request for criado ou um push for realizado, os testes serão executados e, se forem bem-sucedidos, o deploy será realizado.
+
+> IMPORTANTE: Para integrar nossos testes a uma pipeline, é fundamental que nosso projeto de testes automatizados esteja hospedado no GitHub. Essa etapa é essencial, pois permite que utilizemos ferramentas de CI/CD, como o GitHub Actions, para automatizar a execução dos testes sempre que ocorrerem alterações no código.
+
+- toda vez que fizermos um push para o repositório Git, todos os testes serão executados. 
+- essa configuração é totalmente personalizável: por exemplo, é possível configurar a pipeline para rodar os testes apenas quando houver um merge na branch principal, como a master ou main.
+- quando você faz um push de uma alteração no repositório, o GitHub Actions detecta esse evento e inicia a execução da pipeline conforme configurado no arquivo ci.yml.
+  - na seção Actions do GitHub, você encontrará uma lista de todas as pipelines executadas, juntamente com seus respectivos status.
+  - cada execução da pipeline será exibida com informações sobre se os testes foram bem-sucedidos ou se houve falhas. Você pode clicar em cada execução para obter detalhes sobre os logs, etapas executadas e resultados dos testes. 
+  - caso os testes não passem, a pipeline seguirá a mesma lógica, mas não permitirá que avance para a fase de deploy, conforme configuramos no nosso arquivo ci.yml. Isso garante que nenhuma alteração com problemas seja promovida para produção, mantendo a qualidade do código e a estabilidade do sistema.
+- dessa forma, é possível identificar e corrigir os erros antes que qualquer novo código seja implantado, evitando possíveis bugs em produção. Esse mecanismo de verificação ajuda a manter um fluxo de desenvolvimento mais seguro e confiável.
+
+> IMPORTANTE: [Link da solução implementada até o momento para download no GITHUB](https://github.com/proflealvjo/testes-automatizados/tree/3.4.10-ci-test).
+
+---
+
+## FAST TEST
+
+### 1. Assinale a alternativa que completa corretamente a frase a seguir: "Optar por _____________ não é apenas uma questão de testar o software, mas de garantir que o software atenda às necessidades do negócio de forma clara e compreensível para todos os envolvidos".
+> BDD (Behavior-Driven Development)
+
+### 2. Seguir boas práticas na escrita dos cenários de teste é fundamental para garantir que os testes sejam eficazes e fáceis de manter. Uma prática importante é utilizar uma linguagem consistente e evitar ambiguidades. Qual linguagem, em particular, facilita o reaproveitamento de passos em diferentes cenários, o que contribui para a eficiência e manutenção dos testes.
+> Gherkin.
+
+### 3. Os testes automatizados consistem em scripts que validam o comportamento de uma aplicação, assegurando que ela funcione conforme esperado. Os testes automatizados são a base do BDD. Aliás, BDD significa:
+> Behavior-Driven Development.
+
+### 4. Assinale a alternativa que completa corretamente a frase a seguir: "O _____________ permite a escrita de cenários de teste usando a linguagem Gherkin, que é simples e intuitiva, transformando esses cenários em testes executáveis".
+> Cucumber.
+
+### 5. Assinale a alternativa que completa corretamente a frase a seguir: "O _____________ foca em garantir que o código funcione conforme esperado, começando com a criação de testes unitários antes mesmo do código funcional. É uma abordagem mais técnica e orientada ao desenvolvimento de pequenas partes do software de forma isolada".
+> TDD (Test-Driven Development)
 
 --- 
 
