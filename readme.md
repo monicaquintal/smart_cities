@@ -207,7 +207,7 @@
 
 <summary>DISRUPTIVE ARCHITECTURES: IOT, IOB & GENERATIVE IA</summary>
 
-- [Capítulo 04: ]()
+- [Capítulo 04: A arquitetura das... Coisas!](./fase07/capitulo04.md)
 - [Capítulo 05: ]()
 - [Capítulo 06: ]()
 - [Capítulo 07: ]()
