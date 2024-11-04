@@ -201,11 +201,10 @@
 
 - [Capítulo 01: There and back again](./fase07/capitulo01.md)
 - [Capítulo 02: É hora de testar](./fase07/capitulo02.md)
-- [Capítulo 03: ]()
+- [Capítulo 03: Pode trazer a conta!](./fase07/capitulo03.md)
 
 </details>
 
-<>
 <summary>DISRUPTIVE ARCHITECTURES: IOT, IOB & GENERATIVE IA</summary>
 
 - [Capítulo 04: ]()
