@@ -308,7 +308,9 @@ letra = getchar();
 
 ### 1.1.4 Construções básicas em C
 - operadores: aritméticos (+, -, *, / e %), relacionais (como >, <=, ==, !=) e lógicos (como ||, && e !).
-- `operadores aritméticos`: usados para calcular expressões matemáticas e se classificam em duas categorias: binários e unários.
+
+#### 1.1.4.1 `Operadores aritméticos`: 
+- usados para calcular expressões matemáticas e se classificam em duas categorias: binários e unários.
   - ***operadores unários***: atuam na inversão de valores, e utilizam os símbolos – e +. 
   - ***operadores binários***: dependem de dois elementos para a operação.
 
@@ -324,7 +326,8 @@ Módulo (resto) | %
 
 </div>
 
-- `operadores relacionais`: relação de comparação entre os elementos, utilizados ao longo dos códigos para a resolução de problemas.
+#### 1.1.4.2 `Operadores relacionais`: 
+- relação de comparação entre os elementos, utilizados ao longo dos códigos para a resolução de problemas.
 
 <div align="center">
 
@@ -341,7 +344,8 @@ Módulo (resto) | %
 
 > Distinguir (=) de (==): o primeiro é de atribuição (aritmético) e o segundo compara expressões (relacional).
 
-- `operadores lógicos`: servem para interligar mais de uma operação relacional e, do mesmo modo que os relacionais, retornam zero para falso e um para verdadeiro.
+#### 1.1.4.3 `Operadores lógicos`: 
+- servem para interligar mais de uma operação relacional e, do mesmo modo que os relacionais, retornam zero para falso e um para verdadeiro.
 
 <div align="center">
 
@@ -353,10 +357,11 @@ NÃO | !
 
 </div>
 
-- `estruturas de controle`: permitem que o programa faça a escolha do que executar, de acordo com uma condição. 
-  - a linguagem C oferece comandos para a utilização com dois tipos de estruturas: if...else e switch...case. 
+#### 1.1.4.4 `Estruturas de controle`: 
+- permitem que o programa faça a escolha do que executar, de acordo com uma condição. 
+- a linguagem C oferece comandos para a utilização com dois tipos de estruturas: if...else e switch...case. 
 
-- ***Construção if...else***:
+##### a) ***Construção if...else***:
 
 ~~~c
 if (condição) 
@@ -399,7 +404,7 @@ if (condição)
   }
 ~~~
 
-- ***construção switch...case:***
+##### b) ***Construção switch...case:***
 
 ~~~c
 switch (var) {
@@ -411,6 +416,307 @@ switch (var) {
   default: comandos;
 }
 ~~~
+
+- a utilização da estrutura de controle com o switch...case passa a ser uma opção interessante para testar um determinado resultado de uma expressão ou valor atual de uma variável. 
+- exemplo de uso da estrutura de controle com switch...case, onde é possível ver a aplicação testando o valor da variável resp, que teve uma atribuição manual do valor 3, e quando é verdadeira a verificação, não será preciso testar as demais opções, pois o comando break executa a saída do bloco.
+
+~~~c
+#include<stdio.h>
+  int main() {
+   
+    int resp;
+    printf("Digite um numero inteiro entre 1 e 3: \n")
+    scanf("%d",&resp = 3;);
+   
+    switch (resp)
+    {
+      case 1:
+        printf("Voce selecionou a opcao %d \n", resp);
+      break;
+    
+      case 2:
+        printf("Voce selecionou a opcao %d \n", resp);
+      break;
+      case 3:
+        printf("Voce selecionou a opcao %d \n", resp);
+      break;
+      
+      default:
+        printf("Voce selecionou uma opcao diferente de 1, 2 ou 3 --> %d \n", resp);
+      }
+    return 0;
+  }
+~~~
+
+#### 1.1.4.5 `Estruturas de repetição
+- quando houver a necessidade de repetição dentro do programa, existem estruturas especiais para que seja possível implementar na linguagem C, chamadas `estruturas de repetição`.
+  - elas permitem que um bloco de instruções seja executado, repetidamente, uma quantidade controlada de vezes. 
+  - há três estruturas de repetição: do...while, while e for.
+
+##### a) ***Construção do...while***: é uma estrutura básica de repetição condicional; permite a execução de um bloco de instruções repetidamente, sendo que o critério de parada é testado após a entrada no laço:
+
+~~~c
+do
+{
+  /* comandos executados enquanto condição verdadeira */
+  } while(condição)
+~~~
+
+- exemplo de uso do comando de repetição do...while, apresentando como resultado a somatória de números somente após o usuário digitar o número 0:
+
+~~~c
+#include <stdio.h>
+int main()
+{
+    double number, soma = 0;
+
+    do
+    {
+        printf("Insira um número: ");
+        scanf("%lf", &number);
+        soma += number;
+    }
+    while(number != 0.0);
+
+    printf("Soma = %.2lf",soma);
+
+    return 0;
+}
+~~~
+
+##### b) ***Construção while***:
+- faz com que a condição seja avaliada em primeiro lugar. 
+  - se a condição for verdadeira, o bloco é executado uma vez e a condição é avaliada novamente. 
+  - caso a condição seja falsa,a repetição é terminada sem a execução do bloco. 
+- nessa estrutura, ao contrário da estrutura do...while, o bloco de instruções pode não ser executado nenhuma vez, basta que a condição seja inicialmente falsa.
+
+~~~c
+while (condição) 
+  {
+    /*comandos executados enquanto condição verdadeira*/
+  }
+~~~
+
+- exemplo de uso do comando de repetição com while; situação em que ocorre o incremento de uma unidade do número 10, até que tenha o valor 19, última iteração do laço, pois o critério de parada é estipulado para valores inteiros menores do que 20.
+
+~~~c
+#include <stdio.h>
+ 
+int main () {
+
+   int num = 10;
+
+   while( num < 20 ) {
+      printf("Valor atual número: %d\n", num);
+      num++;
+   }
+ 
+   return 0;
+}
+~~~
+
+##### c) ***Construção for***:
+- muito semelhante às estruturas de repetição vistas anteriormente, entretanto, costuma ser utilizada quando se quer um número determinado de ciclos.
+- a contagem dos ciclos é feita por uma variável chamada de contador. 
+- a estrutura for é, às vezes, chamada de estrutura de repetição com contador. 
+- sintaxe:
+
+~~~c
+for(comando de inicialização;teste lógico; comando 3)
+{
+  /*comandos a serem repetidos*/
+}
+~~~
+
+- uma forma simples de contagem de números pode ser feita com o comando for, conforme exemplo, que efetua a contagem dos números de 1 até 10.
+
+~~~c
+#include <stdio.h>
+
+  int main(void)
+  {
+    int contador; //variável de controle do loop
+    
+    for(contador = 1; contador <= 10; contador++)
+    {
+      printf("%d ", contador);
+    }
+    printf(“\nFim da contagem...\n”);
+    
+    return 0;
+  } 
+~~~
+
+## 1.2 Tipos de dados compostos
+- quando o armazenamento ou a atribuição de valores às variáveis se torna mais complexo, faz-se a recursão à utilização de tipos de dados que agregam mais valores. 
+- todo tipo de dado que agrega mais de um valor se trata de uma estrutura de dados. 
+- na linguagem C, são utilizados dois tipos de dados compostos: os que agregam elementos do mesmo tipo (`vetor` e `matrizes`) e os que são compostos de dados de tipos diferentes (`structs`).
+
+### 1.2.1 Vetores e matrizes
+- como vetores (e matrizes) podem conter apenas valores do mesmo tipo,são conhecidos também como estruturas de dados homogêneas. 
+- para declarar uma variável do tipo vetor em C:
+
+~~~
+<Tipo de dado do elemento> nome_identificador [número de elementos];
+~~~
+
+- exemplos de declaração:
+
+~~~c
+int x[5]; 
+float valores[7];
+~~~
+
+- em C, os elementos de um vetor sempre são numerados por índices de 0 até número de elementos –1.
+- para que se tenha acesso a um determinado elemento, é necessário especificar a variável do tipo vetor e, entre colchetes, determinar qual é o índice do elemento, por exemplo, x[2], valores[0] etc.
+- para realizar a leitura e a escrita de um vetor inteiro,deve-se escolher elemento a elemento, por isso normalmente é usada uma repetição,como no exemplo abaixo.
+
+> IMPORTANTE: Constantes são usadas para armazenar valores que NÃO podem ser modificados durante a execução de um programa. Uma constante precisa ser declarada e, para tanto, usa-se a diretiva de pré-processador #define.
+
+~~~c
+#include <stdio.h>
+  #define N 5
+  
+  int main()
+  {
+    int idade[N], I, cont=0;
+    for (i=0; i<N; i++ ) {
+      printf"digite a idade:");
+      scanf"%", &idade[i]);
+      if (idade[i] >= 18) 
+      cont++;
+     }
+    printf"número de pessoas com idade acima 18 anos = %d", cont);
+  
+    return 0;
+  }
+~~~
+
+- no programa, é apresentado mais um novo componente de um programa em C, a `diretiva #define`.
+  - uma diretiva é executada pelo pré-processador.
+  - nesse caso, a ação gerada será a definição da constante N (C diferencia maiúsculas de minúsculas), que terá o valor 5 atribuído a ela. 
+  - quando o programa for compilado, onde houver a constante N, ela será trocada pelo valor 5.
+  - a vantagem de usar a definição de constante é que, se for necessário trocar o tamanho do vetor de 5 para 10, basta alterar o valor da constante, e em todo o programa em que N é usado, o novo valor será utilizado.
+- a estrutura de repetição foi usada para gerar índices que vão de 0 até 4; com isso, em cada repetição a variável i usada pelo for terá o valor do índice.
+
+> Cuidado: Programas em C não avisam quando o limite do dimensionamento de um vetor foi excedido e pode gerar resultados errados.
+
+### 1.2.2 String: vetor de caracteres
+- não existe o tipo básico de dado "string" como existe em algumas linguagens. 
+- uma string na linguagem C é um vetor de caracteres (elementos do tipo char). 
+- esse vetor de caracteres tem tratamento diferenciado:
+  - o final da string armazenada no vetor é marcado com o caractere nulo '\0' (barra zero).
+  - existem funções especiais para tratar esse tipo de dado. 
+- a variável que será uma string em C pode ser declarada como:
+
+~~~c
+char nome[10];
+~~~
+
+- nessa declaração, nome é a variável do tipo vetor de caracteres (string), que poderá conter 10 caracteres, embora um deles sempre conterá o caractere ‘\0’ (o último).
+- para realizar a leitura e a escrita de uma string, podem ser usadas as seguintes abordagens:
+  - Usando funções básicas da biblioteca stdio.h.
+  - scanf("%s",nome).
+  - printf("%s", nome).
+  - fgets(nome, buf,stdin).
+  - Usando funções especiais da biblioteca string.h.
+  - puts(nome).
+- exemplo:
+
+~~~c
+#include <stdio.h>
+
+  #define MAX 32
+  
+  int main() 
+  {
+    char buf[MAX];
+    char f;
+  
+    printf("Digite o nome completo: "); 
+    fgets(buf, MAX, stdin);
+  
+    printf("\n O nome completo: %s\n", buf);
+  
+    return 0;
+  } 
+~~~
+
+- ***função scanf()***: quando lê a informação digitada no teclado, ignora o sobrenome, pois essa função considera o espaço em branco uma forma de finalizar uma string.
+- ***função fgets()*** não segue essa mesma lógica, e consegue ler o nome completo digitado.
+
+> IMPORTANTE: A função scanf() considera que o espaço em branco finaliza uma string.
+
+- há outras funções especiais para manipular strings na biblioteca &lt;string.h&gt;.
+- exemplo de uso de funções básicas para a manipulação de string:
+
+~~~c
+#include <stdio.h>
+  #include <string.h>
+  
+  int main() 
+  {
+  char nome[30]={0}, todos[200]={0}, copia[30]={0};
+  strcpy(nome,"- ");
+  while (strcmp(nome,"fim") !=0){
+    strcat (todos,nome);
+       //concatena a variável nome à variável todos 
+       strcpy(copia,nome); 
+       //copia o conteúdo da variável nome 'a copia
+    printf("\n todos = %s ",todos);
+    printf("\n copia = %s ",copia);
+    printf("\n digite um nome ou fim para encerrar:");
+       fflush(stdin);
+    scanf(“%s”,nome);
+    }
+  printf("\n todos = %s",todos);
+  printf("\n comprimento de todos = %d", strlen(todos));
+  printf("\n copia = %s",copia);
+  printf("\n comprimento de copia = %d\n", strlen(copia));
+  
+  return 0;
+  }
+~~~
+
+- `vetor de string`: aplicação mais comum, onde uma variável pode armazenar um conjunto de palavras, como os nomes dos alunos de uma sala de aula. 
+  - um vetor de string é um vetor que armazena string de 30 caracteres como elemento de um vetor. 
+- exemplo: supondo uma sala com apenas 4 alunos, deve ser usada a variável nome. O programa exemplo mostra como declarar e usar a variável nome apresentada:
+
+~~~c
+#include <stdio.h>
+  #include <string.h>
+  
+  #define 	N_ALUNOS  	4
+  #define 	N_CARACTERES 	30
+  
+  int  main() 
+  {
+      char nome[N_ALUNOS][N_CARACTERES];
+      int i;
+      for (i=0; i<N_ALUNOS ; i++){
+          printf("digite o nome do aluno: ");
+        
+          fflush(stdin);
+          fgets(nome[i], N_CARACTERES,stdin);
+      }
+      for (i=0; i<N_ALUNOS; i++){
+          Printf("Aluno %d: %s",i+1,nome[0]);
+      }
+  
+      return 0;
+  }
+~~~
+
+### 1.2.3 Registros: estruturas de dados heterogêneas (struct)
+- uma estrutura de dados é um conjunto de uma ou mais variáveis, possivelmente de tipos diferentes, colocadas juntas com um único nome. Em algoritmos, esse tipo de variável é chamado de registro. 
+- cada informação contida em uma estrutura é denominada de campo ou membro. 
+- por ser composto de informações que podem ser de vários tipos, um registro (uma variável struct em linguagem C) é classificado como uma estrutura de dados heterogênea. 
+
+31
+
+
+
+
 
 
 
