@@ -712,7 +712,127 @@ char nome[10];
 - cada informação contida em uma estrutura é denominada de campo ou membro. 
 - por ser composto de informações que podem ser de vários tipos, um registro (uma variável struct em linguagem C) é classificado como uma estrutura de dados heterogênea. 
 
-31
+> Exemplo: algoritmo de um registro que armazene informações referentes a um caderno.
+
+- a primeira tarefa a ser realizada é a especificação do molde, ou seja, definição do novo tipo de dado Registro Caderno_Papelaria. 
+- depois podem ser declaradas diversas variáveis que são do tipo Registro Caderno_Papelaria.
+
+~~~
+Algoritmo Papelaria;
+
+Declare tipo
+  Registro Caderno_Papelaria
+    Início
+      fabricante[15]: caractere;
+      num_folhas: inteiro;
+      tipo_de_capa[12]: caractere;
+      tamanho[10]: caractere;
+      preço: real;
+      fim;
+  declare variáveis
+    caderno_cadastro: Registro Caderno_Papelaria
+    caderno_venda: Registro Caderno_Papelaria; 
+...
+~~~
+
+- a linguagem C segue o mesmo conceito.
+- o tipo de dado registro é implementado como struct. 
+- programa exemplo:
+
+~~~c
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+  
+struct Caderno_Papelaria {
+      char fabricante[25];
+      int num_folhas;
+      char tipo_de_capa[12];
+      char tamanho[10];
+      float preco;
+    };
+  
+int main(){
+/* declaração das variáveis */
+  struct Caderno_Papelaria caderno_cadastro, caderno_venda; 
+
+/*Leitura de uma variável do tipo struct: o caderno a ser cadastrado*/
+    printf("**************************************\n")
+    printf("* Digite o caderno a ser cadastrado: *\n");
+    printf("**************************************\n");
+
+    printf("\nDigite o fabricante: ");
+    fgets(caderno_cadastro.fabricante, sizeof(caderno_cadastro.fabricante), stdin);
+    
+    printf( "digite o número de folhas: ");
+    scanf("%d", &caderno_cadastro.num_folhas);
+    
+    printf( "digite o tipo de capa: (dura/brochura)");
+    
+    scanf(“%s”,caderno_cadastro.tipo_de_capa);
+    
+    printf( "digite a dimensão: ");
+    scanf(“%s”,caderno_cadastro.tamanho);
+    
+    printf( "digite o preço: ");
+    scanf ("%f", &caderno_cadastro.preco);
+
+/*Supondo que o caderno cadastrado seja vendido*/ 
+    caderno_venda = caderno_cadastro;
+
+/*Escrita das informações do caderno que é vendido*/
+    printf("***********************************\n");
+    printf("* Apresentacao do caderno vendido *\n");
+    printf("***********************************\n");
+
+    printf("\nfabricante:%s", caderno_cadastro.fabricante);
+    printf("num. de folhas: %d \n", caderno_venda.num_folhas);
+    printf( "tipo de capa: %s \n",caderno_venda.tipo_de_capa);
+    printf( "dimensao: %s \n",caderno_venda.tamanho);
+    printf( "preco: R$%0.2f \n", caderno_venda.preco);
+
+    return 0;
+}
+~~~
+
+- no exemplo acima, é possível verificar que, para se ter acesso a cada campo de uma variável do tipo struct, é necessário que cada campo seja especificado, e a forma é sempre: `nome_variavel.campo`.
+- para realizar a leitura de uma variável do tipo struct, campo por campo deve ser lido para poder armazenar as informações desejadas; o mesmo ocorre com a escrita de cada campo da variável. Já para uma variável que é do mesmo tipo (ou seja, struct Caderno_Papelaria), a atribuição de cada campo pode ser feita de forma implícita, como em: caderno_venda = caderno_cadastro.
+
+- outro exemplo de programa que declara e utiliza um tipo de dado struct:
+
+~~~C
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
+struct rotulo{
+  int x;
+  float y;
+  char n[20];
+  };
+
+int main()
+{
+struct rotulo qlq = {1,2.3,"Primeiro teste"}; 
+//declara uma variável struct e atribui valores iniciais
+printf(" x= %d \t y= %f \t n= %s \n", qlq.x ,qlq.y ,qlq.n);
+qlq.x=0; 
+strcpy(qlq.n,"segundo");
+printf(" x= %d \t y= %f \t n= %s \n", qlq.x ,qlq.y ,qlq.n);
+
+return 0;
+}
+~~~
+
+- o struct é mais utilizado quando podem ser armazenados vários registros de um determinado objeto (elementos de vetores ou matrizes).
+
+### 1.2.4 Uso de vetor de struct
+- um vetor de elementos do tipo struct deve ser declarado da seguinte forma:
+
+~~~c
+struct molde vetor[N];
+~~~
+
 
 
 
