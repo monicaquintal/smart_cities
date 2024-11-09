@@ -209,7 +209,7 @@
 
 - [Capítulo 04: A arquitetura das... Coisas!](./fase07/capitulo04.md)
 - [Capítulo 05: Uma linguagem heroica](./fase07/capitulo05.md)
-- [Capítulo 06: ]()
+- [Capítulo 06: Arduino, o pequeno notável](./fase07/capitulo06.md)
 - [Capítulo 07: ]()
 - [Capítulo 08: ]()
 
