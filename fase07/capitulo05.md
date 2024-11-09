@@ -833,16 +833,551 @@ return 0;
 struct molde vetor[N];
 ~~~
 
+- cada elemento que forma a variável vetor será uma struct com todos os campos especificados pelo molde.
 
+- outros exemplos de uso:
+  - suponha que um programa deva cadastrar as informações (nome e nota) de três alunos de uma sala de aula e apresentar as informações do aluno com maior nota.
+  - o programa abaixo cria o tipo de dado struct cadastro e declara a variável aluno com três elementos do tipo struct.
 
+~~~c
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
+struct cadastro{ //cria o tipo de dado struct aluno
+  char nome[10];
+  float nota;
+};
 
+int main()
+{
+  int quantidade_alunos = 3;
+  struct cadastro aluno[quantidade_alunos]; /*declara variável aluno 
+        como vetor de 3 elementos do tipo struct aluno*/
+  struct cadastro aluno_maior;
+      /*declara variável aluno_maior que armazenará
+        as informações do(1)aluno com maior nota */
+  float maior, nota;
+  int i;
 
+  /* cadastra 3 alunos e suas notas*/
+  for(i=0;i< quantidade_alunos;i++){
+    printf("digite nome: ");
+    fgets(aluno[i].nome, sizeof(aluno[i].nome), stdin);
 
+    printf("digite nota: ");
+    char nota_str[10];
+    fgets(nota_str, sizeof(nota_str), stdin);
+    aluno[i].nota = atof(nota_str);
+    }
 
+  /* Procura e apresenta o aluno com maior nota*/ 
+  maior = 0;    
+  for(i=0;i<quantidade_alunos;i++){    
+    if(aluno[i].nota > maior){
+          maior = aluno[i].nota;
+        aluno_maior.nota=maior;
+        strcpy(aluno_maior.nome,aluno[i].nome);
+  }
+  }
+printf("\n***********************************\n");
+printf("\t maior nota do aluno = %s \t nota = %0.1f \n\n", aluno_maior.nome,  aluno_maior.nota);
 
+return 0;
+}
+~~~
 
+- o uso de struct em C é bastante extenso, sendo que cada campo que compõe um registro pode ser não apenas de tipo simples de dados, mas também de tipo composto, como vetor, matriz e registro.
 
+### 1.2.5 Variáveis do tipo ponteiro
+- há duas situações em que se pode utilizar variáveis do tipo ponteiros:
+  - passagem de parâmetros para funções por referência.
+  - alocação dinâmica de variáveis na memória RAM.
+- quando uma variável é declarada, um espaço na memória RAM é reservado para ela, e cada posição de memória é identificada com um endereço único. 
+  - em programação, é permitido acesso a uma variável pelo nome ou símbolo que foi criado.
+- ***definição de ponteiro***: uma variável é dita do tipo ponteiro se ela contiver como informação um endereço de memória RAM.
+
+> IMPORTANTE: Ponteiro é uma variável que aponta para uma posição da memória RAM.
+
+- para declarar e manipular variáveis do tipo ponteiro, são necessários dois operadores: 
+  - & (endereço de): que retorna o endereço de memória de uma variável.
+  - * (conteúdo de): que especifica que se deve manipular o conteúdo de um endereço de memória.
+- exemplo de declaração de variável do tipo ponteiro:
+
+~~~C
+int *ptr;
+~~~
+
+- toda variável do tipo ponteiro tem o operador * antes do seu nome.
+- a declaração deve ser lida da seguinte forma: ptr é uma variável do tipo ponteiro cujo conteúdo do que ela aponta é inteiro. 
+- exemplo:
+
+~~~C
+#include <stdio.h>
+int main()
+{
+int x = 3; 
+int *ptr; //declara ptrcomo ponteiro para um dado inteiro
+ptr = &x; /*atribui à variável ptr o endereço de memória onde está a
+ variável x, ou seja, ptr aponta para área da memória onde está a 
+ variável x */
+printf(" x=%d ptr=%d conteudo do que ptr aponta %d \n",x, ptr, *ptr);
+}
+~~~
+
+- adicionando mais um comando executado após o trecho anterior:
+
+~~~c
+//conteúdo do que ptr aponta recebe o valor 7
+*ptr = 7; 
+printf(" x=%d ptr=%d conteudo do que ptr aponta %d \n",x, ptr, *ptr);
+~~~
+
+- esse comando deve ser lido da seguinte forma: o conteúdo do que está sendo apontado por ptr recebe o valor 7. Portanto, a variável x apontada por ptr deixa de valer 3 e passar a conter o valor 7.
+
+- exemplo do programa completo:
+
+~~~c
+#include <stdio.h>
+int main()
+{
+int x = 3;
+int *ptr;
+ptr = &x;
+printf(" x=%d ptr=%d conteudo do que ptr aponta %d \n",x, ptr, *ptr);
+//conteúdo do que ptr aponta recebe o valor 7
+*ptr = 7; 
+printf(" x=%d ptr=%d conteudo do que ptr aponta %d \n",x, ptr, *ptr);
+return 0;
+}
+~~~
+
+- no próximo código, são feitas as mesmas operações com ponteiro, com a diferença que o dado onde o ponteiro aponta é do tipo float.
+
+~~~c
+#include <stdio.h>
+  int main()
+  {
+  float x;
+  x = 12.998;
+  float *pontx; 
+  pontx = &x;	//pontx passa a apontar para a variável x
+  *pontx = 3.14;//conteúdo do que pontx aponta recebe 3.14 
+  printf(" x=%0.2f pontx=%d conteúdo do que pontx aponta %f \n",x, pontx, *pontx);
+  
+  return 0;
+} 
+~~~
+
+- para concluir a apresentação sobre o tipo de dado ponteiro e sua manipulação, falta apenas conhecer como são tratados os ponteiros para o tipo de dado struct.
+- para tal, será utilizado o programa abaixo, que obedece à mesma sequência de comandos do programa anterior, mas usando um ponteiro para uma variável do tipo struct.
+
+~~~c
+#include <stdio.h>
+
+  struct cad{
+         int RM;
+         char nome[30];
+         };       
+  int main()
+  {
+      struct cad aluno; //declara variável do tipo struct cad
+      struct cad *p; //declara ponteiro para struct cad
+      p = &aluno;  //p aponta para a variável aluno
+  
+      printf(" digite RM do aluno: ");
+  //lê valor para o campo RM da variavel apontada por p
+      char rm_str[10];
+      fgets(rm_str, sizeof(rm_str), stdin);
+      p->RM = atof(rm_str);printf(" digite nome do aluno: ");
+  //lê valor para o campo nome da variavel apontada por p
+      printf(" digite RM do aluno: ");
+      fgets(p->nome,sizeof(p->nome),stdin);
+      printf(" O aluno %s tem RM:%d \n",p->nome, p->RM);
+  
+      return 0;
+  }
+~~~
+
+- são declaradas duas variáveis: aluno do tipo struct cad e p, um ponteiro para struct cad. 
+- depois do comando p=&aluno, o ponteiro p passa a apontar para a área reservada à variável aluno na memória.
+- para ter acesso aos campos da variável aluno por meio do ponteiro p, é preciso conhecer mais um operador em C: `->`.
+  - quando se encontra `p->` no código, deve-se ler da seguinte forma:"selecione a struct apontada por p". 
+  - tendo acessado a variável do tipo struct cad, é preciso selecionar o campo dentro da struct cad, o que acontece com p->RM e p->nome.
+
+<div align="center">
+<h2>2. FUNÇÕES</h2>
+</div>
+
+- função é um conjunto de comandos agrupados em um módulo ou bloco, que recebe um nome e, por meio desse nome, pode ser chamado para ser executado.
+- em todas as linguagens, é necessário haver construções que permitam escrever programas usando o conceito de modularização. 
+- principais razões para utilizar funções na programação de softwares:
+  - permitir o reaproveitamento de código já elaborado.
+  - evitar que um trecho de código seja repetido várias vezes em um mesmo programa.
+  - permitir a alteração de um trecho de código de forma mais rápida. Com o uso de função, é preciso alterar apenas dentro da função que se deseja.
+  - evitar que os blocos do programa fiquem grandes demais e, consequentemente, mais difíceis de entender.
+  - facilitar a leitura do programa-fonte.
+  - separar o programa em partes (blocos) que possam ser logicamente compreendidas de forma isolada.
+- estrutura básica de uma função em C:
+
+~~~
+<tipo do valor retornado> nome da função(lista de parâmetros)
+{
+  // declaração de variáveis locais
+  // lista de comandos
+  return (valor único retornado);
+}
+~~~
+
+- toda função deve ter um nome e, dentro de delimitadores (“{” e “}”),a especificação dos comandos a serem executados quando a função for chamada.
+- as variáveis declaradas dentro da função são as variáveis locais, ou seja, só são conhecidas e utilizadas enquanto a função estiver sendo executada.
+- mesmo que não haja parâmetros à frente do nome da função, deve-se ter parênteses ().
+
+## 2.1 Funções com apenas 1 valor de resultado (return)
+
+- em C, uma função pode retornar 1 valor com o próprio nome da função, ou seja, usando o comando return. 
+- no caso de retornar um valor de resultado dessa forma, à frente do nome da função deve ser colocado o tipo do valor retornado, por exemplo, int, float, char etc; o retorno do valor do tipo especificado é feito por meio do comando return.
+- quando nenhum valor é retornado com o nome da função, deve ser colocado o tipo void, que significa que nenhum valor será retornado. 
+- exemplo: programa que calcula (usando uma função) o discriminante de uma equação de segundo grau do tipo ax² + bx + c = 0. 
+  - lembrando que o delta (discriminante) é b²–4ac.
+  - parâmetros a, b e c são chamados parâmetros de entrada, pois são valores que a função precisa receber para calcular o delta.
+  - o delta calculado é um parâmetro de saída. 
+
+~~~C
+#include <stdio.h>
+#include <stdlib.h>
+
+//função p/ calcular o discriminante de uma equação do 2º grau
+int delta(int a,int b, int c)
+{
+int d;
+d = b*b-4*a*c;
+return(d);
+}
+
+int main()
+{
+int x,y,z,d;
+printf("digite 3 coeficientes:");
+scanf("%d%d%d", &x,&y,&z);
+d=delta(x,y,z);
+printf ("discriminante: %d \n", d);
+return 0;
+}
+~~~
+
+- a especificação das funções que fazem parte do programa deve acontecer antes que a função seja chamada, por isso a função delta é codificada antes da função main().
+- a execução de qualquer programa é iniciada sempre na função main() - apenas main está ativa na memória, existindo apenas as variáveis x, y, z e d. 
+- quando é feita a chamada da função delta(), a função main() fica “inativa” na memória e apenas a função delta() passa a ser executada. 
+- porém, antes de a função main() ficar aguardando o resultado da função delta, são passados os parâmetros necessários para a função delta poder ser executada.
+  - no exemplo, o parâmetro a recebe o valor da variável x; o parâmetro b, o valor da variável y; e o parâmetro c, o valor da variável z. 
+  - portanto, a = 1, b = 2 e c=1.
+  - após a passagem dos parâmetros, a função delta inicia sua execução e, como primeiro comando, é feita a declaração da variável local d.
+  - importante notar que, apesar de ter o mesmo nome da variável d da função main(), não há qualquer relação entre elas, pois a variável d da função delta() existe apenas enquanto a função delta estiver sendo executada.
+  - em seguida, o cálculo é realizado e armazenado na variável local d. 
+  - para que esse resultado possa ser enviado para a função main(), é usado o comando return(d), que faz com que o valor do resultado seja devolvido para a função que fez a chamada da função delta() e, em seguida, ocomando return encerra a execução da função delta().
+  - quando o comando return é executado, a função que fez a chamada deve ter uma variável que receba, por meio de uma atribuição, o valor retornado da função.
+  - o tipo do retorno da função delta() é int e a variável d da função main() foi declarada como int. 
+
+> IMPORTANTE: É fundamental saber que o return é capaz apenas de retornar um valor, que pode ser do tipo int, float, char, struct ou ponteiro. Deve-se atribuir a uma variável que seja do mesmo tipo do valor declarado do retorno da função.
+
+- outro exemplo:
+
+~~~c
+#include <stdio.h>
+
+char avaliacao (float peso1, float peso2)
+{
+if (peso1 == peso2)
+   return 'p'; //permanece igual
+else if (peso1 > peso2)
+        return 'd'; //diminuiu o peso
+     else 
+        return 'a'; //aumentou o peso 
+}
+
+int main()
+{
+char situacao;
+float peso_inicial, peso_final;
+printf("Digite peso antes e depois da dieta");
+scanf("%f%f", &peso_inicial, &peso_final);
+situacao = avaliacao (peso_inicial, peso_final);
+
+if (situacao == 'p')
+    printf("O paciente não emagreceu\n");
+else if (situacao == 'd')
+         printf("O paciente emagreceu\n");
+     else 
+         printf("O paciente engordou\n");
+
+return 0;
+}
+~~~
+
+## 2.2 Funções com vários resultados (parâmetros de saída)
+
+- até agora,todas as funções apresentadas podiam:
+  - receber vários parâmetros como valores de entrada para a função.•
+  - gerar apenas um valor como resultado da função.
+- e se for necessário gerar mais de um resultado? Há `três possíveis tipos de parâmetros de uma função`:
+  - ***Entrada:*** valores para serem usados apenas pela função. 
+  - ***Entrada e Saída***: valores usados dentro da função, sofrem alterações durante a execução da função e precisam ser passados para a função que fez a chamada.
+  - ***Saída***: são resultados que a função gera e que precisam ser passados para a função que fez a chamada.
+- em C, os `parâmetros de uma função podem ser passados`:
+  - ***por valor***: um valor é copiado para o parâmetro da função e pode ser usado pela função. Apenas para parâmetros de entrada da função.
+  - ***por referência (ponteiro)***: o parâmetro é uma ligação (uma referência) a uma variável da função que fez a chamada, assim, toda alteração que a função impor ao parâmetro terá efeito na variável ligada ao parâmetro. Usado para parâmetros de Saída e de Entrada e Saída. 
+
+- exemplo:
+  - nessa implementação, não vamos usar o comando return para devolver um resultado da função para quem fez a chamada; assim, o tipo de retorno da função é void.
+  - o parâmetro n (inteiro) é apenas de entrada, ou seja, passagem por valor. Finalmente, v (float) e res (inteiro) são parâmetros de saída e de entrada e saída, respectivamente. Sendo assim, devem ser passados por referência, ou melhor, como ponteiros.
+  - protótipo da função exemplo:
+  
+~~~C
+void exemplo (int n, int *res, float *v)
+~~~
+
+- programa que usa a função exemplo:
+
+~~~C
+#include <stdio.h>
+
+void exemplo (int n, int *res, float *v)
+  {
+  n++;
+  *res = n + *res;
+  *v = n * 2.1;
+  }
+
+int main()  
+{
+int a = 1,d =2;
+float m = 0;
+exemplo (a, &d, &m);
+printf("a= %d  \t  y = %d\t e m = %.1f\n",a,d,m);
+}
+~~~
+
+- para realizar a chamada da função exemplo(), são passados os parâmetros, sendo que a variável a tem seu valor passado para o parâmetro de entrada n. Já os parâmetros res e v da função exemplo são parâmetros saída, devem ser ponteiros. 
+  - lembrando da definição de ponteiro, que diz que uma variável do tipo ponteiro é aquela que sempre armazena endereço de memória; ao invés de passar o valor de d e m para res e v, devem ser passados os seus endereços usando o operador &. 
+- descrevendo a execução da função exemplo():
+  - no comando n++, a ação se dá sobre o valor armazenado em n na passagem por valor, que foi o valor 1. Assim, n termina com o valor 2.
+  - o valor de n é somado ao conteúdo de memória apontado por res, ou seja, o valor 2 armazenado na variável d da função main(). O resultado 4 é armazenado como conteúdo da variável apontadapor res.
+  - a multiplicação realizada gera como resultado 8.2 deve ser armazenado como conteúdo da variável apontada pelo parâmetro v, isto é, na variável m da função main().
+
+- é possível modificar a função que calcula o delta da função de 2° grau e, para não usar o comando return, o resultado deve ser retornado usando passagem de parâmetro por referência (ponteiro). 
+- programa:
+
+~~~C
+#include <stdio.h>
+
+//função para calcular o discriminante da equação do 2º grau
+void delta(int a, int b, int c, int *d)
+{
+*d= b*b-4*a*c;
+}
+
+int main()
+{
+    int x = 0, y = 0, z = 0, d = 0;
+    printf("digite 3 coeficientes:");
+    scanf("%d%d%d", &x, &y, &z);
+    printf("\nANTES da função delta: x= %d \t y=%d \t z=%d \t d=%d", x, y, z, d);
+    delta(x, y, z, &d);
+    printf("\nDEPOIS da função delta: x= %d \t y=%d \t z=%d \t d=%d", x, y, z, d);
+    printf("\ndiscriminante: %d \n", d);
+
+    Return 0;
+}
+~~~
+
+- no exemplo acima, o comando return não é usado, o tipo da função foi alterado para void e o quarto parâmetro foi incluído para retornar o resultado da função para a função main(). 
+
+## 2.3 Funções com passagem de parâmetros do tipo de dado struct 
+
+- a regra é a mesma para variáveis como int ou float: se um dado do tipo struct é parâmetro de saída de uma função, este deve ser passado por referência, ou seja, usando ponteiro.
+- a ideia é utilizar um programa que possui duas funções:
+  - a função le_registro() deve ler do teclado os campos que compõem a struct prod, devolvendo para a função que a chamou um parâmetro com a struct prod alterada. Dessa forma, tem apenas uma struct prod como parâmetro de saída.
+  - já a função escreve() recebe como parâmetro uma struct prod e deve apenas escrever na tela de saída, sem gerar qualquer alteração no conteúdo dos campos. Portanto, recebe apenas um parâmetro de entrada.
+
+~~~C
+#include<stdio.h>
+#include<string.h> 
+
+struct prod{		
+    int cod;
+    float preco;
+};
+
+//parametro de saida p_cad é ponteiro para struct prod
+void le_registro(struct prod *p_cad) 
+{  
+printf("Digite codigo do produto e preco\n");
+scanf("%d", &p_cad->cod); 
+scanf("%f", &p_cad->preco); 
+}
+
+//parametro de entrad cad é uma struct prod
+void escreve(struct prod reg) {
+printf(" Codigo e preco do produto são: %d R$%.2f \n", reg.cod, reg.preco);
+}
+
+int main() {
+struct prod cad;
+//chama função passando o endereço da variável cad 
+le_registro (&cad);
+//chama função passando o valor da variável cad 
+escreve(cad);	 
+
+return 0;	 
+}
+~~~
+
+- na função main(), é feita a declaração da variável cad, que é do tipo struct prod. 
+- em seguida, é feita a chamada da função le_registro(&cad).
+- assim, pela passagem de parâmetro p_cad (do tipo ponteiro para uma struct prod) recebe o endereço de memória (ou seja, aponta) onde se encontra a variável cad (p_cad = &cad).
+- dentro da função le_registro():
+  - p_cad->cod especifica que o campo cod da struct apontada por p_cad (deve ser lido como “o campo cod da struct apontada por p_cad”). 
+  - p_cad->preco especifica que o campo preco da struct apontada por p_cad (deve ser lido como “o campo preco da struct apontada por p_cad”). 
+- quando a função le_registro() termina, a variável cad da função main()tem os valores dos campos lidos dentro da função.
+- o parâmetro de entrada reg da função escreve() recebe uma cópia da variável cad da função main(). Dessa forma, a parâmetro do tipo struct prod reg tem seus campos escritos na tela de saída de forma normal.
+
+## 2.4 Vetores, string e matrizes como parâmetros de funções
+
+- todos os parâmetros que são de saída, ou de entrada e saída, devem ser passados por referência, ou seja, como ponteiros. Com vetores e matrizes não é diferente, deve-se conhecer como passá-los como ponteiro. 
+- vetores e matrizes seguem o mesmo conceito para serem passados como parâmetros por referência.
+- em C, quando é declarado um vetor ou uma matriz, é reservada uma área de memória para o armazenamento dos elementos. Quando se referencia apenas o nome do vetor, é obtido o endereço inicial onde foi armazenado o 1º elemento da estrutura.
+  - para passar um vetor ou matriz como parâmetro, basta usar o seu nome sem índice.
+
+> IMPORTANTE: Vetores e matrizes são sempre passados por referência de forma implícita (não precisamos usar explicitamente ponteiros).
+
+- os exemplos a seguir apresentam vetores passados como parâmetros em várias situações.
+  - suponha um programa que leia as quantidades vendidas de cada um dos 10 produtos em uma loja em 2 dias consecutivos.
+    - o programa deve apresentar o total vendido de cada produto nos 2 dias usando uma função para somar os elementos dos 2 vetores. 
+
+~~~C
+#include <stdio.h>
+
+#define N 300
+
+/*a e b sao parametros de entrada e s é de saída, mas não há
+  diferença para a funçao */
+void soma_vetor(int a[N],int b[N], int s[N])
+{
+int i;
+for (i=0; i<N;i++)
+    s[i]=a[i]+b[i];
+}
+
+int main(){
+int i,venda1[N],venda2[N],total[N];
+for (i=0;i<N;i++){
+  printf(" digite quantidade vendida 1º dia do produto %d: ",i);
+  scanf("%d",&venda1[i]);
+  }
+for (i=0;i<N;i++){
+  printf("Digite quantidade vendida 2ºdia do produto %d: ",i);
+  scanf("%d",&venda2[i]);
+  }
+//chama a função passando por referencia cada vetores 
+soma_vetor(venda1,venda2,total);
+for (i=0;i<N;i++){
+  printf(" A quantidade vendida nos 2 dias do produto %d: %d\n",i,total[i]);
+  }
+
+  return 0;
+}  
+~~~
+
+- para ter mais um modelo, o exemplo anterior pode ser modificado da seguinte maneira:
+  - uma função que realize a leitura dos elementos de um vetor com N elementos e a utilize para fazer a entrada de dados dos 2 vetores.
+  - uma função para escrever um vetor com N elementos para escrever o vetor soma.
+  - uma função que calcule a média de produtos vendidos de cada dia.
+
+~~~C
+#include <stdio.h>
+
+#define N 300
+
+void leitura(int x[N])
+//vetor x é parametro de saida 
+{
+int i;
+for (i=0;i<N;i++){
+  printf(" digite quantidade vendida do produto %d: ",i);
+  scanf("%d",&x[i]);
+  }
+}
+
+void escreve(int x[N])
+//vetor x é parametro de entrada 
+{
+int i;
+for (i=0;i<N;i++){
+  printf(" A quantidade vendida nos 2 dias do produto %d: %d\n",i,x[i]);
+  }
+}
+
+void soma_vetor(int a[N],int b[N], int s[N])
+/*vetores a e b são parâmetros de entrada e vetor s é 
+parâmetro de saída */
+{
+int i;
+for (i=0; i<N;i++){
+  s[i]=a[i]+b[i];
+  }
+}
+
+float media(int x[N])
+/*vetor x é parametro de entrada e valor da média calculada 
+  é retornado pelo comando return */
+{
+int i,soma=0;
+float aux;
+for (i=0;i<N;i++)
+    soma=soma+x[i]; 
+aux= (float) soma/N;
+return(aux);
+}
+
+int main()
+{
+int i,venda1[N],venda2[N],total[N];
+float m1,m2;
+printf(" digite quantidades vendidas no primeiro dia\n");
+leitura(venda1);
+printf(" digite quantidades vendidas no segundo dia\n");
+leitura(venda2);
+soma_vetor(venda1,venda2,total);
+printf(" As quantidades vendidas nos 2 dias\n" );
+escreve(total);
+m1=media(venda1);
+printf(" A media de vendas do primeiro dia: %0.1f\n",m1 );
+m2=media(venda2);
+printf(" A media de vendas do segundo dia: %0.1f\n",m2 );
+
+return 0;
+}
+~~~
+
+---
+
+## FAST test
+
+### 1. Qual das opções não é um tipo de dado em linguagem de programação C?
+> const.
+
+### 2. Em linguagem C, as palavras-chave ou reservadas são comandos específicos da linguagem que não podem ser utilizados com outro propósito além do definido pela linguagem. Qual das alternativas não é uma palavra-chave em C?
+> Caractere.
+
+### 3. Em linguagem de programação C, qual é a ação gerada pelo pré-processador pela diretiva #include?
+> É inclusão (ou importação) de bibliotecas com funções específicas.
+
+### 4. Todos os arquivos que pertencem à biblioteca da linguagem C têm qual extensão?
+> ".h".
+
+### 5. Qual das alternativas não é um operador relacional utilizado em linguagem C?
+> &&.
 
 --- 
 
