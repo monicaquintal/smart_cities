@@ -211,7 +211,7 @@
 - [Capítulo 05: Uma linguagem heroica](./fase07/capitulo05.md)
 - [Capítulo 06: Arduino, o pequeno notável](./fase07/capitulo06.md)
 - [Capítulo 07: Tá, mas isso é seguro?](./fase07/capitulo07.md)
-- [Capítulo 08: ]()
+- [Capítulo 08: O que as máquinas aprendem?](./fase07/capitulo08.md)
 
 </details>
 <br>
