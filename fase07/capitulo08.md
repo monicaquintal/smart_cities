@@ -10,6 +10,22 @@
 
 ---
 
+## FAST testadores
+
+### 1. Dentre as principais bibliotecas de Python para utilizar machine learning, podemos citar corretamente:
+> Scikit-Learn, PySpark, Tensorflow e Pytorch.
+
+### 2. Em um processo de Inteligência Artificial, foi observado que as características de determinado objeto estavam sendo examinadas e a saída é atribuída em uma ou mais classes. Analisando os algoritmos utilizados, foi constatado que se tratava de algoritmos de aprendizagem supervisionada. Sabendo disso, indique qual é o tipo de problema de aprendizagem envolvido.
+> Classificação.
+
+### 3. Sobre métricas de avaliação em ML para problemas de regressão. Assinale a alternativa na qual é incorreto afirmar que:
+> Acurácia é uma métrica de avaliação de modelos de ML para problemas de regressão.
+
+### 4. Sobre aprendizagem de máquina, quais são os conceitos fundamentais?
+> Interação, adaptação, correção e otimização.
+
+---
+
 ## QUIZ FASE 07
 
 ### 1. Qual é o nome da plataforma, genuinamente brasileira, que surgiu com o objetivo de desenvolver e demonstrar tecnologias para as cidades inteligentes (smart cities), tendo como pilares de sustentação: segurança pública, mobilidade urbana e saúde?
